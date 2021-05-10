@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/textViewBottomSheetVorlesungHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/vorlesungsinformation"
+            android:textColor="@color/primaryBlue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetVorlesungName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetVorlesungHeader" />
+
+        <View
+            android:id="@+id/bottomSheetDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetVorlesungName" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetDozentTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/dozent"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/bottomSheetDivider"
+            app:layout_constraintTop_toBottomOf="@+id/bottomSheetDivider" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetDozentName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="32dp"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetRoomName"
+            app:layout_constraintEnd_toStartOf="@+id/textViewBottomSheetDozentIcon"
+            app:layout_constraintHorizontal_bias="0.51"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/textViewBottomSheetDozentTitle"
+            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetDozentTitle" />
+
+        <ImageView
+            android:id="@+id/textViewBottomSheetDozentIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/pfeil_nach_rechts"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewBottomSheetDozentName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewBottomSheetDozentName"
+            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetDozentName"
+            app:srcCompat="@drawable/ic_arrow_right" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetRoomName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/textViewBottomSheetRoomIcon"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/textViewBottomSheetRoomTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetDozentName" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetRoomTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/raum"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetDozentTitle"
+            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetRoomName" />
+
+        <ImageView
+            android:id="@+id/textViewBottomSheetRoomIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/karten_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewBottomSheetRoomDetail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetDozentIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetRoomName"
+            app:srcCompat="@drawable/ic_map" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetRoomDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetRoomName"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetRoomTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetRoomTitle" />
+
+        <ImageView
+            android:id="@+id/textViewBottomSheetNoteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/bearbeitungs_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetRoomIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetNoteTitle"
+            app:srcCompat="@drawable/ic_edit" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetNoteTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/notizen"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetRoomDetail"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetDozentTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetRoomDetail" />
+
+        <ImageView
+            android:id="@+id/textViewBottomSheetModulIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/pfeil_nach_rechts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetNoteIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetModulTitle"
+            app:srcCompat="@drawable/ic_arrow_right" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetModulTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/modulhandbuch"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetNoteTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetNoteTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetNoteTitle" />
+
+        <TextView
+            android:id="@+id/textViewBottomSheetChatTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/chat"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetModulTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetModulTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetModulTitle" />
+
+        <ImageView
+            android:id="@+id/textViewBottomSheeChatIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/chat_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewBottomSheetChatTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetModulIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetChatTitle"
+            app:srcCompat="@drawable/ic_chat" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupModalSheetChat"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="textViewBottomSheetChatTitle,textViewBottomSheeChatIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetModul"
+            android:onClick="onClickChat"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupModalSheetModul"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            app:constraint_referenced_ids="textViewBottomSheetModulTitle,textViewBottomSheetModulIcon"
+            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetChatTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetNote"
+            android:onClick="onClickModul"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupModalSheetNote"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            app:constraint_referenced_ids="textViewBottomSheetNoteIcon,textViewBottomSheetNoteTitle"
+            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetModulTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetRoom"
+            android:onClick="onClickNote"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupModalSheetRoom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            app:constraint_referenced_ids="textViewBottomSheetRoomTitle,textViewBottomSheetRoomName,textViewBottomSheetRoomIcon"
+            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetNoteTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetDozent"
+            android:onClick="onClickRoom"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupModalSheetDozent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            app:constraint_referenced_ids="textViewBottomSheetDozentIcon,textViewBottomSheetDozentName,textViewBottomSheetDozentTitle"
+            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetRoomName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bottomSheetDivider"
+            app:layout_constraintVertical_bias="1.0"
+            android:onClick="onClickDozent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

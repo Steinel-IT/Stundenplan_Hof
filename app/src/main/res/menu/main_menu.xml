@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/action_update"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/aktualisieren"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/overflowMenu"
+        android:icon="@drawable/ic_more_vert"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_sync"
+                android:checkable="true"
+                android:icon="@drawable/ic_event"
+                android:title="@string/kalender_sync"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/action_darkmode"
+                android:checkable="true"
+                android:icon="@drawable/ic_brightness"
+                android:title="@string/dark_mode"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/action_reset"
+                android:icon="@drawable/ic_cancel"
+                android:title="@string/app_zur_cksetzen"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+</menu>
