@@ -164,12 +164,12 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     private void sortSchedule() {
         if (daySortedSchedule != null) {
-            if(titleList == null) {
+            if (titleList == null) {
                 titleList = new ArrayList<>();
             } else {
                 titleList.clear();
             }
-            if(scheduleList == null) {
+            if (scheduleList == null) {
                 scheduleList = new ArrayList<>();
             } else {
                 scheduleList.clear();
