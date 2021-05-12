@@ -19,10 +19,12 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
 
     private final ArrayList<String> titelList;
     private final ArrayList<SchedulerEntry> schedulerEntryArrayList;
+    private final CourseEntryListAdapter.VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener;
 
-    public SchedulerEntryListAdapter(ArrayList<String> titelList, ArrayList<SchedulerEntry> schedulerEntryArrayList) {
+    public SchedulerEntryListAdapter(ArrayList<String> titelList, ArrayList<SchedulerEntry> schedulerEntryArrayList, CourseEntryListAdapter.VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener) {
         this.titelList = titelList;
         this.schedulerEntryArrayList = schedulerEntryArrayList;
+        this.vorlesungOnItemClickListener = vorlesungOnItemClickListener;
     }
 
     @NonNull
@@ -35,7 +37,7 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
 
     @Override
     public void onBindViewHolder(@NonNull SchedulerHolder vorlesungHolder, int position) {
-        vorlesungHolder.bind(titelList.get(position), schedulerEntryArrayList.get(position).getCourseEntryArrayList(), position);
+        vorlesungHolder.bind(titelList.get(position), schedulerEntryArrayList.get(position).getCourseEntryArrayList(), position, vorlesungOnItemClickListener);
     }
 
     @Override
@@ -44,8 +46,8 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
     }
 
     public static class SchedulerHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public RecyclerView vorlesungRecyclerView;
+        TextView name;
+        RecyclerView vorlesungRecyclerView;
 
         public SchedulerHolder(View view) {
             super(view);
@@ -55,9 +57,9 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
             vorlesungRecyclerView.addItemDecoration(new DividerItemDecoration(vorlesungRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         }
 
-        public void bind(final String entryName, final ArrayList<CourseEntry> courseEntryArrayList, final int schedulerPos) {
+        public void bind(final String entryName, final ArrayList<CourseEntry> courseEntryArrayList, final int schedulerPos, CourseEntryListAdapter.VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener) {
             name.setText(entryName);
-            CourseEntryListAdapter courseEntryListAdapter = new CourseEntryListAdapter(courseEntryArrayList);
+            CourseEntryListAdapter courseEntryListAdapter = new CourseEntryListAdapter(courseEntryArrayList, vorlesungOnItemClickListener);
             courseEntryListAdapter.setSchedulerPos(schedulerPos);
             vorlesungRecyclerView.setAdapter(courseEntryListAdapter);
         }

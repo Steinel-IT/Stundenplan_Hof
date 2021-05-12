@@ -28,6 +28,7 @@ public class ScheduleParseDownloadManager {
     HandleArrayListScheduleTaskInterface context;
 
     ArrayList<SchedulerEntry> schedulerEntries;
+    ArrayList<String> titelList;
 
     public ScheduleParseDownloadManager(HandleArrayListScheduleTaskInterface context) {
         this.context = context;
@@ -40,7 +41,7 @@ public class ScheduleParseDownloadManager {
     }
 
     public void getSchedule(String shortCourse, String semester) {
-        if (schedulerEntries == null) {
+        if (schedulerEntries == null || titelList == null) {
             String replacedSemester = semester.replace(" - ", "_").replace(" ", "_");
             OkHttpClient okClient = new OkHttpClient();
             String url = "https://www.hof-university.de/index.php?type=1421771406&id=79&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadVorlesungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + replacedSemester + "&tx_stundenplan_stundenplan[view]=alle";
@@ -56,16 +57,21 @@ public class ScheduleParseDownloadManager {
                 public void onResponse(Call call, Response response) throws IOException {
                     if (response.isSuccessful()) {
                         ArrayList<SchedulerEntry> schedulerEntriesLocal = new ArrayList<>();
+                        ArrayList<String> titelListLocal = new ArrayList<>();
                         try {
                             String semesterExpr = new JSONObject(response.body().string()).getString("vorlesungen");
                             Document docCompelte = Jsoup.parse(semesterExpr);
-                            Elements daySelection = docCompelte.select("div[class=hide-for-small]").first().select("tbody");
-                            for (Element dayData : daySelection) {
+                            Elements dayContent = docCompelte.select("div[class=hide-for-small]").select("table");
+                            for (int i = 1; i < dayContent.size(); i++) {
+                                titelListLocal.add(dayContent.get(i).select("thead").first().text());
+                                Element dayData = dayContent.get(i).select("tbody").first();
                                 ArrayList<CourseEntry> vorlesungsArrayList = new ArrayList<>();
                                 for (Element course : dayData.select("tr")) {
                                     String room = course.select("td").get(6).text();
                                     String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
-                                    String shortName = course.select("td").get(3).text().split("[(-]")[0].trim();
+                                    String shortName = getShortName(course.select("td").get(3).text());
+                                    //TODO: get(0) ist der Tag. Also auch rein machen irgendwie.
+                                    //TODO: Tage checken. Fände es gut wenn man die Tage einfach ausließt und dann mitgibt und dann in Title einträgt.
                                     vorlesungsArrayList.add(new CourseEntry(course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, "Gebäude " + building));
                                 }
                                 schedulerEntriesLocal.add(new SchedulerEntry(vorlesungsArrayList));
@@ -74,15 +80,23 @@ public class ScheduleParseDownloadManager {
                             e.printStackTrace();
                         }
                         schedulerEntries = schedulerEntriesLocal;
-                        uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntriesLocal));
+                        titelList = titelListLocal;
+                        uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntriesLocal, titelListLocal));
                     } else {
                         throw new IOException("Download not successful");
                     }
                 }
             });
         } else {
-            uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries));
+            uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
         }
+    }
+
+
+    private String getShortName(String completeName) {
+        String standartSplit = completeName.split("[(-]")[0];
+        //remove Words
+        return standartSplit.replace("Präsenz", "").trim();
     }
 
 }

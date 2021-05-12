@@ -53,11 +53,19 @@ public class StorageManager {
         sharedPreferencesNoteEditor.apply();
     }
 
-    public void getSetupData(Context context, String fileName) {
-        ArrayList<String> resultData = new ArrayList<>();
+    public String[] getSetupData(Context context, String fileName) {
+        String[] resultData = new String[3];
         SharedPreferences sharedPreferencesNote = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        resultData.add(sharedPreferencesNote.getString("course", null));
-        resultData.add(sharedPreferencesNote.getString("shortCourse", null));
-        resultData.add(sharedPreferencesNote.getString("semester", null));
+        resultData[0] = sharedPreferencesNote.getString("course", null);
+        resultData[1] = sharedPreferencesNote.getString("shortCourse", null);
+        resultData[2] = sharedPreferencesNote.getString("semester", null);
+        return resultData;
+    }
+
+    public void deleteSetupData(Context context, String fileName) {
+        SharedPreferences sharedPreferencesNote = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPreferencesNoteEditor = sharedPreferencesNote.edit();
+        sharedPreferencesNoteEditor.clear();
+        sharedPreferencesNoteEditor.apply();
     }
 }

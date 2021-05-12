@@ -6,6 +6,6 @@ import java.util.ArrayList;
 
 public interface HandleArrayListScheduleTaskInterface {
 
-    void onTaskFinished(ArrayList<SchedulerEntry> result);
+    void onTaskFinished(ArrayList<SchedulerEntry> result, ArrayList<String> titel);
 
 }

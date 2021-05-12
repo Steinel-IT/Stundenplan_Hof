@@ -17,9 +17,12 @@ public class CourseEntryListAdapter extends RecyclerView.Adapter<CourseEntryList
 
     private final ArrayList<CourseEntry> courseEntryArrayList;
     private int schedulerPos;
+    private final VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener;
 
-    public CourseEntryListAdapter(ArrayList<CourseEntry> courseEntryArrayList) {
+
+    public CourseEntryListAdapter(ArrayList<CourseEntry> courseEntryArrayList, VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener) {
         this.courseEntryArrayList = courseEntryArrayList;
+        this.vorlesungOnItemClickListener = vorlesungOnItemClickListener;
     }
 
     public void setSchedulerPos(int schedulerPos) {
@@ -36,7 +39,7 @@ public class CourseEntryListAdapter extends RecyclerView.Adapter<CourseEntryList
 
     @Override
     public void onBindViewHolder(@NonNull VorlesungHolder vorlesungHolder, int position) {
-        vorlesungHolder.bind(courseEntryArrayList.get(position), position, courseEntryArrayList.get(position).getOnItemClickListener());
+        vorlesungHolder.bind(courseEntryArrayList.get(position), position, vorlesungOnItemClickListener);
     }
 
     @Override

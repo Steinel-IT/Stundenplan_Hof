@@ -1,10 +1,7 @@
-package com.steinel_it.stundenplanhof.objects;
-
-import com.steinel_it.stundenplanhof.adapter.CourseEntryListAdapter;
+package com.steinel_it.stundenplanhof.objects;;
 
 public class CourseEntry {
     private final String timeStart, timeEnd, name, shortName, dozent, room, gebaeude;
-    private CourseEntryListAdapter.VorlesungHolder.OnItemClickListener onItemClickListener;
 
     public CourseEntry(String timeStart, String timeEnd, String name, String shortName, String dozent, String room, String gebaeude) {
         this.timeStart = timeStart;
@@ -14,10 +11,6 @@ public class CourseEntry {
         this.dozent = dozent;
         this.room = room;
         this.gebaeude = gebaeude;
-    }
-
-    public void setOnItemClickListener(CourseEntryListAdapter.VorlesungHolder.OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
     }
 
     public String getTimeStart() {
@@ -48,10 +41,6 @@ public class CourseEntry {
         return gebaeude;
     }
 
-    public CourseEntryListAdapter.VorlesungHolder.OnItemClickListener getOnItemClickListener() {
-        return onItemClickListener;
-    }
-
     @Override
     public String toString() {
         return "CourseEntry{" +
@@ -62,7 +51,6 @@ public class CourseEntry {
                 ", dozent='" + dozent + '\'' +
                 ", room='" + room + '\'' +
                 ", gebaeude='" + gebaeude + '\'' +
-                ", onItemClickListener=" + onItemClickListener +
                 '}';
     }
 }

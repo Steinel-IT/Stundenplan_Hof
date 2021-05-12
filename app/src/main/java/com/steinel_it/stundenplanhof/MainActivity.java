@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,10 +23,12 @@ import com.google.android.material.chip.ChipGroup;
 import com.steinel_it.stundenplanhof.adapter.CourseEntryListAdapter;
 import com.steinel_it.stundenplanhof.adapter.SchedulerEntryListAdapter;
 import com.steinel_it.stundenplanhof.data_manager.ScheduleParseDownloadManager;
+import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 import com.steinel_it.stundenplanhof.interfaces.HandleArrayListScheduleTaskInterface;
 import com.steinel_it.stundenplanhof.objects.CourseEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
+import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,31 +48,24 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     ScheduleParseDownloadManager setupParseDownloadManager;
 
-    SchedulerFilter filterType = SchedulerFilter.DAYS;
-
     CourseEntry selectedCourseEntry;
 
     SchedulerEntryListAdapter schedulerEntryListAdapter;
 
-    ArrayList<SchedulerEntry> scheduleList;
-    ArrayList<SchedulerEntry> daySortedSchedule; //Original Sorted Schedule
-    ArrayList<String> titleList;
+    SingletonSchedule schedule;
 
-    String[] dayTitle = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
-
-    CourseEntryListAdapter.VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener = (courseEntry, schedulerPos, vorlesungPos, view) -> {
-        createBottomSheet(courseEntry);
-        selectedCourseEntry = courseEntry;
-    };
+    StorageManager storageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //TODO: Überall dran denken an SavedInstanceState!!
         super.onCreate(savedInstanceState);
+        storageManager = new StorageManager();
         if (isFirstTime()) {
             Intent intentFirstTime = new Intent(this, SetupActivity.class);
             startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
         } else {
+            schedule = SingletonSchedule.getInstance();
             setupContent();
         }
     }
@@ -83,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 course = extras.getString(SetupActivity.EXTRA_MESSAGE_COURSE);
                 shortCourse = extras.getString(SetupActivity.EXTRA_MESSAGE_SHORT_COURSE);
                 semester = extras.getString(SetupActivity.EXTRA_MESSAGE_SEMESTER);
+                schedule = SingletonSchedule.getInstance();
                 setupContent();
             }
         }
@@ -97,20 +94,17 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     private boolean isFirstTime() {
-        SharedPreferences pref = getSharedPreferences(KEY_APP_SETTINGS, MODE_PRIVATE);
-        course = pref.getString("course", null);
-        shortCourse = pref.getString("shortCourse", null);
-        semester = pref.getString("semester", null);
-        return course == null && shortCourse == null && semester == null;
+        String[] setupData = storageManager.getSetupData(this, KEY_APP_SETTINGS);
+        course = setupData[0];
+        shortCourse = setupData[1];
+        semester = setupData[2];
+        return setupData[0] == null && setupData[1] == null && setupData[2] == null;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        for (int i = 0; i < menu.size(); i++) {
-            //TODO: Check hin
-        }
         return true;
     }
 
@@ -125,19 +119,37 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 setupParseDownloadManager.resetSchedule();
                 setupParseDownloadManager.getSchedule(shortCourse, semester);
                 break;
+            case R.id.action_reset:
+                storageManager.deleteSetupData(this, KEY_APP_SETTINGS);
+                schedule.setFilterType(SchedulerFilter.DAYS);
+                Intent intentFirstTime = new Intent(this, SetupActivity.class);
+                startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
+                break;
+            case R.id.action_darkmode:
+                int nightMode;
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                    nightMode = AppCompatDelegate.MODE_NIGHT_NO;
+                } else {
+                    nightMode = AppCompatDelegate.MODE_NIGHT_YES;
+                }
+                AppCompatDelegate.setDefaultNightMode(nightMode);
+                //TODO: setzt kein Check und erzeugt bei Dark auf Light ein Fehler
+                item.setChecked(nightMode != 2);
+                break;
+            case R.id.action_sync:
+                break;
         }//TODO set Menue
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onTaskFinished(ArrayList<SchedulerEntry> result) {
-        for (SchedulerEntry sEntry : result) {
-            for (CourseEntry cEntry : sEntry.getCourseEntryArrayList()) {
-                cEntry.setOnItemClickListener(vorlesungOnItemClickListener);
-            }
+    public void onTaskFinished(ArrayList<SchedulerEntry> result, ArrayList<String> titel) {
+        schedule.setDayTitle(titel);
+        schedule.setDaySortedSchedule(result);
+        schedule.sortSchedule();
+        if (schedulerEntryListAdapter != null) {
+            schedulerEntryListAdapter.notifyDataSetChanged();
         }
-        daySortedSchedule = result;
-        sortSchedule();
         setupRecyclerViews();
     }
 
@@ -146,97 +158,36 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         filterChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.chipFilterTage:
-                    filterType = SchedulerFilter.DAYS;
+                    schedule.setFilterType(SchedulerFilter.DAYS);
                     break;
                 case R.id.chipFilterVorlesung:
-                    filterType = SchedulerFilter.VORLESUNGEN;
+                    schedule.setFilterType(SchedulerFilter.VORLESUNGEN);
                     break;
                 case R.id.chipFilterRaeume:
-                    filterType = SchedulerFilter.ROOMS;
+                    schedule.setFilterType(SchedulerFilter.ROOMS);
                     break;
                 case R.id.chipFilterDozenten:
-                    filterType = SchedulerFilter.DOZENTEN;
+                    schedule.setFilterType(SchedulerFilter.DOZENTEN);
                     break;
             }
-            sortSchedule();
-        });
-    }
-
-    private void sortSchedule() {
-        if (daySortedSchedule != null) {
-            if (titleList == null) {
-                titleList = new ArrayList<>();
-            } else {
-                titleList.clear();
-            }
-            if (scheduleList == null) {
-                scheduleList = new ArrayList<>();
-            } else {
-                scheduleList.clear();
-            }
-            HashMap<String, ArrayList<CourseEntry>> sortedMap = new HashMap<>();
-            if (filterType == SchedulerFilter.VORLESUNGEN) {
-                ArrayList<CourseEntry> allCourses = new ArrayList<>();
-                getAllCourses(allCourses);
-                for (CourseEntry entry : allCourses) {
-                    if (!sortedMap.containsKey(entry.getShortName())) {
-                        sortedMap.put(entry.getShortName(), new ArrayList<>());
-                    }
-                    sortedMap.get(entry.getShortName()).add(entry);
-                }
-                titleList.addAll(sortedMap.keySet());
-                for (String key : sortedMap.keySet()) {
-                    scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
-                }
-            } else if (filterType == SchedulerFilter.ROOMS) {
-                ArrayList<CourseEntry> allCourses = new ArrayList<>();
-                getAllCourses(allCourses);
-                for (CourseEntry entry : allCourses) {
-                    if (!sortedMap.containsKey(entry.getRoom())) {
-                        sortedMap.put(entry.getRoom(), new ArrayList<>());
-                    }
-                    sortedMap.get(entry.getRoom()).add(entry);
-                }
-                titleList.addAll(sortedMap.keySet());
-                for (String key : sortedMap.keySet()) {
-                    scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
-                }
-            } else if (filterType == SchedulerFilter.DOZENTEN) {
-                ArrayList<CourseEntry> allCourses = new ArrayList<>();
-                getAllCourses(allCourses);
-                for (CourseEntry entry : allCourses) {
-                    if (!sortedMap.containsKey(entry.getDozent())) {
-                        sortedMap.put(entry.getDozent(), new ArrayList<>());
-                    }
-                    sortedMap.get(entry.getDozent()).add(entry);
-                }
-                titleList.addAll(sortedMap.keySet());
-                for (String key : sortedMap.keySet()) {
-                    scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
-                }
-            } else {
-                titleList.addAll(Arrays.asList(dayTitle));
-                scheduleList.addAll(daySortedSchedule);
-            }
+            schedule.sortSchedule();
             if (schedulerEntryListAdapter != null) {
                 schedulerEntryListAdapter.notifyDataSetChanged();
             }
-        }
+        });
     }
-
-    private void getAllCourses(ArrayList<CourseEntry> allCourses) {
-        for (SchedulerEntry scheduleEntry : daySortedSchedule) {
-            allCourses.addAll(scheduleEntry.getCourseEntryArrayList());
-        }
-    }
-
 
     private void setupRecyclerViews() {
         Group loadingGroup = findViewById(R.id.groupLoadingScheduleMain);
         RecyclerView recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
         loadingGroup.setVisibility(View.GONE);
         recyclerViewScheduler.setVisibility(View.VISIBLE);
-        schedulerEntryListAdapter = new SchedulerEntryListAdapter(titleList, scheduleList);
+        System.out.println("Size: " +schedule.getTitleList().size());
+        System.out.println("Size: " +schedule.getScheduleList().size());
+        schedulerEntryListAdapter = new SchedulerEntryListAdapter(schedule.getTitleList(), schedule.getScheduleList(), (courseEntry, schedulerPos, vorlesungPos, view) -> {
+            createBottomSheet(courseEntry);//
+            selectedCourseEntry = courseEntry;
+        });
         recyclerViewScheduler.setAdapter(schedulerEntryListAdapter);
     }
 
@@ -273,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     public void onClickNote(View view) {
         Intent intentDozent = new Intent(this, NoteActivity.class);
-        intentDozent.putExtra(EXTRA_MESSAGE_NAME, selectedCourseEntry.getName());
+        intentDozent.putExtra(EXTRA_MESSAGE_NAME, selectedCourseEntry.getShortName());
         intentDozent.putExtra(EXTRA_MESSAGE_SEMESTER, semester);
         startActivity(intentDozent);
     }

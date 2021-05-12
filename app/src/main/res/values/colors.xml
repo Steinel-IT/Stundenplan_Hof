@@ -16,4 +16,7 @@
     <color name="darkerTeal">#FF017374</color>
     <color name="grey">#FF363636</color>
     <color name="shadow">#28000000</color>
+
+    <!--  Dark Theme  -->
+    <color name="darkBottomSheet">#FF222222</color>
 </resources>
