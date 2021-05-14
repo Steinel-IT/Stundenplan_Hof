@@ -25,22 +25,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ScheduleParseDownloadManager {
+public class ModuleParseDownloadManager {
 
     HandleArrayListScheduleTaskInterface context;
 
     ArrayList<SchedulerEntry> schedulerEntries;
     ArrayList<String> titelList;
 
-    public ScheduleParseDownloadManager(HandleArrayListScheduleTaskInterface context) {
+    public ModuleParseDownloadManager(HandleArrayListScheduleTaskInterface context) {
         this.context = context;
     }
 
     private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
-
-    public void resetSchedule() {
-        schedulerEntries = null;
-    }
 
     public void getSchedule(String shortCourse, String semester) {
         if (schedulerEntries == null || titelList == null) {
@@ -65,18 +61,7 @@ public class ScheduleParseDownloadManager {
                             String semesterExpr = new JSONObject(response.body().string()).getString("vorlesungen");
                             Document docCompelte = Jsoup.parse(semesterExpr);
                             Elements dayContent = docCompelte.select("div[class=hide-for-small]").select("table");
-                            for (int i = 1; i < dayContent.size(); i++) {
-                                titelListLocal.add(dayContent.get(i).select("thead").first().text());
-                                Element dayData = dayContent.get(i).select("tbody").first();
-                                ArrayList<CourseEntry> vorlesungsArrayList = new ArrayList<>();
-                                for (Element course : dayData.select("tr")) {
-                                    String room = course.select("td").get(6).text();
-                                    String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
-                                    String shortName = getShortName(course.select("td").get(3).text());
-                                    vorlesungsArrayList.add(new CourseEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, "Gebäude " + building));
-                                }
-                                schedulerEntriesLocal.add(new SchedulerEntry(vorlesungsArrayList));
-                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -91,13 +76,6 @@ public class ScheduleParseDownloadManager {
         } else {
             uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
         }
-    }
-
-
-    private String getShortName(String completeName) {
-        String standartSplit = completeName.split("[(-]")[0];
-        //remove Words
-        return standartSplit.replace("Präsenz", "").trim();
     }
 
 }

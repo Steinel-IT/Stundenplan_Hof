@@ -1,9 +1,10 @@
 package com.steinel_it.stundenplanhof.objects;;
 
 public class CourseEntry {
-    private final String timeStart, timeEnd, name, shortName, dozent, room, gebaeude;
+    private final String day, timeStart, timeEnd, name, shortName, dozent, room, gebaeude;
 
-    public CourseEntry(String timeStart, String timeEnd, String name, String shortName, String dozent, String room, String gebaeude) {
+    public CourseEntry(String day, String timeStart, String timeEnd, String name, String shortName, String dozent, String room, String gebaeude) {
+        this.day = day;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
         this.name = name;
@@ -11,6 +12,10 @@ public class CourseEntry {
         this.dozent = dozent;
         this.room = room;
         this.gebaeude = gebaeude;
+    }
+
+    public String getDay() {
+        return day;
     }
 
     public String getTimeStart() {

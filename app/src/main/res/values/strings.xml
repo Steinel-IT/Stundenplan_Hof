@@ -40,4 +40,8 @@
     <string name="stundenplan_wird_geladen">Stundenplan wird geladen</string>
     <string name="app_zur_cksetzen">App zurücksetzen</string>
     <string name="aktualisieren">Aktualisieren</string>
+    <string name="dozent_wird_geladen">Dozent wird geladen</string>
+    <string name="mail_button">Mail Button</string>
+    <string name="phone_button">phone Button</string>
+    <string name="modulhandbuch_wird_geladen">Modulhandbuch wird geladen</string>
 </resources>

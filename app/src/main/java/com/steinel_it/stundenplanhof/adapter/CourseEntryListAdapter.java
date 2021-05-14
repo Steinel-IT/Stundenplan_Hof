@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.steinel_it.stundenplanhof.R;
@@ -48,12 +49,13 @@ public class CourseEntryListAdapter extends RecyclerView.Adapter<CourseEntryList
     }
 
     public static class VorlesungHolder extends RecyclerView.ViewHolder {
-        private final TextView time, room, name, dozent;
+        private final TextView day, time, room, name, dozent;
         private final int schedulerPos;
 
         public VorlesungHolder(View view, int schedulerPos) {
             super(view);
             this.schedulerPos = schedulerPos;
+            day = view.findViewById(R.id.textViewVorlesungDay);
             name = view.findViewById(R.id.textViewVorlesungName);
             time = view.findViewById(R.id.textViewVorlesungTime);
             room = view.findViewById(R.id.textViewVorlesungRoom);
@@ -61,6 +63,12 @@ public class CourseEntryListAdapter extends RecyclerView.Adapter<CourseEntryList
         }
 
         public void bind(final CourseEntry courseEntry, int pos, final OnItemClickListener clickListener) {
+            ConstraintLayout.LayoutParams timeLayoutParams = (ConstraintLayout.LayoutParams) time.getLayoutParams();
+            if (!courseEntry.getDay().isEmpty()) {
+                timeLayoutParams.setMargins(8, 0, 0, 0);
+                day.setText(courseEntry.getDay());
+                day.setVisibility(View.VISIBLE);
+            }
             name.setText(courseEntry.getName());
             time.setText(String.format("%1$s - %2$s", courseEntry.getTimeStart(), courseEntry.getTimeEnd()));
             room.setText(courseEntry.getRoom());

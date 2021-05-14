@@ -1,7 +1,6 @@
 package com.steinel_it.stundenplanhof;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.ChipGroup;
-import com.steinel_it.stundenplanhof.adapter.CourseEntryListAdapter;
 import com.steinel_it.stundenplanhof.adapter.SchedulerEntryListAdapter;
 import com.steinel_it.stundenplanhof.data_manager.ScheduleParseDownloadManager;
 import com.steinel_it.stundenplanhof.data_manager.StorageManager;
@@ -31,8 +29,6 @@ import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements HandleArrayListScheduleTaskInterface {
 
@@ -56,9 +52,10 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     StorageManager storageManager;
 
+    private boolean isNightMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO: Überall dran denken an SavedInstanceState!!
         super.onCreate(savedInstanceState);
         storageManager = new StorageManager();
         if (isFirstTime()) {
@@ -68,6 +65,18 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
             schedule = SingletonSchedule.getInstance();
             setupContent();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean("NightMode", isNightMode);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        isNightMode = savedInstanceState.getBoolean("NightMode");
     }
 
     @Override
@@ -82,15 +91,20 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 schedule = SingletonSchedule.getInstance();
                 setupContent();
             }
-        }
-        Toast.makeText(this, "Fehler im Setup aufgetreten", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(this, "Fehler im Setup aufgetreten", Toast.LENGTH_SHORT).show();
     }
 
     private void setupContent() {
         setupParseDownloadManager = new ScheduleParseDownloadManager(this);
         setContentView(R.layout.activity_main);
+        if (schedule.getScheduleList() == null || schedule.getDayTitle() == null) {
+            setupParseDownloadManager.getSchedule(shortCourse, semester);
+        } else {
+            schedule.sortSchedule();
+            setupRecyclerViews();
+        }
         setupFilterBar();
-        setupParseDownloadManager.getSchedule(shortCourse, semester);
     }
 
     private boolean isFirstTime() {
@@ -105,39 +119,35 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        menu.getItem(1).getSubMenu().getItem(1).setChecked(isNightMode);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_update:
-                Group loadingGroup = findViewById(R.id.groupLoadingScheduleMain);
-                RecyclerView recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
-                recyclerViewScheduler.setVisibility(View.GONE);
-                loadingGroup.setVisibility(View.VISIBLE);
-                setupParseDownloadManager.resetSchedule();
-                setupParseDownloadManager.getSchedule(shortCourse, semester);
-                break;
-            case R.id.action_reset:
-                storageManager.deleteSetupData(this, KEY_APP_SETTINGS);
-                schedule.setFilterType(SchedulerFilter.DAYS);
-                Intent intentFirstTime = new Intent(this, SetupActivity.class);
-                startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
-                break;
-            case R.id.action_darkmode:
-                int nightMode;
-                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                    nightMode = AppCompatDelegate.MODE_NIGHT_NO;
-                } else {
-                    nightMode = AppCompatDelegate.MODE_NIGHT_YES;
-                }
-                AppCompatDelegate.setDefaultNightMode(nightMode);
-                //TODO: setzt kein Check und erzeugt bei Dark auf Light ein Fehler
-                item.setChecked(nightMode != 2);
-                break;
-            case R.id.action_sync:
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_update) {
+            Group loadingGroup = findViewById(R.id.groupLoadingScheduleMain);
+            RecyclerView recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
+            recyclerViewScheduler.setVisibility(View.GONE);
+            loadingGroup.setVisibility(View.VISIBLE);
+            setupParseDownloadManager.resetSchedule();
+            setupParseDownloadManager.getSchedule(shortCourse, semester);
+        } else if (itemId == R.id.action_reset) {
+            storageManager.deleteSetupData(this, KEY_APP_SETTINGS);
+            schedule.setFilterType(SchedulerFilter.DAYS);
+            Intent intentFirstTime = new Intent(this, SetupActivity.class);
+            startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
+        } else if (itemId == R.id.action_darkmode) {
+            int nightMode;
+            isNightMode = !isNightMode;
+            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                nightMode = AppCompatDelegate.MODE_NIGHT_NO;
+            } else {
+                nightMode = AppCompatDelegate.MODE_NIGHT_YES;
+            }
+            AppCompatDelegate.setDefaultNightMode(nightMode);
+        } else if (itemId == R.id.action_sync) {
         }//TODO set Menue
         return super.onOptionsItemSelected(item);
     }
@@ -182,8 +192,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         RecyclerView recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
         loadingGroup.setVisibility(View.GONE);
         recyclerViewScheduler.setVisibility(View.VISIBLE);
-        System.out.println("Size: " +schedule.getTitleList().size());
-        System.out.println("Size: " +schedule.getScheduleList().size());
         schedulerEntryListAdapter = new SchedulerEntryListAdapter(schedule.getTitleList(), schedule.getScheduleList(), (courseEntry, schedulerPos, vorlesungPos, view) -> {
             createBottomSheet(courseEntry);//
             selectedCourseEntry = courseEntry;
@@ -231,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     public void onClickModul(View view) {
         Intent intentModule = new Intent(this, ModuleActivity.class);
+        System.out.println(shortCourse);
+        intentModule.putExtra(EXTRA_MESSAGE_NAME, shortCourse);
+        intentModule.putExtra(EXTRA_MESSAGE_SEMESTER, semester);
         startActivity(intentModule);
     }
 

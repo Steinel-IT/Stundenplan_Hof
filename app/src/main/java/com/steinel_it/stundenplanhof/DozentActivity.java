@@ -1,18 +1,32 @@
 package com.steinel_it.stundenplanhof;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
-public class DozentActivity extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
+
+import com.steinel_it.stundenplanhof.data_manager.DozentParseDownloadManager;
+import com.steinel_it.stundenplanhof.interfaces.HandleDozentTaskInterface;
+
+import java.util.ArrayList;
+
+public class DozentActivity extends AppCompatActivity implements HandleDozentTaskInterface {
+
+    DozentParseDownloadManager dozentParseDownloadManager;
+
+    ArrayList<String> titelList = new ArrayList<>();
+    ArrayList<String> contentList = new ArrayList<>();
+    String dozent;
+    String phone;
+    String mail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +34,8 @@ public class DozentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dozent);
         getSupportActionBar().setTitle("Dozenteninformation");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Bundle extras = getIntent().getExtras();
+        dozent = extras.getString(MainActivity.EXTRA_MESSAGE_DOZENT);
         setupContent();
     }
 
@@ -34,14 +50,14 @@ public class DozentActivity extends AppCompatActivity {
     }
 
     private void setupContent() {
-        //TODO: Content setzen
+        dozentParseDownloadManager = new DozentParseDownloadManager(this);
+        dozentParseDownloadManager.getDozent(dozent);
     }
 
     public void onClickFAB(View view) {
-        switch (view.getId()) {
-            case R.id.floatingActionButtonDozentMail:
-                System.out.println("Mail");
-                String mail = "187@gmail.com";
+        int id = view.getId();
+        if (id == R.id.floatingActionButtonDozentMail) {
+            if (mail != null) {
                 Intent intentMail = new Intent(Intent.ACTION_SENDTO);
                 intentMail.setData(Uri.parse("mailto:"));
                 intentMail.putExtra(Intent.EXTRA_EMAIL, new String[]{mail});
@@ -50,16 +66,32 @@ public class DozentActivity extends AppCompatActivity {
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(this, "Kein E-Mail Service gefunden", Toast.LENGTH_LONG).show();
                 }
-                break;
-            case R.id.floatingActionButtonDozentCall:
-                System.out.println("Call");
-                String phone = "+34666777888";
+            } else {
+                Toast.makeText(this, "E-Mail Adresse nicht vorhanden", Toast.LENGTH_SHORT).show();
+            }
+        } else if (id == R.id.floatingActionButtonDozentCall) {
+            if (phone != null) {
                 Intent intentCall = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
                 try {
                     startActivity(Intent.createChooser(intentCall, "Wähle einen Telefon Service:"));
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(this, "Kein Telefon Service gefunden", Toast.LENGTH_LONG).show();
                 }
+            } else {
+                Toast.makeText(this, "Telefon Nummer nicht vorhanden", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    @Override
+    public void onTaskFinished( ArrayList<String> titel, ArrayList<String> result, String image) {
+        this.titelList = titel;
+        this.contentList = result;
+        ScrollView scrollView = findViewById(R.id.scrollViewDozent);
+        Group loadingGroup = findViewById(R.id.groupLoadingDozent);
+        Group fabDozent = findViewById(R.id.groupFABDozent);
+        scrollView.setVisibility(View.VISIBLE);
+        loadingGroup.setVisibility(View.GONE);
+        fabDozent.setVisibility(View.VISIBLE);
     }
 }
