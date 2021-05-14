@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
             startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
         } else {
             schedule = SingletonSchedule.getInstance();
-            setupContent();
+            setupContent(false);
         }
     }
 
@@ -89,16 +89,17 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 shortCourse = extras.getString(SetupActivity.EXTRA_MESSAGE_SHORT_COURSE);
                 semester = extras.getString(SetupActivity.EXTRA_MESSAGE_SEMESTER);
                 schedule = SingletonSchedule.getInstance();
-                setupContent();
+                setupContent(true);
+                //TODO: Hier geht irgendwie das neuladen nicht man muss manuel neu laden
             }
         } else
             Toast.makeText(this, "Fehler im Setup aufgetreten", Toast.LENGTH_SHORT).show();
     }
 
-    private void setupContent() {
+    private void setupContent(boolean reload) {
         setupParseDownloadManager = new ScheduleParseDownloadManager(this);
         setContentView(R.layout.activity_main);
-        if (schedule.getScheduleList() == null || schedule.getDayTitle() == null) {
+        if (reload || schedule.getScheduleList() == null || schedule.getDayTitle() == null) {
             setupParseDownloadManager.getSchedule(shortCourse, semester);
         } else {
             schedule.sortSchedule();

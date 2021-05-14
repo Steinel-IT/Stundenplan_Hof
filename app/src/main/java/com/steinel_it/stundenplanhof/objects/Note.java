@@ -3,7 +3,7 @@ package com.steinel_it.stundenplanhof.objects;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 
-public class Note {
+public class Note implements Comparator<Note>{
     private final LocalDateTime saveDate;
     private String text;
 
@@ -29,6 +29,8 @@ public class Note {
         this.text = text;
     }
 
-    //TODO: Geht hier static?
-    public static Comparator<Note> sortComp = (note, note2) -> note.getSaveDate().compareTo(note2.getSaveDate());
+    @Override
+    public int compare(Note n1, Note n2) {
+        return n1.getSaveDate().compareTo(n2.getSaveDate());
+    }
 }

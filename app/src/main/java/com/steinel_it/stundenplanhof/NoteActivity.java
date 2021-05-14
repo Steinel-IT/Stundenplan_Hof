@@ -72,7 +72,6 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void deleteSavedNote(Note note, int position) {
-        System.out.println("Delete: " + position);
         noteArrayList.remove(note);
         noteListAdapter.notifyDataSetChanged();
         storageManager.deleteNote(note, getApplicationContext(), fileName);

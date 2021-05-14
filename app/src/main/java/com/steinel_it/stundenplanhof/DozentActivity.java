@@ -2,11 +2,17 @@ package com.steinel_it.stundenplanhof;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Space;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,11 +28,12 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
 
     DozentParseDownloadManager dozentParseDownloadManager;
 
-    ArrayList<String> titelList = new ArrayList<>();
-    ArrayList<String> contentList = new ArrayList<>();
+    ArrayList<String> titelList;
+    ArrayList<String> contentList;
     String dozent;
     String phone;
     String mail;
+    Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +57,51 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
     }
 
     private void setupContent() {
-        dozentParseDownloadManager = new DozentParseDownloadManager(this);
-        dozentParseDownloadManager.getDozent(dozent);
+        if (titelList == null || contentList == null) {
+            dozentParseDownloadManager = new DozentParseDownloadManager(this);
+            dozentParseDownloadManager.getDozent(dozent);
+        } else if (titelList.isEmpty() || contentList.isEmpty()) {
+            Group groupNothingToSee = findViewById(R.id.groupDozentNothingToSee);
+            Group loadingGroup = findViewById(R.id.groupLoadingDozent);
+            loadingGroup.setVisibility(View.GONE);
+            groupNothingToSee.setVisibility(View.VISIBLE);
+        } else {
+            TextView textViewName = findViewById(R.id.textViewDozentName);
+            TextView textViewTopContent = findViewById(R.id.textViewDozentTopContent);
+            textViewName.setText(titelList.get(0));
+            textViewTopContent.setText(contentList.get(0));
+            ImageView imageViewDozent = findViewById(R.id.imageViewDozent);
+            if (image != null) {
+                imageViewDozent.setImageBitmap(image);
+            } else {
+                imageViewDozent.setVisibility(View.GONE);
+            }
+            LinearLayout linearLayoutDozentContent = findViewById(R.id.linearLayoutDozentContent);
+            for (int i = 1; i < titelList.size(); i++) {
+                TextView textViewTitle = new TextView(this);
+                textViewTitle.setText(titelList.get(i));
+                textViewTitle.setTextSize(20);
+                textViewTitle.setTypeface(null, Typeface.BOLD);
+                TextView textViewText = new TextView(this);
+                if(i == 1) {
+                    textViewText.setText(contentList.get(i));
+                } else { //Manueller Abstand nach 1, weil Website nicht konstant ist
+                    StringBuilder sb = new StringBuilder(contentList.get(i));
+                    sb.append(System.lineSeparator());
+                    textViewText.setText(sb.toString());
+                }
+                textViewText.setTextSize(16);
+                linearLayoutDozentContent.addView(textViewTitle);
+                linearLayoutDozentContent.addView(textViewText);
+            }
+            //Set VISIBLE to Main Content and set GONE to Loading Screen
+            ScrollView scrollView = findViewById(R.id.scrollViewDozent);
+            Group loadingGroup = findViewById(R.id.groupLoadingDozent);
+            Group fabDozent = findViewById(R.id.groupFABDozent);
+            scrollView.setVisibility(View.VISIBLE);
+            loadingGroup.setVisibility(View.GONE);
+            fabDozent.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onClickFAB(View view) {
@@ -84,14 +134,14 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
     }
 
     @Override
-    public void onTaskFinished( ArrayList<String> titel, ArrayList<String> result, String image) {
+    public void onTaskFinished(ArrayList<String> titel, ArrayList<String> result, Bitmap image) {
         this.titelList = titel;
         this.contentList = result;
-        ScrollView scrollView = findViewById(R.id.scrollViewDozent);
-        Group loadingGroup = findViewById(R.id.groupLoadingDozent);
-        Group fabDozent = findViewById(R.id.groupFABDozent);
-        scrollView.setVisibility(View.VISIBLE);
-        loadingGroup.setVisibility(View.GONE);
-        fabDozent.setVisibility(View.VISIBLE);
+        if (!result.isEmpty()) {
+            this.phone = result.get(0).substring(result.get(0).indexOf("Fon: ") + 4, result.get(0).indexOf("Fax: ")).replace("(0) ", "").replace(" / ", "");
+            this.mail = result.get(0).substring(result.get(0).indexOf("E-Mail: ") + 7);
+            this.image = image;
+        }
+        setupContent();
     }
 }

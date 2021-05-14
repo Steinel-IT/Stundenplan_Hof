@@ -18,7 +18,7 @@ public class StorageManager {
         for (Map.Entry<String, ?> entry : savedMap.entrySet()) {
             resultNotes.add(new Note(entry.getValue().toString(), LocalDateTime.parse(entry.getKey())));
         }
-        resultNotes.sort(Note.sortComp);
+        resultNotes.stream().sorted();
         return resultNotes;
     }
 

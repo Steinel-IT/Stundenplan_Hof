@@ -44,4 +44,7 @@
     <string name="mail_button">Mail Button</string>
     <string name="phone_button">phone Button</string>
     <string name="modulhandbuch_wird_geladen">Modulhandbuch wird geladen</string>
+    <string name="profile_picture">Profile-Picture</string>
+    <string name="dozent_no_data">Keine Dozent Daten vorhanden</string>
+    <string name="nothingtoseeicon">nothingToSeeIcon</string>
 </resources>
