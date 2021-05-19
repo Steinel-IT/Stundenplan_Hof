@@ -3,6 +3,7 @@ package com.steinel_it.stundenplanhof;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.Group;
 import com.steinel_it.stundenplanhof.data_manager.DozentParseDownloadManager;
 import com.steinel_it.stundenplanhof.interfaces.HandleDozentTaskInterface;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class DozentActivity extends AppCompatActivity implements HandleDozentTaskInterface {
@@ -41,8 +42,16 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
         setContentView(R.layout.activity_dozent);
         getSupportActionBar().setTitle("Dozenteninformation");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Bundle extras = getIntent().getExtras();
-        dozent = extras.getString(MainActivity.EXTRA_MESSAGE_DOZENT);
+        if (savedInstanceState != null) {
+            titelList = savedInstanceState.getStringArrayList("titelList");
+            contentList = savedInstanceState.getStringArrayList("contentList");
+            phone = savedInstanceState.getString("phone");
+            mail = savedInstanceState.getString("mail");
+            image = bitmapToByteArray(savedInstanceState.getByteArray("imageBytes"));
+        } else {
+            Bundle extras = getIntent().getExtras();
+            dozent = extras.getString(MainActivity.EXTRA_MESSAGE_DOZENT);
+        }
         setupContent();
     }
 
@@ -54,6 +63,26 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putStringArrayList("titelList", titelList);
+        savedInstanceState.putStringArrayList("contentList", contentList);
+        savedInstanceState.putString("phone", phone);
+        savedInstanceState.putString("mail", mail);
+        savedInstanceState.putByteArray("imageBytes", getImageAsByteArray());
+    }
+
+    private byte[] getImageAsByteArray() {
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+        return outStream.toByteArray();
+    }
+
+    private Bitmap bitmapToByteArray(byte[] imageBytes) {
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
     private void setupContent() {
@@ -83,7 +112,7 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
                 textViewTitle.setTextSize(20);
                 textViewTitle.setTypeface(null, Typeface.BOLD);
                 TextView textViewText = new TextView(this);
-                if(i == 1) {
+                if (i == 1) {
                     textViewText.setText(contentList.get(i));
                 } else { //Manueller Abstand nach 1, weil Website nicht konstant ist
                     StringBuilder sb = new StringBuilder(contentList.get(i));
@@ -134,12 +163,12 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
     }
 
     @Override
-    public void onTaskFinished(ArrayList<String> titel, ArrayList<String> result, Bitmap image) {
+    public void onTaskFinished(ArrayList<String> titel, ArrayList<String> contentList, Bitmap image) {
         this.titelList = titel;
-        this.contentList = result;
-        if (!result.isEmpty()) {
-            this.phone = result.get(0).substring(result.get(0).indexOf("Fon: ") + 4, result.get(0).indexOf("Fax: ")).replace("(0) ", "").replace(" / ", "");
-            this.mail = result.get(0).substring(result.get(0).indexOf("E-Mail: ") + 7);
+        this.contentList = contentList;
+        if (!contentList.isEmpty()) {
+            this.phone = contentList.get(0).substring(contentList.get(0).indexOf("Fon: ") + 4, contentList.get(0).indexOf("Fax: ")).replace("(0) ", "").replace(" / ", "");
+            this.mail = contentList.get(0).substring(contentList.get(0).indexOf("E-Mail: ") + 7);
             this.image = image;
         }
         setupContent();

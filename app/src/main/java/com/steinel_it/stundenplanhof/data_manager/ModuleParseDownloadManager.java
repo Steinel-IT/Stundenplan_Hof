@@ -2,12 +2,12 @@ package com.steinel_it.stundenplanhof.data_manager;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.steinel_it.stundenplanhof.interfaces.HandleArrayListScheduleTaskInterface;
-import com.steinel_it.stundenplanhof.objects.CourseEntry;
-import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
+import com.steinel_it.stundenplanhof.interfaces.HandleDozentTaskInterface;
+import com.steinel_it.stundenplanhof.interfaces.HandleTitleContentTaskInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,55 +27,66 @@ import okhttp3.Response;
 
 public class ModuleParseDownloadManager {
 
-    HandleArrayListScheduleTaskInterface context;
+    HandleTitleContentTaskInterface context;
 
-    ArrayList<SchedulerEntry> schedulerEntries;
-    ArrayList<String> titelList;
-
-    public ModuleParseDownloadManager(HandleArrayListScheduleTaskInterface context) {
+    public ModuleParseDownloadManager(HandleTitleContentTaskInterface context) {
         this.context = context;
     }
 
     private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
 
-    public void getSchedule(String shortCourse, String semester) {
-        if (schedulerEntries == null || titelList == null) {
-            String replacedSemester = semester.replace(" - ", "_").replace(" ", "_");
-            OkHttpClient okClient = new OkHttpClient();
-            String url = "https://www.hof-university.de/index.php?type=1421771406&id=79&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadVorlesungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + replacedSemester + "&tx_stundenplan_stundenplan[view]=alle";
-            Request request = new Request.Builder().url(url).build();
+    public void getModule(String shortCourse, String year, String shortLecture) {
+        String replacedYear = year.replace(" ", "%20");
+        OkHttpClient okClient = new OkHttpClient();
+        String url = "https://www.hof-university.de/index.php?type=1421771407&id=167&tx_modulhandbuch_modulhandbuch[controller]=Ajax&tx_modulhandbuch_modulhandbuch[action]=loadModulhandbuecher&tx_modulhandbuch_modulhandbuch[cl]=" + shortCourse + "&tx_modulhandbuch_modulhandbuch[se]=&tx_modulhandbuch_modulhandbuch[ye]=" + replacedYear;
+        Request requestAllModuleBooks = new Request.Builder().url(url).build();
+        okClient.newCall(requestAllModuleBooks).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Module Loading", "Failed by loading module books");
+            }
 
-            okClient.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    System.out.println("Fail");
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        ArrayList<SchedulerEntry> schedulerEntriesLocal = new ArrayList<>();
-                        ArrayList<String> titelListLocal = new ArrayList<>();
-                        try {
-                            assert response.body() != null;
-                            String semesterExpr = new JSONObject(response.body().string()).getString("vorlesungen");
-                            Document docCompelte = Jsoup.parse(semesterExpr);
-                            Elements dayContent = docCompelte.select("div[class=hide-for-small]").select("table");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        assert response.body() != null;
+                        String AllLinksExpr = new JSONObject(response.body().string()).getString("content");
+                        Document docCompelte = Jsoup.parse(AllLinksExpr);
+                        Elements links = docCompelte.select("tr");
+                        for (Element linkElement : links) {
+                            if (linkElement.text().contains(shortLecture)) {
+                                //Build new URL
+                                String moduleURL = "https://www.hof-university.de/" + linkElement.select("a").attr("href");
+                                Request requestModuleBook = new Request.Builder().url(moduleURL).build();
+                                //Download specific ModuleBook
+                                Response responseModuleBook = okClient.newCall(requestModuleBook).execute();
+                                assert responseModuleBook.body() != null;
+                                Document moduleDoc = Jsoup.parse(responseModuleBook.body().string());
+                                Elements rows = moduleDoc.select("tr");
+                                ArrayList<String> titelList = new ArrayList<>();
+                                ArrayList<String> contentList = new ArrayList<>();
+                                for (Element row : rows) {
+                                    Elements rowData = row.select("td");
+                                    titelList.add(rowData.get(0).text());
+                                    contentList.add(rowData.get(1).text());
+                                }
+                                uiThreadHandler.post(() -> context.onTaskFinished(titelList, contentList));
+                                return;
+                            }
                         }
-                        schedulerEntries = schedulerEntriesLocal;
-                        titelList = titelListLocal;
-                        uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntriesLocal, titelListLocal));
-                    } else {
-                        throw new IOException("Download not successful");
+                        uiThreadHandler.post(() -> context.onTaskFinished(null, null));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+
+
+                    uiThreadHandler.post(() -> context.onTaskFinished(null, null));
+                } else {
+                    throw new IOException("Download not successful");
                 }
-            });
-        } else {
-            uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
-        }
+            }
+        });
     }
 
 }

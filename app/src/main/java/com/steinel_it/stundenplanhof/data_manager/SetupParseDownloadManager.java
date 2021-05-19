@@ -3,6 +3,7 @@ package com.steinel_it.stundenplanhof.data_manager;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.steinel_it.stundenplanhof.interfaces.HandleArrayListStringTaskInterface;
 
@@ -113,7 +114,7 @@ public class SetupParseDownloadManager {
         okClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("Fail");
+                Log.e("Module Loading", "Failed by loading setup data");
             }
 
             @Override

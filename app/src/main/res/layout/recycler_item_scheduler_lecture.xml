@@ -8,19 +8,19 @@
 
 
     <TextView
-        android:id="@+id/textViewVorlesungDay"
+        android:id="@+id/textViewLectureDay"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text=""
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/textViewVorlesungTime"
-        app:layout_constraintEnd_toEndOf="@+id/textViewVorlesungTime"
-        app:layout_constraintStart_toStartOf="@+id/textViewVorlesungTime"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLectureTime"
+        app:layout_constraintEnd_toEndOf="@+id/textViewLectureTime"
+        app:layout_constraintStart_toStartOf="@+id/textViewLectureTime"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewVorlesungTime"
+        android:id="@+id/textViewLectureTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -28,50 +28,50 @@
         android:text=""
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textViewVorlesungRoom"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLectureRoom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewVorlesungDay" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewLectureDay" />
 
     <TextView
-        android:id="@+id/textViewVorlesungRoom"
+        android:id="@+id/textViewLectureRoom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textViewVorlesungTime"
-        app:layout_constraintStart_toStartOf="@+id/textViewVorlesungTime"
-        app:layout_constraintTop_toBottomOf="@id/textViewVorlesungTime"
+        app:layout_constraintEnd_toEndOf="@+id/textViewLectureTime"
+        app:layout_constraintStart_toStartOf="@+id/textViewLectureTime"
+        app:layout_constraintTop_toBottomOf="@id/textViewLectureTime"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/textViewVorlesungName"
+        android:id="@+id/textViewLectureName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text=""
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewVorlesungDozent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/textViewVorlesungTime"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLectureDozent"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewLectureClickIcon"
+        app:layout_constraintStart_toEndOf="@+id/textViewLectureTime"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewVorlesungDozent"
+        android:id="@+id/textViewLectureDozent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text=""
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/textViewVorlesungTime"
-        app:layout_constraintStart_toStartOf="@+id/textViewVorlesungName"
-        app:layout_constraintTop_toBottomOf="@+id/textViewVorlesungName" />
+        app:layout_constraintEnd_toStartOf="@+id/imageViewLectureClickIcon"
+        app:layout_constraintStart_toEndOf="@+id/textViewLectureTime"
+        app:layout_constraintStart_toStartOf="@+id/textViewLectureName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLectureName" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewLectureClickIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

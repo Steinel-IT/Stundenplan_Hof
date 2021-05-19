@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +22,7 @@ import com.steinel_it.stundenplanhof.adapter.SchedulerEntryListAdapter;
 import com.steinel_it.stundenplanhof.data_manager.ScheduleParseDownloadManager;
 import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 import com.steinel_it.stundenplanhof.interfaces.HandleArrayListScheduleTaskInterface;
-import com.steinel_it.stundenplanhof.objects.CourseEntry;
+import com.steinel_it.stundenplanhof.objects.LectureEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
@@ -37,14 +36,17 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     public static final String EXTRA_MESSAGE_DOZENT = "com.steinel_it.stundenplanhof.dozent";
     public static final String EXTRA_MESSAGE_NAME = "com.steinel_it.stundenplanhof.name";
     public static final String EXTRA_MESSAGE_SEMESTER = "com.steinel_it.stundenplanhof.semester";
+    public static final String EXTRA_MESSAGE_LECTURE = "com.steinel_it.stundenplanhof.lecture";
+    public static final String EXTRA_MESSAGE_YEAR = "com.steinel_it.stundenplanhof.year";
 
     private String course;
     private String shortCourse;
     private String semester;
+    private String year;
 
     ScheduleParseDownloadManager setupParseDownloadManager;
 
-    CourseEntry selectedCourseEntry;
+    LectureEntry selectedLectureEntry;
 
     SchedulerEntryListAdapter schedulerEntryListAdapter;
 
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     StorageManager storageManager;
 
-    private boolean isNightMode = false;
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +72,11 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putBoolean("NightMode", isNightMode);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        isNightMode = savedInstanceState.getBoolean("NightMode");
     }
 
     @Override
@@ -88,13 +88,15 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 course = extras.getString(SetupActivity.EXTRA_MESSAGE_COURSE);
                 shortCourse = extras.getString(SetupActivity.EXTRA_MESSAGE_SHORT_COURSE);
                 semester = extras.getString(SetupActivity.EXTRA_MESSAGE_SEMESTER);
+                year = extras.getString(SetupActivity.EXTRA_MESSAGE_YEAR);
                 schedule = SingletonSchedule.getInstance();
                 setupContent(true);
-                //TODO: Hier geht irgendwie das neuladen nicht man muss manuel neu laden
             }
         } else
             Toast.makeText(this, "Fehler im Setup aufgetreten", Toast.LENGTH_SHORT).show();
     }
+
+    //TODO Stundenplanänderungen anzeigen
 
     private void setupContent(boolean reload) {
         setupParseDownloadManager = new ScheduleParseDownloadManager(this);
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         course = setupData[0];
         shortCourse = setupData[1];
         semester = setupData[2];
+        year = setupData[3];
         return setupData[0] == null && setupData[1] == null && setupData[2] == null;
     }
 
@@ -120,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        menu.getItem(1).getSubMenu().getItem(1).setChecked(isNightMode);
         return true;
     }
 
@@ -139,17 +141,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
             schedule.setFilterType(SchedulerFilter.DAYS);
             Intent intentFirstTime = new Intent(this, SetupActivity.class);
             startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
-        } else if (itemId == R.id.action_darkmode) { //TODO raus machen
-            int nightMode;
-            isNightMode = !isNightMode;
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                nightMode = AppCompatDelegate.MODE_NIGHT_NO;
-            } else {
-                nightMode = AppCompatDelegate.MODE_NIGHT_YES;
-            }
-            AppCompatDelegate.setDefaultNightMode(nightMode);
         } else if (itemId == R.id.action_sync) {
-        }//TODO set Menue
+        }//TODO set Menue Sync
         return super.onOptionsItemSelected(item);
     }
 
@@ -195,27 +188,27 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         recyclerViewScheduler.setVisibility(View.VISIBLE);
         schedulerEntryListAdapter = new SchedulerEntryListAdapter(schedule.getTitleList(), schedule.getScheduleList(), (courseEntry, schedulerPos, vorlesungPos, view) -> {
             createBottomSheet(courseEntry);//
-            selectedCourseEntry = courseEntry;
+            selectedLectureEntry = courseEntry;
         });
         recyclerViewScheduler.setAdapter(schedulerEntryListAdapter);
     }
 
-    private void createBottomSheet(CourseEntry courseEntry) {
+    private void createBottomSheet(LectureEntry lectureEntry) {
         BottomSheetDialog bottomSheetDialogVorlesung = new BottomSheetDialog(MainActivity.this);
         bottomSheetDialogVorlesung.getBehavior().setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels - 100);
         View buttomSheet = getLayoutInflater().inflate(R.layout.modal_sheet_vorlesung, null);
 
         TextView textViewVorlesungName = buttomSheet.findViewById(R.id.textViewBottomSheetVorlesungName);
-        textViewVorlesungName.setText(courseEntry.getShortName());
+        textViewVorlesungName.setText(lectureEntry.getShortName());
 
         TextView textViewDozentName = buttomSheet.findViewById(R.id.textViewBottomSheetDozentName);
-        textViewDozentName.setText(courseEntry.getDozent());
+        textViewDozentName.setText(lectureEntry.getDozent());
 
         TextView textViewRoomName = buttomSheet.findViewById(R.id.textViewBottomSheetRoomName);
-        textViewRoomName.setText(courseEntry.getRoom());
+        textViewRoomName.setText(lectureEntry.getRoom());
 
         TextView textViewRoomDetail = buttomSheet.findViewById(R.id.textViewBottomSheetRoomDetail);
-        textViewRoomDetail.setText(courseEntry.getGebaeude());
+        textViewRoomDetail.setText(lectureEntry.getBuilding());
 
         bottomSheetDialogVorlesung.setContentView(buttomSheet);
         bottomSheetDialogVorlesung.show();
@@ -223,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     public void onClickDozent(View view) {
         Intent intentDozent = new Intent(this, DozentActivity.class);
-        intentDozent.putExtra(EXTRA_MESSAGE_DOZENT, selectedCourseEntry.getDozent());
+        intentDozent.putExtra(EXTRA_MESSAGE_DOZENT, selectedLectureEntry.getDozent());
         startActivity(intentDozent);
     }
 
@@ -233,16 +226,16 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     public void onClickNote(View view) {
         Intent intentDozent = new Intent(this, NoteActivity.class);
-        intentDozent.putExtra(EXTRA_MESSAGE_NAME, selectedCourseEntry.getShortName());
+        intentDozent.putExtra(EXTRA_MESSAGE_NAME, selectedLectureEntry.getShortName());
         intentDozent.putExtra(EXTRA_MESSAGE_SEMESTER, semester);
         startActivity(intentDozent);
     }
 
     public void onClickModul(View view) {
         Intent intentModule = new Intent(this, ModuleActivity.class);
-        System.out.println(shortCourse);
         intentModule.putExtra(EXTRA_MESSAGE_NAME, shortCourse);
-        intentModule.putExtra(EXTRA_MESSAGE_SEMESTER, semester);
+        intentModule.putExtra(EXTRA_MESSAGE_LECTURE, selectedLectureEntry.getShortName());
+        intentModule.putExtra(EXTRA_MESSAGE_YEAR, year);
         startActivity(intentModule);
     }
 

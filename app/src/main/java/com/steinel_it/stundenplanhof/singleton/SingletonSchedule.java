@@ -1,6 +1,6 @@
 package com.steinel_it.stundenplanhof.singleton;
 
-import com.steinel_it.stundenplanhof.objects.CourseEntry;
+import com.steinel_it.stundenplanhof.objects.LectureEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 
@@ -57,11 +57,11 @@ public class SingletonSchedule {
             } else {
                 scheduleList.clear();
             }
-            HashMap<String, ArrayList<CourseEntry>> sortedMap = new HashMap<>();
+            HashMap<String, ArrayList<LectureEntry>> sortedMap = new HashMap<>();
             if (filterType == SchedulerFilter.VORLESUNGEN) {
-                ArrayList<CourseEntry> allCourses = new ArrayList<>();
+                ArrayList<LectureEntry> allCourses = new ArrayList<>();
                 getAllCourses(allCourses);
-                for (CourseEntry entry : allCourses) {
+                for (LectureEntry entry : allCourses) {
                     if (!sortedMap.containsKey(entry.getShortName())) {
                         sortedMap.put(entry.getShortName(), new ArrayList<>());
                     }
@@ -72,9 +72,9 @@ public class SingletonSchedule {
                     scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
                 }
             } else if (filterType == SchedulerFilter.ROOMS) {
-                ArrayList<CourseEntry> allCourses = new ArrayList<>();
+                ArrayList<LectureEntry> allCourses = new ArrayList<>();
                 getAllCourses(allCourses);
-                for (CourseEntry entry : allCourses) {
+                for (LectureEntry entry : allCourses) {
                     if (!sortedMap.containsKey(entry.getRoom())) {
                         sortedMap.put(entry.getRoom(), new ArrayList<>());
                     }
@@ -85,9 +85,9 @@ public class SingletonSchedule {
                     scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
                 }
             } else if (filterType == SchedulerFilter.DOZENTEN) {
-                ArrayList<CourseEntry> allCourses = new ArrayList<>();
+                ArrayList<LectureEntry> allCourses = new ArrayList<>();
                 getAllCourses(allCourses);
-                for (CourseEntry entry : allCourses) {
+                for (LectureEntry entry : allCourses) {
                     if (!sortedMap.containsKey(entry.getDozent())) {
                         sortedMap.put(entry.getDozent(), new ArrayList<>());
                     }
@@ -104,7 +104,7 @@ public class SingletonSchedule {
         }
     }
 
-    private void getAllCourses(ArrayList<CourseEntry> allCourses) {
+    private void getAllCourses(ArrayList<LectureEntry> allCourses) {
         for (SchedulerEntry scheduleEntry : daySortedSchedule) {
             allCourses.addAll(scheduleEntry.getCourseEntryArrayList());
         }

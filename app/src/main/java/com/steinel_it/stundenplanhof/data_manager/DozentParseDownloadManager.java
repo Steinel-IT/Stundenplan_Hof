@@ -52,7 +52,7 @@ public class DozentParseDownloadManager {
             okClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    System.out.println("Fail");
+                    Log.e("Module Loading", "Failed by loading dozent");
                 }
 
                 @Override
@@ -100,10 +100,10 @@ public class DozentParseDownloadManager {
                             }
                         }
 
-                        //Parse Description //TODO: Peter Stöhr hat Problem wegen Aufzählung
+                        //Parse Description
                         Element dozentDescRaw = docCompelte.select("div[class=six mobile-one columns]").first();
                         titelList.add(dozentDescRaw.select("div[class=row sitesubtitle]").text());
-                        contentList.add(dozentDescRaw.select("p").text());
+                        contentList.add(dozentDescRaw.text());
 
                         //Load Image
                         if (imageURL != null) {

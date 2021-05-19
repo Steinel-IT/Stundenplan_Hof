@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.steinel_it.stundenplanhof.R;
-import com.steinel_it.stundenplanhof.objects.CourseEntry;
+import com.steinel_it.stundenplanhof.objects.LectureEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 
 import java.util.ArrayList;
@@ -19,12 +19,12 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
 
     private final ArrayList<String> titelList;
     private final ArrayList<SchedulerEntry> schedulerEntryArrayList;
-    private final CourseEntryListAdapter.VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener;
+    private final LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener;
 
-    public SchedulerEntryListAdapter(ArrayList<String> titelList, ArrayList<SchedulerEntry> schedulerEntryArrayList, CourseEntryListAdapter.VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener) {
+    public SchedulerEntryListAdapter(ArrayList<String> titelList, ArrayList<SchedulerEntry> schedulerEntryArrayList, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
         this.titelList = titelList;
         this.schedulerEntryArrayList = schedulerEntryArrayList;
-        this.vorlesungOnItemClickListener = vorlesungOnItemClickListener;
+        this.lectureOnItemClickListener = lectureOnItemClickListener;
     }
 
     @NonNull
@@ -36,8 +36,8 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SchedulerHolder vorlesungHolder, int position) {
-        vorlesungHolder.bind(titelList.get(position), schedulerEntryArrayList.get(position).getCourseEntryArrayList(), position, vorlesungOnItemClickListener);
+    public void onBindViewHolder(@NonNull SchedulerHolder courseHolder, int position) {
+        courseHolder.bind(titelList.get(position), schedulerEntryArrayList.get(position).getCourseEntryArrayList(), position, lectureOnItemClickListener);
     }
 
     @Override
@@ -47,21 +47,21 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
 
     public static class SchedulerHolder extends RecyclerView.ViewHolder {
         TextView name;
-        RecyclerView vorlesungRecyclerView;
+        RecyclerView lectureRecyclerView;
 
         public SchedulerHolder(View view) {
             super(view);
 
             name = view.findViewById(R.id.textViewSchedulerName);
-            vorlesungRecyclerView = view.findViewById(R.id.recyclerViewVorlesungen);
-            vorlesungRecyclerView.addItemDecoration(new DividerItemDecoration(vorlesungRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+            lectureRecyclerView = view.findViewById(R.id.recyclerViewCourse);
+            lectureRecyclerView.addItemDecoration(new DividerItemDecoration(lectureRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         }
 
-        public void bind(final String entryName, final ArrayList<CourseEntry> courseEntryArrayList, final int schedulerPos, CourseEntryListAdapter.VorlesungHolder.OnItemClickListener vorlesungOnItemClickListener) {
+        public void bind(final String entryName, final ArrayList<LectureEntry> lectureEntryArrayList, final int schedulerPos, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
             name.setText(entryName);
-            CourseEntryListAdapter courseEntryListAdapter = new CourseEntryListAdapter(courseEntryArrayList, vorlesungOnItemClickListener);
-            courseEntryListAdapter.setSchedulerPos(schedulerPos);
-            vorlesungRecyclerView.setAdapter(courseEntryListAdapter);
+            LectureEntryListAdapter lectureEntryListAdapter = new LectureEntryListAdapter(lectureEntryArrayList, lectureOnItemClickListener);
+            lectureEntryListAdapter.setSchedulerPos(schedulerPos);
+            lectureRecyclerView.setAdapter(lectureEntryListAdapter);
         }
     }
 }

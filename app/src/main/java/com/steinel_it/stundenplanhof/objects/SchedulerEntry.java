@@ -3,20 +3,20 @@ package com.steinel_it.stundenplanhof.objects;
 import java.util.ArrayList;
 
 public class SchedulerEntry {
-    ArrayList<CourseEntry> courseEntryArrayList;
+    ArrayList<LectureEntry> lectureEntryArrayList;
 
-    public SchedulerEntry(ArrayList<CourseEntry> courseEntryArrayList) {
-        this.courseEntryArrayList = courseEntryArrayList;
+    public SchedulerEntry(ArrayList<LectureEntry> lectureEntryArrayList) {
+        this.lectureEntryArrayList = lectureEntryArrayList;
     }
 
-    public ArrayList<CourseEntry> getCourseEntryArrayList() {
-        return courseEntryArrayList;
+    public ArrayList<LectureEntry> getCourseEntryArrayList() {
+        return lectureEntryArrayList;
     }
 
     @Override
     public String toString() {
         return "SchedulerEntry{" +
-                "courseEntryArrayList=" + courseEntryArrayList +
+                "courseEntryArrayList=" + lectureEntryArrayList +
                 '}';
     }
 }

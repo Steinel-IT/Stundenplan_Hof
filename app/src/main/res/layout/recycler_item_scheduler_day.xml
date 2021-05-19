@@ -44,13 +44,13 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="8dp"
                 android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toTopOf="@+id/recyclerViewVorlesungen"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerViewCourse"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewSchedulerName" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewVorlesungen"
+                android:id="@+id/recyclerViewCourse"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -58,7 +58,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerScheduler"
-                tools:listitem="@layout/recycler_item_scheduler_vorlesung" />
+                tools:listitem="@layout/recycler_item_scheduler_lecture" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

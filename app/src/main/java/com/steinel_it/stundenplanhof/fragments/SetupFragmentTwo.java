@@ -67,7 +67,7 @@ public class SetupFragmentTwo extends Fragment {
 
         //Set SemesterSpinner presetValue
         ArrayList<String> semesterPreset = new ArrayList<>();
-        semesterPreset.add(getString(R.string.loadSemester)); //TODO zur String datei einbinden
+        semesterPreset.add(getString(R.string.loadSemester));
         ArrayAdapter<String> spinnerSemesterPresetAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, semesterPreset);
         spinnerSemesterPresetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSemester.setAdapter(spinnerSemesterPresetAdapter);

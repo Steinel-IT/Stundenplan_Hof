@@ -2,11 +2,12 @@ package com.steinel_it.stundenplanhof.data_manager;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.steinel_it.stundenplanhof.interfaces.HandleArrayListScheduleTaskInterface;
-import com.steinel_it.stundenplanhof.objects.CourseEntry;
+import com.steinel_it.stundenplanhof.objects.LectureEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 
 import org.json.JSONException;
@@ -52,7 +53,7 @@ public class ScheduleParseDownloadManager {
             okClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    System.out.println("Fail");
+                    Log.e("Module Loading", "Failed by loading schedule");
                 }
 
                 @Override
@@ -68,12 +69,12 @@ public class ScheduleParseDownloadManager {
                             for (int i = 1; i < dayContent.size(); i++) {
                                 titelListLocal.add(dayContent.get(i).select("thead").first().text());
                                 Element dayData = dayContent.get(i).select("tbody").first();
-                                ArrayList<CourseEntry> vorlesungsArrayList = new ArrayList<>();
+                                ArrayList<LectureEntry> vorlesungsArrayList = new ArrayList<>();
                                 for (Element course : dayData.select("tr")) {
                                     String room = course.select("td").get(6).text();
                                     String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
                                     String shortName = getShortName(course.select("td").get(3).text());
-                                    vorlesungsArrayList.add(new CourseEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, "Gebäude " + building));
+                                    vorlesungsArrayList.add(new LectureEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, "Gebäude " + building));
                                 }
                                 schedulerEntriesLocal.add(new SchedulerEntry(vorlesungsArrayList));
                             }
@@ -95,7 +96,7 @@ public class ScheduleParseDownloadManager {
 
 
     private String getShortName(String completeName) {
-        String standartSplit = completeName.split("[(-]")[0];
+        String standartSplit = completeName.split(" - |\\(")[0];
         //remove Words
         return standartSplit.replace("Präsenz", "").trim();
     }

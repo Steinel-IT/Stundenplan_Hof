@@ -21,13 +21,6 @@
                 app:showAsAction="never" />
 
             <item
-                android:id="@+id/action_darkmode"
-                android:checkable="true"
-                android:icon="@drawable/ic_brightness"
-                android:title="@string/dark_mode"
-                app:showAsAction="never" />
-
-            <item
                 android:id="@+id/action_reset"
                 android:icon="@drawable/ic_cancel"
                 android:title="@string/app_zur_cksetzen"
