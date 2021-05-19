@@ -27,6 +27,7 @@ public class SetupParseDownloadManager {
 
     public static final int REQUEST_CODE_COURSES = 0;
     public static final int REQUEST_CODE_SEMESTER = 1;
+    public static final int REQUEST_CODE_YEARS = 2;
 
     HandleArrayListStringTaskInterface context;
 
@@ -85,6 +86,26 @@ public class SetupParseDownloadManager {
         uiThreadHandler.post(() -> context.onTaskFinished(REQUEST_CODE_SEMESTER, new ArrayList<>(semester)));
     }
 
+    public void getYears(int... selectedCourseIndex) {
+        final ArrayList<String> years = new ArrayList<>();
+        if (selectedCourseIndex.length != 0) {
+            System.out.println(shortCourses.get(selectedCourseIndex[0]));
+            downloadSetupForm(REQUEST_CODE_YEARS, "https://www.hof-university.de/index.php?type=1421771407&id=167&tx_modulhandbuch_modulhandbuch[controller]=Ajax&tx_modulhandbuch_modulhandbuch[action]=loadYear&tx_modulhandbuch_modulhandbuch[cl]=" + shortCourses.get(selectedCourseIndex[0]));
+            return;
+        }
+        try {
+            String semesterExpr = new JSONObject(semesterResponse).getString("year");
+            Document doc = Jsoup.parse(semesterExpr);
+            Element select = doc.select("select[name=tx_modulhandbuch_modulhandbuch[ye]]").first();
+            for (Element element : select.children()) {
+                years.add(element.text());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        uiThreadHandler.post(() -> context.onTaskFinished(REQUEST_CODE_YEARS, new ArrayList<>(years)));
+    }
+
     private void downloadSetupForm(int requestCode, String url) {
         OkHttpClient okClient = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -106,6 +127,10 @@ public class SetupParseDownloadManager {
                         case REQUEST_CODE_SEMESTER:
                             semesterResponse = response.body().string();
                             getSemester();
+                            break;
+                        case REQUEST_CODE_YEARS:
+                            semesterResponse = response.body().string();
+                            getYears();
                             break;
                     }
                 } else {

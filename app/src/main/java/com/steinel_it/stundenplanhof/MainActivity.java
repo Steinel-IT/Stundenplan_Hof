@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
             schedule.setFilterType(SchedulerFilter.DAYS);
             Intent intentFirstTime = new Intent(this, SetupActivity.class);
             startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
-        } else if (itemId == R.id.action_darkmode) {
+        } else if (itemId == R.id.action_darkmode) { //TODO raus machen
             int nightMode;
             isNightMode = !isNightMode;
             if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {

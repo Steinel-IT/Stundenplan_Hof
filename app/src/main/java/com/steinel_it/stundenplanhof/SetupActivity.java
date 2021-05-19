@@ -28,6 +28,7 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
     public static final String EXTRA_MESSAGE_COURSE = "com.steinel_it.stundenplanhof.dozent";
     public static final String EXTRA_MESSAGE_SHORT_COURSE = "com.steinel_it.stundenplanhof.name";
     public static final String EXTRA_MESSAGE_SEMESTER = "com.steinel_it.stundenplanhof.semester";
+    public static final String EXTRA_MESSAGE_YEAR = "com.steinel_it.stundenplanhof.year";
 
     private SetupParseDownloadManager setupParseDownloadManager;
     private SetupViewPager pager;
@@ -36,6 +37,7 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
     private String selectedCourse;
     private String selectedShortCourse;
     private String selectedSemester;
+    private String selectedYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +72,16 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
     }
 
     public void onClickSetupFab(View view) {
-        if (pager.getCurrentItem() == 1 && (selectedCourse == null || selectedSemester == null)) {
+        if (pager.getCurrentItem() == 1 && (selectedCourse == null || selectedSemester == null || selectedYear == null)) {
             pager.setSwipeEnabled(false);
-            Toast.makeText(this, "Wählen Sie Ihren Studiengang und das Semester", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.selectAllInSetup, Toast.LENGTH_SHORT).show();
         } else if (pager.getCurrentItem() == 2) {
-            new StorageManager().saveSetupData(getApplicationContext(), MainActivity.KEY_APP_SETTINGS, selectedCourse, selectedShortCourse, selectedSemester);
+            new StorageManager().saveSetupData(getApplicationContext(), MainActivity.KEY_APP_SETTINGS, selectedCourse, selectedShortCourse, selectedSemester, selectedYear);
             Intent intentToMain = new Intent();
             intentToMain.putExtra(EXTRA_MESSAGE_COURSE, selectedCourse);
             intentToMain.putExtra(EXTRA_MESSAGE_SHORT_COURSE, selectedShortCourse);
             intentToMain.putExtra(EXTRA_MESSAGE_SEMESTER, selectedSemester);
+            intentToMain.putExtra(EXTRA_MESSAGE_YEAR, selectedYear);
             setResult(RESULT_OK, intentToMain);
             finish();
         } else {
@@ -123,6 +126,9 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
             case SetupParseDownloadManager.REQUEST_CODE_SEMESTER:
                 ((SetupFragmentTwo) fragmentPageList.get(1)).setSemester(result);
                 break;
+            case SetupParseDownloadManager.REQUEST_CODE_YEARS:
+                ((SetupFragmentTwo) fragmentPageList.get(1)).setYears(result);
+                break;
         }
     }
 
@@ -137,6 +143,7 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
                 selectedCourse = item;
                 selectedShortCourse = setupParseDownloadManager.getShortCourse(index);
                 setupParseDownloadManager.getSemester(index);
+                setupParseDownloadManager.getYears(index);
                 break;
             case SetupFragmentTwo.SELECT_CODE_SEMESTER:
                 if (index == -1) {
@@ -144,7 +151,17 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
                     break;
                 }
                 selectedSemester = item;
-                pager.setSwipeEnabled(true);
+                if (selectedYear != null)
+                    pager.setSwipeEnabled(true);
+                break;
+            case SetupFragmentTwo.SELECT_CODE_YEAR:
+                if (index == -1) {
+                    selectedYear = null;
+                    break;
+                }
+                selectedYear = item;
+                if (selectedSemester != null)
+                    pager.setSwipeEnabled(true);
                 break;
         }
     }

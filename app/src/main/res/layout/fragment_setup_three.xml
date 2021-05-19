@@ -36,7 +36,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewSetupSynch"
         style="@style/SetupCardStyle"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewSetupDarkMode"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewSetupSettings">
@@ -46,22 +46,6 @@
             style="@style/CardContentStyle"
             android:checked="true"
             android:text="@string/kalender_sync"
-            android:textSize="18sp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewSetupDarkMode"
-        style="@style/SetupCardStyle"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewSetupSynch">
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchSetupDarkMode"
-            style="@style/CardContentStyle"
-            android:text="@string/dark_mode"
             android:textSize="18sp" />
     </androidx.cardview.widget.CardView>
 

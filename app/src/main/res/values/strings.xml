@@ -47,4 +47,7 @@
     <string name="profile_picture">Profile-Picture</string>
     <string name="dozent_no_data">Keine Dozent Daten vorhanden</string>
     <string name="nothingtoseeicon">nothingToSeeIcon</string>
+    <string name="selectAllInSetup">Wählen Sie Ihren Studiengang, das Semester und das Studienjahr</string>
+    <string name="loadSemester">Semester werden geladen</string>
+    <string name="loadYear">Studienjahre werden geladen</string>
 </resources>

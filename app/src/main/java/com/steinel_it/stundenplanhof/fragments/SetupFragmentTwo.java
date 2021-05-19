@@ -27,11 +27,12 @@ public class SetupFragmentTwo extends Fragment {
 
     public static final int SELECT_CODE_COURSES = 0;
     public static final int SELECT_CODE_SEMESTER = 1;
+    public static final int SELECT_CODE_YEAR = 2;
 
     SetupValueInterface setupValueInterface;
     View view;
 
-    ArrayList<String> semesterPreset;
+
 
     public SetupFragmentTwo() {
     }
@@ -62,24 +63,30 @@ public class SetupFragmentTwo extends Fragment {
     public void setSpinnerSelect() {
         Spinner spinnerCourse = view.findViewById(R.id.spinnerSetupCourse);
         Spinner spinnerSemester = view.findViewById(R.id.spinnerSetupSemester);
+        Spinner spinnerYear = view.findViewById(R.id.spinnerSetupYear);
+
         //Set SemesterSpinner presetValue
-        semesterPreset = new ArrayList<>();
-        semesterPreset.add("Semester wird geladen");
-        ArrayAdapter<String> spinnerPresetAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, semesterPreset);
-        spinnerPresetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSemester.setAdapter(spinnerPresetAdapter);
-        //set On Item Choose
+        ArrayList<String> semesterPreset = new ArrayList<>();
+        semesterPreset.add(getString(R.string.loadSemester)); //TODO zur String datei einbinden
+        ArrayAdapter<String> spinnerSemesterPresetAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, semesterPreset);
+        spinnerSemesterPresetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSemester.setAdapter(spinnerSemesterPresetAdapter);
+
+        //Set YearSpinner presetValue
+        ArrayList<String> yearPreset = new ArrayList<>();
+        yearPreset.add(getString(R.string.loadYear));
+        ArrayAdapter<String> spinnerYearPresetAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, yearPreset);
+        spinnerYearPresetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerYear.setAdapter(spinnerYearPresetAdapter);
+        //Set On Item Choose
         spinnerCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-
                 setupValueInterface.onSelectValue(SELECT_CODE_COURSES, pos - 1, (String) adapterView.getAdapter().getItem(pos));
-
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
         spinnerSemester.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -88,9 +95,16 @@ public class SetupFragmentTwo extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+        spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                setupValueInterface.onSelectValue(SELECT_CODE_YEAR, pos - 1, (String) adapterView.getAdapter().getItem(pos));
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
     }
 
@@ -104,6 +118,13 @@ public class SetupFragmentTwo extends Fragment {
     public void setSemester(ArrayList<String> semester) {
         Spinner spinner = view.findViewById(R.id.spinnerSetupSemester);
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, semester);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+    }
+
+    public void setYears(ArrayList<String> years) {
+        Spinner spinner = view.findViewById(R.id.spinnerSetupYear);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, years);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
     }

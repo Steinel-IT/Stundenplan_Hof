@@ -29,8 +29,7 @@ public class SetupFragmentThree extends Fragment {
     }
 
     public static SetupFragmentThree newInstance() {
-        SetupFragmentThree fragment = new SetupFragmentThree();
-        return fragment;
+        return new SetupFragmentThree();
     }
 
     @Override
