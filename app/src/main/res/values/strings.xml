@@ -46,6 +46,7 @@
     <string name="modulhandbuch_wird_geladen">Modulhandbuch wird geladen</string>
     <string name="profile_picture">Profile-Picture</string>
     <string name="dozent_no_data">Keine Dozent Daten vorhanden</string>
+    <string name="module_no_data">Daten sind nicht für dieses Studienjahr vorhanden\noder konnte nicht geladen werden</string>
     <string name="nothingtoseeicon">nothingToSeeIcon</string>
     <string name="selectAllInSetup">Wählen Sie Ihren Studiengang, das Semester und das Studienjahr</string>
     <string name="loadSemester">Semester werden geladen</string>

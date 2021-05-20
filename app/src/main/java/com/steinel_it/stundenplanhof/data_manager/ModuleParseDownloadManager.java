@@ -44,7 +44,7 @@ public class ModuleParseDownloadManager {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("Module Loading", "Failed by loading module books");
-                uiThreadHandler.post(() -> context.onTaskFinished(null, null));
+                uiThreadHandler.post(() -> context.onTaskFinished(new ArrayList<>(), new ArrayList<>()));
             }
 
             @Override
@@ -76,12 +76,10 @@ public class ModuleParseDownloadManager {
                                 return;
                             }
                         }
-                        uiThreadHandler.post(() -> context.onTaskFinished(null, null));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    uiThreadHandler.post(() -> context.onTaskFinished(null, null));
+                    uiThreadHandler.post(() -> context.onTaskFinished(new ArrayList<>(), new ArrayList<>()));
                 } else {
                     throw new IOException("Download not successful");
                 }

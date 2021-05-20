@@ -43,7 +43,7 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
             year = extras.getString(MainActivity.EXTRA_MESSAGE_YEAR);
         }
 
-        getSupportActionBar().setTitle("Modulhandbuch: "+ shortLecture);
+        getSupportActionBar().setTitle("Modulhandbuch: " + shortLecture);
         setupContent();
     }
 
@@ -68,6 +68,11 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
         if (titelList == null || contentList == null) {
             moduleParseDownloadManager = new ModuleParseDownloadManager(this);
             moduleParseDownloadManager.getModule(shortCourse, year, shortLecture);
+        } else if (titelList.isEmpty() || contentList.isEmpty()) {
+            Group groupLoadingScreen = findViewById(R.id.groupLoadingModuleMain);
+            Group groupNoDataScreen = findViewById(R.id.groupModuleNothingToSee);
+            groupNoDataScreen.setVisibility(View.VISIBLE);
+            groupLoadingScreen.setVisibility(View.GONE);
         } else {
             Group groupLoadingScreen = findViewById(R.id.groupLoadingModuleMain);
             Group groupModuleContent = findViewById(R.id.groupModuleContent);
@@ -86,7 +91,8 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {}
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
             });
 
             textViewContent.setText(contentList.get(0));
@@ -100,6 +106,7 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
     public void onTaskFinished(ArrayList<String> titel, ArrayList<String> contentList) {
         this.titelList = titel;
         this.contentList = contentList;
+
         setupContent();
     }
 }
