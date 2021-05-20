@@ -1,12 +1,15 @@
 package com.steinel_it.stundenplanhof;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -187,27 +190,59 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         loadingGroup.setVisibility(View.GONE);
         recyclerViewScheduler.setVisibility(View.VISIBLE);
         schedulerEntryListAdapter = new SchedulerEntryListAdapter(schedule.getTitleList(), schedule.getScheduleList(), (courseEntry, schedulerPos, vorlesungPos, view) -> {
-            createBottomSheet(courseEntry);//
+            int orientation = this.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                createBottomOptionSheet(courseEntry);
+            else
+                createSideOptionSheet(courseEntry);
             selectedLectureEntry = courseEntry;
         });
         recyclerViewScheduler.setAdapter(schedulerEntryListAdapter);
     }
 
-    private void createBottomSheet(LectureEntry lectureEntry) {
+    private void createSideOptionSheet(LectureEntry lectureEntry) {
+        LinearLayout linearLayoutMainLandscape = findViewById(R.id.linearLayoutMainLandscape);
+        if (linearLayoutMainLandscape.getChildCount() > 1)
+            linearLayoutMainLandscape.removeViewAt(2);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        View vericalDivider = new View(this);
+        vericalDivider.setBackgroundColor(R.attr.dividerVertical);
+
+        View viewSideBar = inflater.inflate(R.layout.modal_sheet_vorlesung, linearLayoutMainLandscape, false);
+
+        TextView textViewVorlesungName = viewSideBar.findViewById(R.id.textViewModalSheetVorlesungName);
+        textViewVorlesungName.setText(lectureEntry.getShortName());
+
+        TextView textViewDozentName = viewSideBar.findViewById(R.id.textViewModalSheetDozentName);
+        textViewDozentName.setText(lectureEntry.getDozent());
+
+        TextView textViewRoomName = viewSideBar.findViewById(R.id.textViewModalSheetRoomName);
+        textViewRoomName.setText(lectureEntry.getRoom());
+
+        TextView textViewRoomDetail = viewSideBar.findViewById(R.id.textViewModalSheetRoomDetail);
+        textViewRoomDetail.setText(lectureEntry.getBuilding());
+        if (linearLayoutMainLandscape.getChildCount() == 1)
+            linearLayoutMainLandscape.addView(vericalDivider, new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.MATCH_PARENT));
+        linearLayoutMainLandscape.addView(viewSideBar, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+    }
+
+    private void createBottomOptionSheet(LectureEntry lectureEntry) {
         BottomSheetDialog bottomSheetDialogVorlesung = new BottomSheetDialog(MainActivity.this);
         bottomSheetDialogVorlesung.getBehavior().setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels - 100);
         View buttomSheet = getLayoutInflater().inflate(R.layout.modal_sheet_vorlesung, null);
 
-        TextView textViewVorlesungName = buttomSheet.findViewById(R.id.textViewBottomSheetVorlesungName);
+        TextView textViewVorlesungName = buttomSheet.findViewById(R.id.textViewModalSheetVorlesungName);
         textViewVorlesungName.setText(lectureEntry.getShortName());
 
-        TextView textViewDozentName = buttomSheet.findViewById(R.id.textViewBottomSheetDozentName);
+        TextView textViewDozentName = buttomSheet.findViewById(R.id.textViewModalSheetDozentName);
         textViewDozentName.setText(lectureEntry.getDozent());
 
-        TextView textViewRoomName = buttomSheet.findViewById(R.id.textViewBottomSheetRoomName);
+        TextView textViewRoomName = buttomSheet.findViewById(R.id.textViewModalSheetRoomName);
         textViewRoomName.setText(lectureEntry.getRoom());
 
-        TextView textViewRoomDetail = buttomSheet.findViewById(R.id.textViewBottomSheetRoomDetail);
+        TextView textViewRoomDetail = buttomSheet.findViewById(R.id.textViewModalSheetRoomDetail);
         textViewRoomDetail.setText(lectureEntry.getBuilding());
 
         bottomSheetDialogVorlesung.setContentView(buttomSheet);

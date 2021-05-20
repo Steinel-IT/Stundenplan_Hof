@@ -44,6 +44,7 @@ public class ModuleParseDownloadManager {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("Module Loading", "Failed by loading module books");
+                uiThreadHandler.post(() -> context.onTaskFinished(null, null));
             }
 
             @Override
@@ -79,7 +80,6 @@ public class ModuleParseDownloadManager {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
 
                     uiThreadHandler.post(() -> context.onTaskFinished(null, null));
                 } else {

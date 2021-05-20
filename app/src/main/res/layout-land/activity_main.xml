@@ -4,54 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ModuleActivity">
+    tools:context=".MainActivity">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewModuleSelect"
+    <include
+        android:id="@+id/includeChipBar"
+        layout="@layout/filter_chip_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="?attr/colorSurface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Spinner
-            android:id="@+id/spinnerModuleContentSelector"
-            style="@style/CardContentStyle"
-            android:spinnerMode="dropdown" />
-
-    </androidx.cardview.widget.CardView>
-
-    <ScrollView
-        android:id="@+id/scrollViewModuleContent"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/linearLayoutMainLandscape"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewModuleSelect">
+        app:layout_constraintTop_toBottomOf="@+id/includeChipBar">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewScheduler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="10dp"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/recycler_item_scheduler_day">
 
-            <TextView
-                android:id="@+id/textViewModuleContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </ScrollView>
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupModuleContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="cardViewModuleSelect,scrollViewModuleContent" />
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBarMain"
@@ -62,22 +48,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45" />
+        app:layout_constraintTop_toBottomOf="@+id/includeChipBar" />
 
     <TextView
         android:id="@+id/textViewLoadingScheduleMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/modulhandbuch_wird_geladen"
+        android:text="@string/stundenplan_wird_geladen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBarMain" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupLoadingModuleMain"
+        android:id="@+id/groupLoadingScheduleMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="progressBarMain,textViewLoadingScheduleMain" />
+        app:constraint_referenced_ids="progressBarMain,textViewLoadingScheduleMain"
+        tools:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

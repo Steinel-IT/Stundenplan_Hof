@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/textViewBottomSheetVorlesungHeader"
+            android:id="@+id/textViewModalSheetVorlesungHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/vorlesungsinformation"
@@ -25,153 +25,153 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetVorlesungName"
+            android:id="@+id/textViewModalSheetVorlesungName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetVorlesungHeader" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetVorlesungHeader" />
 
         <View
-            android:id="@+id/bottomSheetDivider"
+            android:id="@+id/modalSheetDivider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetVorlesungName" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetVorlesungName" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetDozentTitle"
+            android:id="@+id/textViewModalSheetDozentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/dozent"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/bottomSheetDivider"
-            app:layout_constraintTop_toBottomOf="@+id/bottomSheetDivider" />
+            app:layout_constraintStart_toStartOf="@+id/modalSheetDivider"
+            app:layout_constraintTop_toBottomOf="@+id/modalSheetDivider" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetDozentName"
+            android:id="@+id/textViewModalSheetDozentName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="32dp"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetRoomName"
-            app:layout_constraintEnd_toStartOf="@+id/textViewBottomSheetDozentIcon"
+            app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetRoomName"
+            app:layout_constraintEnd_toStartOf="@+id/textViewModalSheetDozentIcon"
             app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/textViewBottomSheetDozentTitle"
-            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetDozentTitle" />
+            app:layout_constraintStart_toEndOf="@+id/textViewModalSheetDozentTitle"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetDozentTitle" />
 
         <ImageView
-            android:id="@+id/textViewBottomSheetDozentIcon"
+            android:id="@+id/textViewModalSheetDozentIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/pfeil_nach_rechts"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewBottomSheetDozentName"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewModalSheetDozentName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewBottomSheetDozentName"
-            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetDozentName"
+            app:layout_constraintStart_toEndOf="@+id/textViewModalSheetDozentName"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetDozentName"
             app:srcCompat="@drawable/ic_arrow_right" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetRoomName"
+            android:id="@+id/textViewModalSheetRoomName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/textViewBottomSheetRoomIcon"
+            app:layout_constraintEnd_toStartOf="@+id/textViewModalSheetRoomIcon"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/textViewBottomSheetRoomTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetDozentName" />
+            app:layout_constraintStart_toEndOf="@+id/textViewModalSheetRoomTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetDozentName" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetRoomTitle"
+            android:id="@+id/textViewModalSheetRoomTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/raum"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetDozentTitle"
-            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetRoomName" />
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetDozentTitle"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetRoomName" />
 
         <ImageView
-            android:id="@+id/textViewBottomSheetRoomIcon"
+            android:id="@+id/textViewModalSheetRoomIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/karten_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewBottomSheetRoomDetail"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewModalSheetRoomDetail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetDozentIcon"
-            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetRoomName"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetDozentIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetRoomName"
             app:srcCompat="@drawable/ic_map" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetRoomDetail"
+            android:id="@+id/textViewModalSheetRoomDetail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetRoomName"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetRoomTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetRoomTitle" />
+            app:layout_constraintEnd_toEndOf="@+id/textViewModalSheetRoomName"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetRoomTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetRoomTitle" />
 
         <ImageView
-            android:id="@+id/textViewBottomSheetNoteIcon"
+            android:id="@+id/textViewModalSheetNoteIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/bearbeitungs_icon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetRoomIcon"
-            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetNoteTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetRoomIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetNoteTitle"
             app:srcCompat="@drawable/ic_edit" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetNoteTitle"
+            android:id="@+id/textViewModalSheetNoteTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/notizen"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetRoomDetail"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetDozentTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetRoomDetail" />
+            app:layout_constraintEnd_toEndOf="@+id/textViewModalSheetRoomDetail"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetDozentTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetRoomDetail" />
 
         <ImageView
-            android:id="@+id/textViewBottomSheetModulIcon"
+            android:id="@+id/textViewModalSheetModulIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/pfeil_nach_rechts"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetNoteIcon"
-            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetModulTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetNoteIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetModulTitle"
             app:srcCompat="@drawable/ic_arrow_right" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetModulTitle"
+            android:id="@+id/textViewModalSheetModulTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/modulhandbuch"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetNoteTitle"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetNoteTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetNoteTitle" />
+            app:layout_constraintEnd_toEndOf="@+id/textViewModalSheetNoteTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetNoteTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetNoteTitle" />
 
         <TextView
-            android:id="@+id/textViewBottomSheetChatTitle"
+            android:id="@+id/textViewModalSheetChatTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -180,26 +180,26 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/textViewBottomSheetModulTitle"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetModulTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBottomSheetModulTitle" />
+            app:layout_constraintEnd_toEndOf="@+id/textViewModalSheetModulTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetModulTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetModulTitle" />
 
         <ImageView
-            android:id="@+id/textViewBottomSheeChatIcon"
+            android:id="@+id/textViewModalSheeChatIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/chat_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewBottomSheetChatTitle"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewModalSheetChatTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textViewBottomSheetModulIcon"
-            app:layout_constraintTop_toTopOf="@+id/textViewBottomSheetChatTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetModulIcon"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetChatTitle"
             app:srcCompat="@drawable/ic_chat" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupModalSheetChat"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:constraint_referenced_ids="textViewBottomSheetChatTitle,textViewBottomSheeChatIcon"
+            app:constraint_referenced_ids="textViewModalSheetChatTitle,textViewModalSheeChatIcon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -211,8 +211,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
-            app:constraint_referenced_ids="textViewBottomSheetModulTitle,textViewBottomSheetModulIcon"
-            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetChatTitle"
+            app:constraint_referenced_ids="textViewModalSheetModulTitle,textViewModalSheetModulIcon"
+            app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetChatTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/groupModalSheetNote"
@@ -223,8 +223,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
-            app:constraint_referenced_ids="textViewBottomSheetNoteIcon,textViewBottomSheetNoteTitle"
-            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetModulTitle"
+            app:constraint_referenced_ids="textViewModalSheetNoteIcon,textViewModalSheetNoteTitle"
+            app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetModulTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/groupModalSheetRoom"
@@ -235,8 +235,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
-            app:constraint_referenced_ids="textViewBottomSheetRoomTitle,textViewBottomSheetRoomName,textViewBottomSheetRoomIcon"
-            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetNoteTitle"
+            app:constraint_referenced_ids="textViewModalSheetRoomTitle,textViewModalSheetRoomName,textViewModalSheetRoomIcon"
+            app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetNoteTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/groupModalSheetDozent"
@@ -247,14 +247,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
-            app:constraint_referenced_ids="textViewBottomSheetDozentIcon,textViewBottomSheetDozentName,textViewBottomSheetDozentTitle"
-            app:layout_constraintBottom_toTopOf="@+id/textViewBottomSheetRoomName"
+            app:constraint_referenced_ids="textViewModalSheetDozentIcon,textViewModalSheetDozentName,textViewModalSheetDozentTitle"
+            app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetRoomName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bottomSheetDivider"
+            app:layout_constraintTop_toBottomOf="@+id/modalSheetDivider"
             app:layout_constraintVertical_bias="1.0"
             android:onClick="onClickDozent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</ScrollView>
