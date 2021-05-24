@@ -73,8 +73,7 @@ public class ScheduleParseDownloadManager {
                                 for (Element course : dayData.select("tr")) {
                                     String room = course.select("td").get(6).text();
                                     String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
-                                    String shortName = getShortName(course.select("td").get(3).text());
-                                    //TODO: Short name richtig rausfiltern
+                                    String shortName = course.select("td").get(3).textNodes().get(0).text();
                                     vorlesungsArrayList.add(new LectureEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, building));
                                 }
                                 schedulerEntriesLocal.add(new SchedulerEntry(vorlesungsArrayList));
@@ -94,12 +93,4 @@ public class ScheduleParseDownloadManager {
             uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
         }
     }
-
-
-    private String getShortName(String completeName) {
-        String standartSplit = completeName.split(" - |\\(")[0];
-        //remove Words
-        return standartSplit.replace("Präsenz", "").trim();
-    }
-
 }

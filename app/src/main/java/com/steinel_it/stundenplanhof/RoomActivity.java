@@ -20,10 +20,6 @@ import androidx.core.content.ContextCompat;
 
 import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
-
 public class RoomActivity extends AppCompatActivity {
 
     private StorageManager storageManager;
@@ -93,10 +89,9 @@ public class RoomActivity extends AppCompatActivity {
         } else {
             textViewGPS.setText(String.format("%s: %s", getString(R.string.coordinates), getString(R.string.unknown)));
         }
-        textViewCurrLoc.setText(String.format("%s: %s", getString(R.string.currPos), getString(R.string.unknown)));
+        textViewCurrLoc.setText(String.format("%s: %s", getString(R.string.currPos), getString(R.string.isLoading)));
     }
 
-    //TODO: geht nicht
     private void setLocationListener() {
         if (ContextCompat.checkSelfPermission(RoomActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(RoomActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -106,9 +101,10 @@ public class RoomActivity extends AppCompatActivity {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1200, 5, new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {
+                        //TODO: Wird nicht geladen auf Physical Device
                         TextView textViewGPS = findViewById(R.id.textViewCurrLoc);
                         currLocation = location;
-                        textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.currPos), location.getLatitude(), location.getLongitude(), location.getAltitude()));
+                        textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.isLoading), location.getLatitude(), location.getLongitude(), location.getAltitude()));
                         Toast.makeText(RoomActivity.this, getString(R.string.locationLoaded), Toast.LENGTH_SHORT).show();
                     }
 
@@ -135,6 +131,7 @@ public class RoomActivity extends AppCompatActivity {
             TextView textViewGPS = findViewById(R.id.textViewRoomGPS);
             storageManager.saveRoomGPS(RoomActivity.this, "roomCoord", room, currLocation);
             textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.coordinates), currLocation.getLatitude(), currLocation.getLongitude(), currLocation.getAltitude()));
+            //TODO hier wird Fehler erzeugt wenn nichts vorhanden
             webView.loadUrl("https://www.google.com/maps/search/?api=1&query=" + currLocation.getLatitude() + "," + currLocation.getLongitude());
             location.set(currLocation);
         }

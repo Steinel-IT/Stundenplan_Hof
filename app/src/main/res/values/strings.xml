@@ -63,4 +63,5 @@
     <string name="enableLoc">GPS bitte anschalten</string>
     <string name="currPos">aktuelle Position</string>
     <string name="virtuel">Virtuell</string>
+    <string name="isLoading">wird geladen</string>
 </resources>
