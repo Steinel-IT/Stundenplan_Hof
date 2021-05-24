@@ -10,7 +10,6 @@
     <string name="tage">Tage</string>
     <string name="vorlesungsinformation">Vorlesungsinformation:</string>
     <string name="dozent">Dozent</string>
-    <string name="raum">Raum</string>
     <string name="notizen">Notizen</string>
     <string name="chat">Chat</string>
     <string name="modulhandbuch">Modulhandbuch</string>
@@ -51,4 +50,17 @@
     <string name="selectAllInSetup">Wählen Sie Ihren Studiengang, das Semester und das Studienjahr</string>
     <string name="loadSemester">Semester werden geladen</string>
     <string name="loadYear">Studienjahre werden geladen</string>
+    <string name="room">Raum</string>
+    <string name="building">Gebäude</string>
+    <string name="floor">Stockwerk</string>
+    <string name="coordinates">Koordinaten</string>
+    <string name="gps_save">GPS speichern</string>
+    <string name="unknown">Unbekannt</string>
+    <string name="loadCoord">GPS-Daten werden geladen. Noch keine Daten vorhanden.</string>
+    <string name="permissionGranted">Berechtigung gewährt</string>
+    <string name="permissionNotGranted">Berechtigung nicht gewährt</string>
+    <string name="locationLoaded">Position gefunden</string>
+    <string name="enableLoc">GPS bitte anschalten</string>
+    <string name="currPos">aktuelle Position</string>
+    <string name="virtuel">Virtuell</string>
 </resources>

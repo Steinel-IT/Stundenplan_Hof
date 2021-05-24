@@ -2,12 +2,17 @@ package com.steinel_it.stundenplanhof.data_manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 
 import com.steinel_it.stundenplanhof.objects.Note;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class StorageManager {
 
@@ -69,5 +74,29 @@ public class StorageManager {
         SharedPreferences.Editor sharedPreferencesNoteEditor = sharedPreferencesNote.edit();
         sharedPreferencesNoteEditor.clear();
         sharedPreferencesNoteEditor.apply();
+    }
+
+    public void saveRoomGPS(Context context, String fileName, String room, Location loc) {
+        Set<String> locList = new HashSet<>();
+        locList.add(String.valueOf(loc.getAltitude()));
+        locList.add(String.valueOf(loc.getLongitude()));
+        locList.add(String.valueOf(loc.getLatitude()));
+        SharedPreferences sharedPreferencesNote = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPreferencesNoteEditor = sharedPreferencesNote.edit();
+        sharedPreferencesNoteEditor.putStringSet(room, locList);
+        sharedPreferencesNoteEditor.apply();
+    }
+
+    public Location getRoomGPS(Context context, String fileName, String room) {
+        SharedPreferences sharedPreferencesNote = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        Set<String> resultSet = sharedPreferencesNote.getStringSet(room, null);
+        if (resultSet == null) return null;
+        List<String> resultList = new ArrayList<>(resultSet);
+        System.out.println(resultList);
+        Location resultLoc = new Location("");
+        resultLoc.setLatitude(Double.parseDouble(resultList.get(1)));
+        resultLoc.setLongitude(Double.parseDouble(resultList.get(2)));
+        resultLoc.setAltitude(Double.parseDouble(resultList.get(0)));
+        return resultLoc;
     }
 }

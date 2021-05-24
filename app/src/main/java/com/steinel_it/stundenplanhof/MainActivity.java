@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     public static final String EXTRA_MESSAGE_SEMESTER = "com.steinel_it.stundenplanhof.semester";
     public static final String EXTRA_MESSAGE_LECTURE = "com.steinel_it.stundenplanhof.lecture";
     public static final String EXTRA_MESSAGE_YEAR = "com.steinel_it.stundenplanhof.year";
+    public static final String EXTRA_MESSAGE_ROOM = "com.steinel_it.stundenplanhof.room";
+    public static final String EXTRA_MESSAGE_BUILDING = "com.steinel_it.stundenplanhof.building";
 
     private String course;
     private String shortCourse;
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         textViewRoomName.setText(lectureEntry.getRoom());
 
         TextView textViewRoomDetail = buttomSheet.findViewById(R.id.textViewModalSheetRoomDetail);
-        textViewRoomDetail.setText(lectureEntry.getBuilding());
+        textViewRoomDetail.setText(String.format("%s %s", getString(R.string.building), lectureEntry.getBuilding()));
 
         bottomSheetDialogVorlesung.setContentView(buttomSheet);
         bottomSheetDialogVorlesung.show();
@@ -256,14 +258,18 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     public void onClickRoom(View view) {
-        System.out.println("On Click Room");
+        Intent intentRoom = new Intent(this, RoomActivity.class);
+        intentRoom.putExtra(EXTRA_MESSAGE_NAME, selectedLectureEntry.getShortName());
+        intentRoom.putExtra(EXTRA_MESSAGE_ROOM, selectedLectureEntry.getRoom());
+        intentRoom.putExtra(EXTRA_MESSAGE_BUILDING, selectedLectureEntry.getBuilding());
+        startActivity(intentRoom);
     }
 
     public void onClickNote(View view) {
-        Intent intentDozent = new Intent(this, NoteActivity.class);
-        intentDozent.putExtra(EXTRA_MESSAGE_NAME, selectedLectureEntry.getShortName());
-        intentDozent.putExtra(EXTRA_MESSAGE_SEMESTER, semester);
-        startActivity(intentDozent);
+        Intent intentNote = new Intent(this, NoteActivity.class);
+        intentNote.putExtra(EXTRA_MESSAGE_NAME, selectedLectureEntry.getShortName());
+        intentNote.putExtra(EXTRA_MESSAGE_SEMESTER, semester);
+        startActivity(intentNote);
     }
 
     public void onClickModul(View view) {

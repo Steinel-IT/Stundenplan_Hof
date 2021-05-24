@@ -74,7 +74,8 @@ public class ScheduleParseDownloadManager {
                                     String room = course.select("td").get(6).text();
                                     String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
                                     String shortName = getShortName(course.select("td").get(3).text());
-                                    vorlesungsArrayList.add(new LectureEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, "Gebäude " + building));
+                                    //TODO: Short name richtig rausfiltern
+                                    vorlesungsArrayList.add(new LectureEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, building));
                                 }
                                 schedulerEntriesLocal.add(new SchedulerEntry(vorlesungsArrayList));
                             }

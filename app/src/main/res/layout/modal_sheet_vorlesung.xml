@@ -99,7 +99,7 @@
             android:id="@+id/textViewModalSheetRoomTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/raum"
+            android:text="@string/room"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/textViewModalSheetDozentTitle"
