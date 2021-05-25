@@ -52,7 +52,7 @@ public class DozentParseDownloadManager {
             okClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Log.e("Module Loading", "Failed by loading dozent");
+                    Log.e("Dozent Loading", "Failed by loading dozent");
                 }
 
                 @Override

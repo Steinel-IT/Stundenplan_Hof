@@ -64,4 +64,5 @@
     <string name="currPos">aktuelle Position</string>
     <string name="virtuel">Virtuell</string>
     <string name="isLoading">wird geladen</string>
+    <string name="enable_cancelled_lecture">Ausfälle einblenden</string>
 </resources>

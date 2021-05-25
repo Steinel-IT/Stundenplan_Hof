@@ -2,8 +2,9 @@ package com.steinel_it.stundenplanhof.objects;
 
 public class LectureEntry {
     private final String day, timeStart, timeEnd, name, shortName, dozent, room, building;
+    private final boolean canceled;
 
-    public LectureEntry(String day, String timeStart, String timeEnd, String name, String shortName, String dozent, String room, String building) {
+    public LectureEntry(String day, String timeStart, String timeEnd, String name, String shortName, String dozent, String room, String building, boolean canceled) {
         this.day = day;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
@@ -12,6 +13,7 @@ public class LectureEntry {
         this.dozent = dozent;
         this.room = room;
         this.building = building;
+        this.canceled = canceled;
     }
 
     public String getDay() {
@@ -46,16 +48,22 @@ public class LectureEntry {
         return building;
     }
 
+    public boolean getCanceled() {
+        return canceled;
+    }
+
     @Override
     public String toString() {
-        return "CourseEntry{" +
-                "timeStart='" + timeStart + '\'' +
+        return "LectureEntry{" +
+                "day='" + day + '\'' +
+                ", timeStart='" + timeStart + '\'' +
                 ", timeEnd='" + timeEnd + '\'' +
                 ", name='" + name + '\'' +
                 ", shortName='" + shortName + '\'' +
                 ", dozent='" + dozent + '\'' +
                 ", room='" + room + '\'' +
-                ", gebaeude='" + building + '\'' +
+                ", building='" + building + '\'' +
+                ", canceled=" + canceled +
                 '}';
     }
 }

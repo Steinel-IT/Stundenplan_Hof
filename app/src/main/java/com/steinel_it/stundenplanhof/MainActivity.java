@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     StorageManager storageManager;
 
-    //
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         } else
             Toast.makeText(this, "Fehler im Setup aufgetreten", Toast.LENGTH_SHORT).show();
     }
-
-    //TODO Stundenplanänderungen anzeigen
 
     private void setupContent(boolean reload) {
         setupParseDownloadManager = new ScheduleParseDownloadManager(this);
@@ -165,19 +161,14 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private void setupFilterBar() {
         ChipGroup filterChipGroup = findViewById(R.id.chipGroupFilter);
         filterChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.chipFilterTage:
-                    schedule.setFilterType(SchedulerFilter.DAYS);
-                    break;
-                case R.id.chipFilterVorlesung:
-                    schedule.setFilterType(SchedulerFilter.VORLESUNGEN);
-                    break;
-                case R.id.chipFilterRaeume:
-                    schedule.setFilterType(SchedulerFilter.ROOMS);
-                    break;
-                case R.id.chipFilterDozenten:
-                    schedule.setFilterType(SchedulerFilter.DOZENTEN);
-                    break;
+            if (checkedId == R.id.chipFilterTage) {
+                schedule.setFilterType(SchedulerFilter.DAYS);
+            } else if (checkedId == R.id.chipFilterVorlesung) {
+                schedule.setFilterType(SchedulerFilter.VORLESUNGEN);
+            } else if (checkedId == R.id.chipFilterRaeume) {
+                schedule.setFilterType(SchedulerFilter.ROOMS);
+            } else if (checkedId == R.id.chipFilterDozenten) {
+                schedule.setFilterType(SchedulerFilter.DOZENTEN);
             }
             schedule.sortSchedule();
             if (schedulerEntryListAdapter != null) {
@@ -233,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private void createBottomOptionSheet(LectureEntry lectureEntry) {
         BottomSheetDialog bottomSheetDialogVorlesung = new BottomSheetDialog(MainActivity.this);
         bottomSheetDialogVorlesung.getBehavior().setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels - 100);
-        View buttomSheet = getLayoutInflater().inflate(R.layout.modal_sheet_vorlesung, null);
+        View buttomSheet = getLayoutInflater().inflate(R.layout.modal_sheet_vorlesung, null);  //TODO: warum hier null?
 
         TextView textViewVorlesungName = buttomSheet.findViewById(R.id.textViewModalSheetVorlesungName);
         textViewVorlesungName.setText(lectureEntry.getShortName());
@@ -259,7 +250,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     public void onClickRoom(View view) {
         Intent intentRoom = new Intent(this, RoomActivity.class);
-        intentRoom.putExtra(EXTRA_MESSAGE_NAME, selectedLectureEntry.getShortName());
         intentRoom.putExtra(EXTRA_MESSAGE_ROOM, selectedLectureEntry.getRoom());
         intentRoom.putExtra(EXTRA_MESSAGE_BUILDING, selectedLectureEntry.getBuilding());
         startActivity(intentRoom);

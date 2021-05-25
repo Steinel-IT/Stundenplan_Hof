@@ -47,8 +47,6 @@ public class NoteActivity extends AppCompatActivity {
         checkNothingLabel();
     }
 
-    //TODO SaveInstance noch ausfüllen
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

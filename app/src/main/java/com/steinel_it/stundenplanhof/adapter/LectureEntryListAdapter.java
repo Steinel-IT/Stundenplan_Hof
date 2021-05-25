@@ -1,5 +1,7 @@
 package com.steinel_it.stundenplanhof.adapter;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +72,10 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
                 day.setVisibility(View.VISIBLE);
             }
             name.setText(lectureEntry.getName());
+            if(lectureEntry.getCanceled()) {
+                name.setTextColor(Color.RED);
+                name.setPaintFlags(name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
             time.setText(String.format("%1$s - %2$s", lectureEntry.getTimeStart(), lectureEntry.getTimeEnd()));
             room.setText(lectureEntry.getRoom());
             dozent.setText(lectureEntry.getDozent());

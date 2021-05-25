@@ -41,7 +41,7 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO: Überall dran denken an SavedInstanceState!!
+        //TODO: Hier auch SaveInstance?
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
         getSupportActionBar().hide();

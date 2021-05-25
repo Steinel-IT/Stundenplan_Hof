@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -27,7 +28,7 @@ public class RoomActivity extends AppCompatActivity {
     private LocationManager locationManager;
 
     private WebView webView;
-    private String name, room, building;
+    private String room, building;
     private Location location;
     private Location currLocation;
     private boolean gpsStatus;
@@ -41,19 +42,43 @@ public class RoomActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         storageManager = new StorageManager();
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Bundle extras = getIntent().getExtras();
-        name = extras.getString(MainActivity.EXTRA_MESSAGE_NAME);
-        room = extras.getString(MainActivity.EXTRA_MESSAGE_ROOM);
-        building = extras.getString(MainActivity.EXTRA_MESSAGE_BUILDING);
+        //TODO Fehler bei der Rotation Überprüfen. Werden Objecte gespeichert automatisch bei der Rotation?
+        if (savedInstanceState != null) {
+            room = savedInstanceState.getString("room");
+            building = savedInstanceState.getString("building");
+            gpsStatus = savedInstanceState.getBoolean("gpsStatus");
+            System.out.println(savedInstanceState.getDouble("currLocationLat") != 0.0 && savedInstanceState.getDouble("currLocationLong") != 0.0);
+            if(savedInstanceState.getDouble("currLocationLat") != 0.0 && savedInstanceState.getDouble("currLocationLong") != 0.0) {
+                currLocation = new Location("");
+                currLocation.setLatitude(savedInstanceState.getDouble("currLocationLat"));
+                currLocation.setLongitude(savedInstanceState.getDouble("currLocationLong"));
+                currLocation.setAltitude(savedInstanceState.getDouble("currLocationAlt"));
+            }
+        } else {
+            Bundle extras = getIntent().getExtras();
+            room = extras.getString(MainActivity.EXTRA_MESSAGE_ROOM);
+            building = extras.getString(MainActivity.EXTRA_MESSAGE_BUILDING);
+        }
+        gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         getSupportActionBar().setTitle(getString(R.string.room) + ": " + room);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         loadCoordinates();
         setLocationListener();
         setupContent();
     }
 
-    //TODO SaveInstance noch ausfüllen currPos, gpsStatus, location, name, room, building
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("room", room);
+        savedInstanceState.putString("building", building);
+        savedInstanceState.putBoolean("gpsStatus", gpsStatus);
+        if(currLocation != null) {
+            savedInstanceState.putDouble("currLocationLat", currLocation.getLatitude());
+            savedInstanceState.putDouble("currLocationLong", currLocation.getLongitude());
+            savedInstanceState.putDouble("currLocationAlt", currLocation.getAltitude());
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -85,6 +110,7 @@ public class RoomActivity extends AppCompatActivity {
         }
         if (location != null) {
             textViewGPS.setText(String.format("%s:\nLat:%s Long:%s Alt:%s", getString(R.string.coordinates), location.getLatitude(), location.getLongitude(), location.getAltitude()));
+            webView.setVisibility(View.VISIBLE);
             webView.loadUrl("https://www.google.com/maps/search/?api=1&query=" + location.getLatitude() + "," + location.getLongitude());
         } else {
             textViewGPS.setText(String.format("%s: %s", getString(R.string.coordinates), getString(R.string.unknown)));
@@ -98,7 +124,7 @@ public class RoomActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(RoomActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             if (gpsStatus) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1200, 5, new LocationListener() {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {
                         //TODO: Wird nicht geladen auf Physical Device
@@ -131,8 +157,9 @@ public class RoomActivity extends AppCompatActivity {
             TextView textViewGPS = findViewById(R.id.textViewRoomGPS);
             storageManager.saveRoomGPS(RoomActivity.this, "roomCoord", room, currLocation);
             textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.coordinates), currLocation.getLatitude(), currLocation.getLongitude(), currLocation.getAltitude()));
-            //TODO hier wird Fehler erzeugt wenn nichts vorhanden
+            webView.setVisibility(View.VISIBLE);
             webView.loadUrl("https://www.google.com/maps/search/?api=1&query=" + currLocation.getLatitude() + "," + currLocation.getLongitude());
+            if(location == null) location = new Location("");
             location.set(currLocation);
         }
     }
