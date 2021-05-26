@@ -19,18 +19,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
-import com.steinel_it.stundenplanhof.data_manager.DozentParseDownloadManager;
-import com.steinel_it.stundenplanhof.interfaces.HandleDozentTaskInterface;
+import com.steinel_it.stundenplanhof.data_manager.LecturerParseDownloadManager;
+import com.steinel_it.stundenplanhof.interfaces.HandleLecturerTaskInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class DozentActivity extends AppCompatActivity implements HandleDozentTaskInterface {
+public class LecturerActivity extends AppCompatActivity implements HandleLecturerTaskInterface {
 
     private ArrayList<String> titelList;
     private ArrayList<String> contentList;
-    private String dozent;
+    private String lecturer;
     private String phone;
     private String mail;
     private Bitmap image;
@@ -38,8 +38,8 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dozent);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.dozentInfo);
+        setContentView(R.layout.activity_lecturer);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.lecturerInfo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState != null) {
             titelList = savedInstanceState.getStringArrayList("titelList");
@@ -49,7 +49,7 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
             image = bitmapToByteArray(savedInstanceState.getByteArray("imageBytes"));
         } else {
             Bundle extras = getIntent().getExtras();
-            dozent = extras.getString(MainActivity.EXTRA_MESSAGE_DOZENT);
+            lecturer = extras.getString(MainActivity.EXTRA_MESSAGE_LECTURER);
         }
         setupContent();
     }
@@ -85,25 +85,25 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
 
     private void setupContent() {
         if (titelList == null || contentList == null) {
-            DozentParseDownloadManager dozentParseDownloadManager = new DozentParseDownloadManager(this);
-            dozentParseDownloadManager.getDozent(dozent);
+            LecturerParseDownloadManager lecturerParseDownloadManager = new LecturerParseDownloadManager(this);
+            lecturerParseDownloadManager.getLecturer(lecturer);
         } else if (titelList.isEmpty() || contentList.isEmpty()) {
-            Group groupNothingToSee = findViewById(R.id.groupDozentNothingToSee);
-            Group loadingGroup = findViewById(R.id.groupLoadingDozent);
+            Group groupNothingToSee = findViewById(R.id.groupLecturerNothingToSee);
+            Group loadingGroup = findViewById(R.id.groupLoadingLecturer);
             loadingGroup.setVisibility(View.GONE);
             groupNothingToSee.setVisibility(View.VISIBLE);
         } else {
-            TextView textViewName = findViewById(R.id.textViewDozentName);
-            TextView textViewTopContent = findViewById(R.id.textViewDozentTopContent);
+            TextView textViewName = findViewById(R.id.textViewLecturerName);
+            TextView textViewTopContent = findViewById(R.id.textViewLecturerTopContent);
             textViewName.setText(titelList.get(0));
             textViewTopContent.setText(contentList.get(0));
-            ImageView imageViewDozent = findViewById(R.id.imageViewDozent);
+            ImageView imageViewLecturer = findViewById(R.id.imageViewLecturer);
             if (image != null) {
-                imageViewDozent.setImageBitmap(image);
+                imageViewLecturer.setImageBitmap(image);
             } else {
-                imageViewDozent.setVisibility(View.GONE);
+                imageViewLecturer.setVisibility(View.GONE);
             }
-            LinearLayout linearLayoutDozentContent = findViewById(R.id.linearLayoutDozentContent);
+            LinearLayout linearLayoutLecturerContent = findViewById(R.id.linearLayoutLecturerContent);
             for (int i = 1; i < titelList.size(); i++) {
                 TextView textViewTitle = new TextView(this);
                 textViewTitle.setText(titelList.get(i));
@@ -116,22 +116,22 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
                     textViewText.setText(String.format("%s%s",contentList.get(i),System.lineSeparator()));
                 }
                 textViewText.setTextSize(16);
-                linearLayoutDozentContent.addView(textViewTitle);
-                linearLayoutDozentContent.addView(textViewText);
+                linearLayoutLecturerContent.addView(textViewTitle);
+                linearLayoutLecturerContent.addView(textViewText);
             }
             //Set VISIBLE to Main Content and set GONE to Loading Screen
-            ScrollView scrollView = findViewById(R.id.scrollViewDozent);
-            Group loadingGroup = findViewById(R.id.groupLoadingDozent);
-            Group fabDozent = findViewById(R.id.groupFABDozent);
+            ScrollView scrollView = findViewById(R.id.scrollViewLecturer);
+            Group loadingGroup = findViewById(R.id.groupLoadingLecturer);
+            Group fabLecturer = findViewById(R.id.groupFABLecturer);
             scrollView.setVisibility(View.VISIBLE);
             loadingGroup.setVisibility(View.GONE);
-            fabDozent.setVisibility(View.VISIBLE);
+            fabLecturer.setVisibility(View.VISIBLE);
         }
     }
 
     public void onClickFAB(View view) {
         int id = view.getId();
-        if (id == R.id.floatingActionButtonDozentMail) {
+        if (id == R.id.floatingActionButtonLecturerMail) {
             if (mail != null) {
                 Intent intentMail = new Intent(Intent.ACTION_SENDTO);
                 intentMail.setData(Uri.parse("mailto:"));
@@ -144,7 +144,7 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
             } else {
                 Toast.makeText(this, getString(R.string.EMailNotFound), Toast.LENGTH_SHORT).show();
             }
-        } else if (id == R.id.floatingActionButtonDozentCall) {
+        } else if (id == R.id.floatingActionButtonLecturerCall) {
             if (phone != null) {
                 Intent intentCall = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
                 try {

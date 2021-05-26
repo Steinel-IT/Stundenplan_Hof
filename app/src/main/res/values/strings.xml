@@ -40,12 +40,12 @@
     <string name="loadingSchedule">Stundenplan wird geladen</string>
     <string name="app_zur_cksetzen">App zurücksetzen</string>
     <string name="aktualisieren">Aktualisieren</string>
-    <string name="loadingDozent">Dozent wird geladen</string>
+    <string name="loadingLecturer">Dozent wird geladen</string>
     <string name="mailButton">Mail Button</string>
     <string name="phoneButton">phone Button</string>
     <string name="loadingModuleBook">Modulhandbuch wird geladen</string>
     <string name="profilePicture">Profile-Picture</string>
-    <string name="dozentNoData">Keine Dozent Daten vorhanden</string>
+    <string name="lecturerNoData">Keine Dozent Daten vorhanden</string>
     <string name="moduleNoData">Daten sind nicht für dieses Studienjahr vorhanden\noder konnte nicht geladen werden</string>
     <string name="nothingToSeeIcon">nothingToSeeIcon</string>
     <string name="selectAllInSetup">Wählen Sie Ihren Studiengang, das Semester und das Studienjahr</string>
@@ -70,7 +70,7 @@
     <string name="errorInSetup">Fehler im Setup aufgetreten</string>
     <string name="errorInDownloadParse">Download oder Parsing fehlgeschlagen</string>
     <string name="changes">Änderungen</string>
-    <string name="dozentInfo">Dozenteninformation</string>
+    <string name="lecturerInfo">Dozenteninformation</string>
     <string name="chooseEMailService">Wähle einen E-Mail Service:</string>
     <string name="noEMailServiceFound">Kein E-Mail Service gefunden</string>
     <string name="EMailNotFound">E-Mail Adresse nicht vorhanden</string>

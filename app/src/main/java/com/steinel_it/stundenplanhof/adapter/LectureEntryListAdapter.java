@@ -78,7 +78,7 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
             }
             time.setText(String.format("%1$s - %2$s", lectureEntry.getTimeStart(), lectureEntry.getTimeEnd()));
             room.setText(lectureEntry.getRoom());
-            dozent.setText(lectureEntry.getDozent());
+            dozent.setText(lectureEntry.getLecturer());
             itemView.setOnClickListener(view -> clickListener.onItemClick(lectureEntry, schedulerPos, pos, view));
         }
 

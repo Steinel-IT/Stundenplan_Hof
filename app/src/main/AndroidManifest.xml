@@ -20,7 +20,7 @@
             android:name=".SetupActivity"
             android:screenOrientation="userPortrait" />
         <activity android:name=".NoteActivity" />
-        <activity android:name=".DozentActivity" />
+        <activity android:name=".LecturerActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

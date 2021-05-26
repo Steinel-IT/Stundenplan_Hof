@@ -45,7 +45,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetVorlesungName" />
 
         <TextView
-            android:id="@+id/textViewModalSheetDozentTitle"
+            android:id="@+id/textViewModalSheetLecturerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -56,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@+id/modalSheetDivider" />
 
         <TextView
-            android:id="@+id/textViewModalSheetDozentName"
+            android:id="@+id/textViewModalSheetLecturerName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -64,21 +64,21 @@
             android:layout_marginBottom="32dp"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetRoomName"
-            app:layout_constraintEnd_toStartOf="@+id/textViewModalSheetDozentIcon"
+            app:layout_constraintEnd_toStartOf="@+id/textViewModalSheetLecturerIcon"
             app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/textViewModalSheetDozentTitle"
-            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetDozentTitle" />
+            app:layout_constraintStart_toEndOf="@+id/textViewModalSheetLecturerTitle"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetLecturerTitle" />
 
         <ImageView
-            android:id="@+id/textViewModalSheetDozentIcon"
+            android:id="@+id/textViewModalSheetLecturerIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/arrowRight"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewModalSheetDozentName"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewModalSheetLecturerName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewModalSheetDozentName"
-            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetDozentName"
+            app:layout_constraintStart_toEndOf="@+id/textViewModalSheetLecturerName"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetLecturerName"
             app:srcCompat="@drawable/ic_arrow_right" />
 
         <TextView
@@ -93,7 +93,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toEndOf="@+id/textViewModalSheetRoomTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetDozentName" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetLecturerName" />
 
         <TextView
             android:id="@+id/textViewModalSheetRoomTitle"
@@ -102,7 +102,7 @@
             android:text="@string/room"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetDozentTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetLecturerTitle"
             app:layout_constraintTop_toTopOf="@+id/textViewModalSheetRoomName" />
 
         <ImageView
@@ -113,7 +113,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/textViewModalSheetRoomDetail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetDozentIcon"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetLecturerIcon"
             app:layout_constraintTop_toTopOf="@+id/textViewModalSheetRoomName"
             app:srcCompat="@drawable/ic_map" />
 
@@ -145,7 +145,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/textViewModalSheetRoomDetail"
-            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetDozentTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewModalSheetLecturerTitle"
             app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetRoomDetail" />
 
         <ImageView
@@ -239,22 +239,22 @@
             app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetNoteTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetDozent"
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetLecturer"
             android:onClick="onClickRoom"/>
 
         <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupModalSheetDozent"
+            android:id="@+id/groupModalSheetLecturer"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
-            app:constraint_referenced_ids="textViewModalSheetDozentIcon,textViewModalSheetDozentName,textViewModalSheetDozentTitle"
+            app:constraint_referenced_ids="textViewModalSheetLecturerIcon,textViewModalSheetLecturerName,textViewModalSheetLecturerTitle"
             app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetRoomName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/modalSheetDivider"
             app:layout_constraintVertical_bias="1.0"
-            android:onClick="onClickDozent"/>
+            android:onClick="onClickLecturer"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

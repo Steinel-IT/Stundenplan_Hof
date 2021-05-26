@@ -8,7 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.steinel_it.stundenplanhof.interfaces.HandleDozentTaskInterface;
+import com.steinel_it.stundenplanhof.interfaces.HandleLecturerTaskInterface;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,33 +26,33 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DozentParseDownloadManager {
+public class LecturerParseDownloadManager {
 
-    HandleDozentTaskInterface context;
+    HandleLecturerTaskInterface context;
 
     ArrayList<String> contentList = new ArrayList<>();
     ArrayList<String> titelList = new ArrayList<>();
     Bitmap image;
 
-    public DozentParseDownloadManager(HandleDozentTaskInterface context) {
+    public LecturerParseDownloadManager(HandleLecturerTaskInterface context) {
         this.context = context;
     }
 
     private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
 
-    public void getDozent(String dozent) {
+    public void getLecturer(String lecturer) {
         if (contentList.isEmpty() || titelList.isEmpty() || image == null) {
-            String replacedDozent = dozent.replace(".", "").toLowerCase();
-            replacedDozent = replacedDozent.replace("msc ", "").replace(" ", "-");
-            replacedDozent = replacedDozent.replace("ö", "oe").replace("ü", "ue").replace("ä", "ae");
+            String replacedLecturer = lecturer.replace(".", "").toLowerCase();
+            replacedLecturer = replacedLecturer.replace("msc ", "").replace(" ", "-");
+            replacedLecturer = replacedLecturer.replace("ö", "oe").replace("ü", "ue").replace("ä", "ae");
             OkHttpClient okClient = new OkHttpClient();
-            String url = "https://www.hof-university.de/ueber-uns/personen/professoren/" + replacedDozent + "/";
+            String url = "https://www.hof-university.de/ueber-uns/personen/professoren/" + replacedLecturer + "/";
             Request request = new Request.Builder().url(url).build();
 
             okClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Log.e("Dozent Loading", "Failed by loading dozent");
+                    Log.e("Lecturer loading", "Failed by loading lecturer");
                 }
 
                 @Override
@@ -62,24 +62,24 @@ public class DozentParseDownloadManager {
 
                         Document docCompelte = Jsoup.parse(response.body().string());
 
-                        Elements dozentContentRaw = docCompelte.select("div[class=row contact_persons]").select("div[class=bg]");
+                        Elements lecturerContentRaw = docCompelte.select("div[class=row contact_persons]").select("div[class=bg]");
 
                         //Falls keine Dozenten vorhanden
-                        if (dozentContentRaw.isEmpty()) {
+                        if (lecturerContentRaw.isEmpty()) {
                             uiThreadHandler.post(() -> context.onTaskFinished(new ArrayList<>(), new ArrayList<>(), null));
                             return;
                         }
                         //Parse Image src
                         String imageURL = null;
-                        if (dozentContentRaw.first().select("img").first() != null)
-                            imageURL = dozentContentRaw.first().select("img").first().attr("src");
+                        if (lecturerContentRaw.first().select("img").first() != null)
+                            imageURL = lecturerContentRaw.first().select("img").first().attr("src");
 
-                        for (int i = 0; i < dozentContentRaw.size(); i++) {
-                            titelList.add(dozentContentRaw.get(i).select("h4").text());
-                            dozentContentRaw.get(i).select("h4").remove();
+                        for (int i = 0; i < lecturerContentRaw.size(); i++) {
+                            titelList.add(lecturerContentRaw.get(i).select("h4").text());
+                            lecturerContentRaw.get(i).select("h4").remove();
                             if (i < 2) {
                                 StringBuilder stringBuilder = new StringBuilder();
-                                for (Element line : dozentContentRaw.get(i).select("p")) {
+                                for (Element line : lecturerContentRaw.get(i).select("p")) {
                                     for (Node currNode : line.childNodes()) {
                                         if (currNode.toString().equals("<br>")) {
                                             stringBuilder.append("\n");
@@ -96,14 +96,14 @@ public class DozentParseDownloadManager {
                                 }
                                 contentList.add(stringBuilder.toString());
                             } else {
-                                contentList.add(dozentContentRaw.get(i).text());
+                                contentList.add(lecturerContentRaw.get(i).text());
                             }
                         }
 
                         //Parse Description
-                        Element dozentDescRaw = docCompelte.select("div[class=six mobile-one columns]").first();
-                        titelList.add(dozentDescRaw.select("div[class=row sitesubtitle]").text());
-                        contentList.add(dozentDescRaw.text());
+                        Element lecturerDescRaw = docCompelte.select("div[class=six mobile-one columns]").first();
+                        titelList.add(lecturerDescRaw.select("div[class=row sitesubtitle]").text());
+                        contentList.add(lecturerDescRaw.text());
 
                         //Load Image
                         if (imageURL != null) {
@@ -111,7 +111,7 @@ public class DozentParseDownloadManager {
                                 InputStream in = new java.net.URL(imageURL).openStream();
                                 image = BitmapFactory.decodeStream(in);
                             } catch (Exception e) {
-                                Log.e("Error Message by Loading Dozent Image", e.getMessage());
+                                Log.e("Error message by loading lecturer image", e.getMessage());
                                 e.printStackTrace();
                             }
                         }

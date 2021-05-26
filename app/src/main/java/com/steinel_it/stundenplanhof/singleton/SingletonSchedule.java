@@ -58,7 +58,7 @@ public class SingletonSchedule {
                 scheduleList.clear();
             }
             HashMap<String, ArrayList<LectureEntry>> sortedMap = new HashMap<>();
-            if (filterType == SchedulerFilter.VORLESUNGEN) {
+            if (filterType == SchedulerFilter.LECTURE) {
                 ArrayList<LectureEntry> allCourses = new ArrayList<>();
                 getAllCourses(allCourses);
                 for (LectureEntry entry : allCourses) {
@@ -84,14 +84,14 @@ public class SingletonSchedule {
                 for (String key : sortedMap.keySet()) {
                     scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
                 }
-            } else if (filterType == SchedulerFilter.DOZENTEN) {
+            } else if (filterType == SchedulerFilter.LECTURER) {
                 ArrayList<LectureEntry> allCourses = new ArrayList<>();
                 getAllCourses(allCourses);
                 for (LectureEntry entry : allCourses) {
-                    if (!sortedMap.containsKey(entry.getDozent())) {
-                        sortedMap.put(entry.getDozent(), new ArrayList<>());
+                    if (!sortedMap.containsKey(entry.getLecturer())) {
+                        sortedMap.put(entry.getLecturer(), new ArrayList<>());
                     }
-                    sortedMap.get(entry.getDozent()).add(entry);
+                    sortedMap.get(entry.getLecturer()).add(entry);
                 }
                 titleList.addAll(sortedMap.keySet());
                 for (String key : sortedMap.keySet()) {

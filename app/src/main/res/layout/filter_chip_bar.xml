@@ -25,7 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:checkedChip="@id/chipFilterTage"
+        app:checkedChip="@id/chipFilterDay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageViewFilterIcon"
@@ -33,28 +33,28 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chipFilterTage"
+            android:id="@+id/chipFilterDay"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/days" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chipFilterVorlesung"
+            android:id="@+id/chipFilterLecture"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lectureEntry" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chipFilterRaeume"
+            android:id="@+id/chipFilterRoom"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rooms" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chipFilterDozenten"
+            android:id="@+id/chipFilterLecturer"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

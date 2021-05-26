@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.steinel_it.stundenplanhof.interfaces.HandleDozentTaskInterface;
 import com.steinel_it.stundenplanhof.interfaces.HandleTitleContentTaskInterface;
 
 import org.json.JSONException;

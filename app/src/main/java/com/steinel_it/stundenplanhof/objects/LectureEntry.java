@@ -1,16 +1,16 @@
 package com.steinel_it.stundenplanhof.objects;
 
 public class LectureEntry {
-    private final String day, timeStart, timeEnd, name, shortName, dozent, room, building;
+    private final String day, timeStart, timeEnd, name, shortName, lecturer, room, building;
     private final boolean canceled;
 
-    public LectureEntry(String day, String timeStart, String timeEnd, String name, String shortName, String dozent, String room, String building, boolean canceled) {
+    public LectureEntry(String day, String timeStart, String timeEnd, String name, String shortName, String lecturer, String room, String building, boolean canceled) {
         this.day = day;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
         this.name = name;
         this.shortName = shortName;
-        this.dozent = dozent;
+        this.lecturer = lecturer;
         this.room = room;
         this.building = building;
         this.canceled = canceled;
@@ -36,8 +36,8 @@ public class LectureEntry {
         return shortName;
     }
 
-    public String getDozent() {
-        return dozent;
+    public String getLecturer() {
+        return lecturer;
     }
 
     public String getRoom() {
@@ -60,7 +60,7 @@ public class LectureEntry {
                 ", timeEnd='" + timeEnd + '\'' +
                 ", name='" + name + '\'' +
                 ", shortName='" + shortName + '\'' +
-                ", dozent='" + dozent + '\'' +
+                ", lecturer='" + lecturer + '\'' +
                 ", room='" + room + '\'' +
                 ", building='" + building + '\'' +
                 ", canceled=" + canceled +

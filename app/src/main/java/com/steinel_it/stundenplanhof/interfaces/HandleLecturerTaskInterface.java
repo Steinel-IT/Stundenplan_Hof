@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 
-public interface HandleDozentTaskInterface {
+public interface HandleLecturerTaskInterface {
 
     void onTaskFinished(ArrayList<String> titel, ArrayList<String> contentList, Bitmap image);
 

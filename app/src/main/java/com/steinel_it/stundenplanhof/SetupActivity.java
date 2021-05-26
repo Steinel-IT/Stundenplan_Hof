@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class SetupActivity extends AppCompatActivity implements HandleArrayListStringTaskInterface, SetupValueInterface {
 
-    public static final String EXTRA_MESSAGE_COURSE = "com.steinel_it.stundenplanhof.dozent";
+    public static final String EXTRA_MESSAGE_COURSE = "com.steinel_it.stundenplanhof.course";
     public static final String EXTRA_MESSAGE_SHORT_COURSE = "com.steinel_it.stundenplanhof.name";
     public static final String EXTRA_MESSAGE_SEMESTER = "com.steinel_it.stundenplanhof.semester";
     public static final String EXTRA_MESSAGE_YEAR = "com.steinel_it.stundenplanhof.year";

@@ -2,9 +2,9 @@ package com.steinel_it.stundenplanhof.objects;
 
 public enum SchedulerFilter {
     DAYS("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"),
-    VORLESUNGEN,
+    LECTURE,
     ROOMS,
-    DOZENTEN;
+    LECTURER;
 
     private final String[] titel;
 

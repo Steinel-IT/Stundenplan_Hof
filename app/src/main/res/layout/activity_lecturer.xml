@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DozentActivity">
+    tools:context=".LecturerActivity">
 
     <ScrollView
-        android:id="@+id/scrollViewDozent"
+        android:id="@+id/scrollViewLecturer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
@@ -26,50 +26,50 @@
             android:layout_margin="8dp">
 
             <TextView
-                android:id="@+id/textViewDozentName"
+                android:id="@+id/textViewLecturerName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/imageViewDozent"
+                app:layout_constraintEnd_toStartOf="@+id/imageViewLecturer"
                 app:layout_constraintHorizontal_weight="3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageViewDozent"
+                android:id="@+id/imageViewLecturer"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:contentDescription="@string/profilePicture"
                 android:scaleType="fitCenter"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewDozentTopContent"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewLecturerTopContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="2"
-                app:layout_constraintStart_toEndOf="@id/textViewDozentName"
+                app:layout_constraintStart_toEndOf="@id/textViewLecturerName"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textViewDozentTopContent"
+                android:id="@+id/textViewLecturerTopContent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:lineSpacingExtra="2sp"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/textViewDozentName"
+                app:layout_constraintEnd_toEndOf="@+id/textViewLecturerName"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDozentName" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewLecturerName" />
 
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/barrierDozentToTop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="textViewDozentTopContent,imageViewDozent"
+                app:constraint_referenced_ids="textViewLecturerTopContent,imageViewLecturer"
                 tools:layout_editor_absoluteY="128dp" />
 
             <LinearLayout
-                android:id="@+id/linearLayoutDozentContent"
+                android:id="@+id/linearLayoutLecturerContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="32dp"
@@ -102,14 +102,14 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/dozentNoData"
+        android:text="@string/lecturerNoData"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewDozentEye" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupDozentNothingToSee"
+        android:id="@+id/groupLecturerNothingToSee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -132,20 +132,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/loadingDozent"
+        android:text="@string/loadingLecturer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBarMain" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupLoadingDozent"
+        android:id="@+id/groupLoadingLecturer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:constraint_referenced_ids="progressBarMain,textViewLoadingScheduleMain" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonDozentMail"
+        android:id="@+id/floatingActionButtonLecturerMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -158,7 +158,7 @@
         app:srcCompat="@drawable/ic_mail" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonDozentCall"
+        android:id="@+id/floatingActionButtonLecturerCall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -167,14 +167,14 @@
         android:contentDescription="@string/phoneButton"
         android:onClick="onClickFAB"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonDozentMail"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonLecturerMail"
         app:srcCompat="@drawable/ic_call" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupFABDozent"
+        android:id="@+id/groupFABLecturer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="floatingActionButtonDozentMail,floatingActionButtonDozentCall" />
+        app:constraint_referenced_ids="floatingActionButtonLecturerMail,floatingActionButtonLecturerCall" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     public static final String KEY_APP_SETTINGS = "appSettings";
     public static final int RESULTCODE_SETUP = 1;
-    public static final String EXTRA_MESSAGE_DOZENT = "com.steinel_it.stundenplanhof.dozent";
+    public static final String EXTRA_MESSAGE_LECTURER = "com.steinel_it.stundenplanhof.lecturer";
     public static final String EXTRA_MESSAGE_NAME = "com.steinel_it.stundenplanhof.name";
     public static final String EXTRA_MESSAGE_SEMESTER = "com.steinel_it.stundenplanhof.semester";
     public static final String EXTRA_MESSAGE_LECTURE = "com.steinel_it.stundenplanhof.lecture";
@@ -176,14 +176,14 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private void setupFilterBar() {
         ChipGroup filterChipGroup = findViewById(R.id.chipGroupFilter);
         filterChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.chipFilterTage) {
+            if (checkedId == R.id.chipFilterDay) {
                 schedule.setFilterType(SchedulerFilter.DAYS);
-            } else if (checkedId == R.id.chipFilterVorlesung) {
-                schedule.setFilterType(SchedulerFilter.VORLESUNGEN);
-            } else if (checkedId == R.id.chipFilterRaeume) {
+            } else if (checkedId == R.id.chipFilterLecture) {
+                schedule.setFilterType(SchedulerFilter.LECTURE);
+            } else if (checkedId == R.id.chipFilterRoom) {
                 schedule.setFilterType(SchedulerFilter.ROOMS);
-            } else if (checkedId == R.id.chipFilterDozenten) {
-                schedule.setFilterType(SchedulerFilter.DOZENTEN);
+            } else if (checkedId == R.id.chipFilterLecturer) {
+                schedule.setFilterType(SchedulerFilter.LECTURER);
             }
             schedule.sortSchedule();
             if (schedulerEntryListAdapter != null) {
@@ -206,6 +206,11 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
             selectedLectureEntry = courseEntry;
         });
         recyclerViewScheduler.setAdapter(schedulerEntryListAdapter);
+        scrollToToday();
+    }
+
+    private void scrollToToday() {
+        //TODO: Machen
     }
 
     private void createSideOptionSheet(LectureEntry lectureEntry) {
@@ -223,8 +228,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         TextView textViewVorlesungName = viewSideBar.findViewById(R.id.textViewModalSheetVorlesungName);
         textViewVorlesungName.setText(lectureEntry.getShortName());
 
-        TextView textViewDozentName = viewSideBar.findViewById(R.id.textViewModalSheetDozentName);
-        textViewDozentName.setText(lectureEntry.getDozent());
+        TextView textViewLecturerName = viewSideBar.findViewById(R.id.textViewModalSheetLecturerName);
+        textViewLecturerName.setText(lectureEntry.getLecturer());
 
         TextView textViewRoomName = viewSideBar.findViewById(R.id.textViewModalSheetRoomName);
         textViewRoomName.setText(lectureEntry.getRoom());
@@ -244,8 +249,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         TextView textViewVorlesungName = buttomSheet.findViewById(R.id.textViewModalSheetVorlesungName);
         textViewVorlesungName.setText(lectureEntry.getShortName());
 
-        TextView textViewDozentName = buttomSheet.findViewById(R.id.textViewModalSheetDozentName);
-        textViewDozentName.setText(lectureEntry.getDozent());
+        TextView textViewLecturerName = buttomSheet.findViewById(R.id.textViewModalSheetLecturerName);
+        textViewLecturerName.setText(lectureEntry.getLecturer());
 
         TextView textViewRoomName = buttomSheet.findViewById(R.id.textViewModalSheetRoomName);
         textViewRoomName.setText(lectureEntry.getRoom());
@@ -257,10 +262,10 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         bottomSheetDialogLecture.show();
     }
 
-    public void onClickDozent(View view) {
-        Intent intentDozent = new Intent(this, DozentActivity.class);
-        intentDozent.putExtra(EXTRA_MESSAGE_DOZENT, selectedLectureEntry.getDozent());
-        startActivity(intentDozent);
+    public void onClickLecturer(View view) {
+        Intent intentLecturer = new Intent(this, LecturerActivity.class);
+        intentLecturer.putExtra(EXTRA_MESSAGE_LECTURER, selectedLectureEntry.getLecturer());
+        startActivity(intentLecturer);
     }
 
     public void onClickRoom(View view) {
