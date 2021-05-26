@@ -6,11 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ModuleActivity">
 
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/cardViewModuleSelect" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewModuleSelect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="8dp"
         app:cardBackgroundColor="?attr/colorSurface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,35 +29,23 @@
 
     </androidx.cardview.widget.CardView>
 
-    <ScrollView
-        android:id="@+id/scrollViewModuleContent"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewModule"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/recycler_item_module_book_entry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewModuleSelect">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/textViewModuleContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/groupModuleContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="cardViewModuleSelect,scrollViewModuleContent" />
+        app:constraint_referenced_ids="cardViewModuleSelect,recyclerViewModule" />
 
     <ProgressBar
         android:id="@+id/progressBarMain"
@@ -70,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/modulhandbuch_wird_geladen"
+        android:text="@string/loadingModuleBook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBarMain" />
@@ -85,7 +79,7 @@
         android:id="@+id/imageViewModuleEye"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/nothingtoseeicon"
+        android:contentDescription="@string/nothingToSeeIcon"
         android:src="@drawable/ic_eye"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +94,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:text="@string/module_no_data"
+        android:text="@string/moduleNoData"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

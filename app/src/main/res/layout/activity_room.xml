@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:onClick="onClickGpsSave"
-        android:text="@string/gps_save"
+        android:text="@string/saveLocation"
         app:layout_constraintEnd_toStartOf="@+id/textViewCurrLoc"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textViewRoomGPS"

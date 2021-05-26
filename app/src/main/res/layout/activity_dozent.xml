@@ -41,7 +41,7 @@
                 android:id="@+id/imageViewDozent"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:contentDescription="@string/profile_picture"
+                android:contentDescription="@string/profilePicture"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="@+id/textViewDozentTopContent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +93,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.45"
-        android:contentDescription="@string/nothingtoseeicon" />
+        android:contentDescription="@string/nothingToSeeIcon" />
 
     <TextView
         android:id="@+id/textViewDozentNothingToSee"
@@ -102,7 +102,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/dozent_no_data"
+        android:text="@string/dozentNoData"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/dozent_wird_geladen"
+        android:text="@string/loadingDozent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBarMain" />
@@ -151,7 +151,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
-        android:contentDescription="@string/mail_button"
+        android:contentDescription="@string/mailButton"
         android:onClick="onClickFAB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -164,7 +164,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
-        android:contentDescription="@string/phone_button"
+        android:contentDescription="@string/phoneButton"
         android:onClick="onClickFAB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonDozentMail"

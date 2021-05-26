@@ -24,23 +24,22 @@ import com.steinel_it.stundenplanhof.interfaces.HandleDozentTaskInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DozentActivity extends AppCompatActivity implements HandleDozentTaskInterface {
 
-    DozentParseDownloadManager dozentParseDownloadManager;
-
-    ArrayList<String> titelList;
-    ArrayList<String> contentList;
-    String dozent;
-    String phone;
-    String mail;
-    Bitmap image;
+    private ArrayList<String> titelList;
+    private ArrayList<String> contentList;
+    private String dozent;
+    private String phone;
+    private String mail;
+    private Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dozent);
-        getSupportActionBar().setTitle("Dozenteninformation");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.dozentInfo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState != null) {
             titelList = savedInstanceState.getStringArrayList("titelList");
@@ -57,10 +56,9 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -87,7 +85,7 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
 
     private void setupContent() {
         if (titelList == null || contentList == null) {
-            dozentParseDownloadManager = new DozentParseDownloadManager(this);
+            DozentParseDownloadManager dozentParseDownloadManager = new DozentParseDownloadManager(this);
             dozentParseDownloadManager.getDozent(dozent);
         } else if (titelList.isEmpty() || contentList.isEmpty()) {
             Group groupNothingToSee = findViewById(R.id.groupDozentNothingToSee);
@@ -115,9 +113,7 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
                 if (i == 1) {
                     textViewText.setText(contentList.get(i));
                 } else { //Manueller Abstand nach 1, weil Website nicht konstant ist
-                    StringBuilder sb = new StringBuilder(contentList.get(i));
-                    sb.append(System.lineSeparator());
-                    textViewText.setText(sb.toString());
+                    textViewText.setText(String.format("%s%s",contentList.get(i),System.lineSeparator()));
                 }
                 textViewText.setTextSize(16);
                 linearLayoutDozentContent.addView(textViewTitle);
@@ -141,23 +137,23 @@ public class DozentActivity extends AppCompatActivity implements HandleDozentTas
                 intentMail.setData(Uri.parse("mailto:"));
                 intentMail.putExtra(Intent.EXTRA_EMAIL, new String[]{mail});
                 try {
-                    startActivity(Intent.createChooser(intentMail, "Wähle einen E-Mail Service:"));
+                    startActivity(Intent.createChooser(intentMail, getString(R.string.chooseEMailService)));
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, "Kein E-Mail Service gefunden", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.noEMailServiceFound), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, "E-Mail Adresse nicht vorhanden", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.EMailNotFound), Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.floatingActionButtonDozentCall) {
             if (phone != null) {
                 Intent intentCall = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
                 try {
-                    startActivity(Intent.createChooser(intentCall, "Wähle einen Telefon Service:"));
+                    startActivity(Intent.createChooser(intentCall, getString(R.string.choosePhoneService)));
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, "Kein Telefon Service gefunden", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.noPhoneServiceFound), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, "Telefon Nummer nicht vorhanden", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.PhoneNotFound), Toast.LENGTH_SHORT).show();
             }
         }
     }

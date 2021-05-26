@@ -8,7 +8,7 @@ public class Note implements Comparator<Note>{
     private String text;
 
     public Note(String text) {
-        this.text = new String(text);
+        this.text = text;
         this.saveDate = LocalDateTime.now();
     }
 

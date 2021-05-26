@@ -21,14 +21,15 @@ import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 import com.steinel_it.stundenplanhof.objects.Note;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class NoteActivity extends AppCompatActivity {
 
-    String fileName;
-    StorageManager storageManager;
-    LinearLayout linearLayoutNothingToSee;
-    ArrayList<Note> noteArrayList = new ArrayList<>();
-    NoteListAdapter noteListAdapter;
+    private String fileName;
+    private StorageManager storageManager;
+    private LinearLayout linearLayoutNothingToSee;
+    private ArrayList<Note> noteArrayList = new ArrayList<>();
+    private NoteListAdapter noteListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class NoteActivity extends AppCompatActivity {
         fileName = String.format("Notes_S%1$s_%2$s",
                 extras.getString(MainActivity.EXTRA_MESSAGE_SEMESTER),
                 extras.getString(MainActivity.EXTRA_MESSAGE_NAME));
-        getSupportActionBar().setTitle("Notizen");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.notes));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getAllNotes();
         setupNotes();
@@ -49,21 +50,17 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void setupNotes() {
         RecyclerView recyclerViewNotes = findViewById(R.id.recyclerViewNotes);
-        noteListAdapter = new NoteListAdapter(noteArrayList, (Note note, int position, View view) -> {
-            showDialog(view, note);
-        }, (Note note, int position, View view) -> {
-            deleteSavedNote(note, position);
-        });
+        noteListAdapter = new NoteListAdapter(noteArrayList, (Note note, int position, View view) ->
+                showDialog(view, note), (Note note, int position, View view) -> deleteSavedNote(note));
         recyclerViewNotes.setAdapter(noteListAdapter);
     }
 
@@ -71,7 +68,7 @@ public class NoteActivity extends AppCompatActivity {
         noteArrayList = storageManager.getAllNotes(getApplicationContext(), fileName);
     }
 
-    private void deleteSavedNote(Note note, int position) {
+    private void deleteSavedNote(Note note) {
         noteArrayList.remove(note);
         noteListAdapter.notifyDataSetChanged();
         storageManager.deleteNote(note, getApplicationContext(), fileName);
@@ -99,10 +96,10 @@ public class NoteActivity extends AppCompatActivity {
         TextView textViewTitle = dialogView.findViewById(R.id.textViewDialogNoteTitle);
         EditText editTextNote = dialogView.findViewById(R.id.editTextDialogNote);
         if (presetNote != null) {
-            textViewTitle.setText(R.string.notiz_bearbeiten);
+            textViewTitle.setText(R.string.editNote);
             editTextNote.setText(presetNote.getText());
         } else {
-            textViewTitle.setText(R.string.neue_notiz);
+            textViewTitle.setText(R.string.newNote);
         }
         Button buttonCancel = dialogView.findViewById(R.id.buttonDialogNoteCancel);
         Button buttonSave = dialogView.findViewById(R.id.buttonDialogNoteSave);

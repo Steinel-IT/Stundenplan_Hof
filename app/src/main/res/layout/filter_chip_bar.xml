@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
-        android:contentDescription="@string/filtericon"
+        android:contentDescription="@string/filterIcon"
         app:layout_constraintBottom_toBottomOf="@+id/chipGroupFilter"
         app:layout_constraintEnd_toStartOf="@+id/chipGroupFilter"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tage" />
+            android:text="@string/days" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipFilterVorlesung"
@@ -51,14 +51,14 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/raeume" />
+            android:text="@string/rooms" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipFilterDozenten"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dozenten" />
+            android:text="@string/lecturers" />
 
     </com.google.android.material.chip.ChipGroup>
 

@@ -38,5 +38,5 @@ public class SetupFragmentThree extends Fragment {
         return inflater.inflate(R.layout.fragment_setup_three, container, false);
     }
 
-    //TODO: Hier den Switch machen
+    //TODO: Switch Kalender Sync
 }

@@ -30,7 +30,6 @@ import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements HandleArrayListScheduleTaskInterface {
@@ -50,17 +49,17 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private String semester;
     private String year;
 
-    ScheduleParseDownloadManager setupParseDownloadManager;
+    private ScheduleParseDownloadManager setupParseDownloadManager;
 
-    LectureEntry selectedLectureEntry;
+    private LectureEntry selectedLectureEntry;
 
-    SchedulerEntryListAdapter schedulerEntryListAdapter;
+    private SchedulerEntryListAdapter schedulerEntryListAdapter;
 
-    SingletonSchedule schedule;
+    private SingletonSchedule schedule;
 
-    StorageManager storageManager;
+    private StorageManager storageManager;
 
-    BottomSheetDialog bottomSheetDialogLecture;
+    private BottomSheetDialog bottomSheetDialogLecture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     private void setupContent(boolean reload) {
-        setupParseDownloadManager = new ScheduleParseDownloadManager(this);
+        setupParseDownloadManager = new ScheduleParseDownloadManager(this, getString(R.string.virtuel), getString(R.string.changes));
         setContentView(R.layout.activity_main);
         if (reload || schedule.getScheduleList() == null || schedule.getDayTitle() == null) {
             setupParseDownloadManager.getSchedule(shortCourse, semester);
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
             Intent intentFirstTime = new Intent(this, SetupActivity.class);
             startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
         } else if (itemId == R.id.action_sync) {
-        }//TODO set Menue Sync
+        }//TODO set Kalender Sync
         return super.onOptionsItemSelected(item);
     }
 
@@ -287,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     public void onClickChat(View view) {
-        System.out.println("On Click Chat");
+        //TODO: CHAT
     }
 
 }

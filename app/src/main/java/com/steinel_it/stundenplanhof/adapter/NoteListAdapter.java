@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.steinel_it.stundenplanhof.R;
 import com.steinel_it.stundenplanhof.objects.Note;
 
+import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteHo
 
     @Override
     public int getItemCount() {
-        if(noteArrayList == null) return 0;
+        if (noteArrayList == null) return 0;
         return noteArrayList.size();
     }
 

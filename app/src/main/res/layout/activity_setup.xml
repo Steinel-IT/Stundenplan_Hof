@@ -26,8 +26,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:icon="@drawable/ic_keyboard_arrow_right"
-        android:contentDescription="@string/nextpagebutton"
-        android:text="@string/best_tigen"
+        android:contentDescription="@string/nextPageButton"
+        android:text="@string/submit"
         android:onClick="onClickSetupFab"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,7 +17,7 @@
                 android:id="@+id/action_sync"
                 android:checkable="true"
                 android:icon="@drawable/ic_event"
-                android:title="@string/kalender_sync"
+                android:title="@string/calendarSync"
                 app:showAsAction="never" />
 
             <item

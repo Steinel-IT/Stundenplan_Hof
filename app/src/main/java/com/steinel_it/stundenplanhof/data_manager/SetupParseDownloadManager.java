@@ -69,7 +69,6 @@ public class SetupParseDownloadManager {
     public void getSemester(int... selectedCourseIndex) {
         final ArrayList<String> semester = new ArrayList<>();
         if (selectedCourseIndex.length != 0) {
-            System.out.println(shortCourses.get(selectedCourseIndex[0]));
             downloadSetupForm(REQUEST_CODE_SEMESTER, "https://www.hof-university.de/index.php?type=1421771406&id=79&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadSemester&tx_stundenplan_stundenplan[studiengang]=" + shortCourses.get(selectedCourseIndex[0]));
             return;
         }
@@ -90,7 +89,6 @@ public class SetupParseDownloadManager {
     public void getYears(int... selectedCourseIndex) {
         final ArrayList<String> years = new ArrayList<>();
         if (selectedCourseIndex.length != 0) {
-            System.out.println(shortCourses.get(selectedCourseIndex[0]));
             downloadSetupForm(REQUEST_CODE_YEARS, "https://www.hof-university.de/index.php?type=1421771407&id=167&tx_modulhandbuch_modulhandbuch[controller]=Ajax&tx_modulhandbuch_modulhandbuch[action]=loadYear&tx_modulhandbuch_modulhandbuch[cl]=" + shortCourses.get(selectedCourseIndex[0]));
             return;
         }

@@ -1,12 +1,13 @@
 package com.steinel_it.stundenplanhof;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -21,12 +22,15 @@ import androidx.core.content.ContextCompat;
 
 import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 
+import java.util.Objects;
+
 public class RoomActivity extends AppCompatActivity {
 
     private StorageManager storageManager;
 
     private LocationManager locationManager;
 
+    boolean firstTime = true;
     private WebView webView;
     private String room, building;
     private Location location;
@@ -39,15 +43,13 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
         webView = findViewById(R.id.webViewRoomLoc);
         webView.setWebViewClient(new WebViewClient());
-        webView.getSettings().setJavaScriptEnabled(true);
         storageManager = new StorageManager();
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (savedInstanceState != null) {
             room = savedInstanceState.getString("room");
             building = savedInstanceState.getString("building");
-            gpsStatus = savedInstanceState.getBoolean("gpsStatus");
             System.out.println(savedInstanceState.getDouble("currLocationLat") != 0.0 && savedInstanceState.getDouble("currLocationLong") != 0.0);
-            if(savedInstanceState.getDouble("currLocationLat") != 0.0 && savedInstanceState.getDouble("currLocationLong") != 0.0) {
+            if (savedInstanceState.getDouble("currLocationLat") != 0.0 && savedInstanceState.getDouble("currLocationLong") != 0.0) {
                 currLocation = new Location("");
                 currLocation.setLatitude(savedInstanceState.getDouble("currLocationLat"));
                 currLocation.setLongitude(savedInstanceState.getDouble("currLocationLong"));
@@ -59,11 +61,29 @@ public class RoomActivity extends AppCompatActivity {
             building = extras.getString(MainActivity.EXTRA_MESSAGE_BUILDING);
         }
         gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        getSupportActionBar().setTitle(getString(R.string.room) + ": " + room);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.room) + ": " + room);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadCoordinates();
-        setLocationListener();
         setupContent();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (gpsStatus) {
+            setLocationListener();
+        } else {
+            if (firstTime) {
+                firstTime = false;
+                Toast.makeText(RoomActivity.this, getString(R.string.enableLoc), Toast.LENGTH_LONG).show();
+                Intent intentLocSett = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intentLocSett);
+            } else {
+                Toast.makeText(RoomActivity.this, getString(R.string.gpsWasNotEnabled), Toast.LENGTH_LONG).show();
+            }
+        }
+
     }
 
     @Override
@@ -71,8 +91,7 @@ public class RoomActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("room", room);
         savedInstanceState.putString("building", building);
-        savedInstanceState.putBoolean("gpsStatus", gpsStatus);
-        if(currLocation != null) {
+        if (currLocation != null) {
             savedInstanceState.putDouble("currLocationLat", currLocation.getLatitude());
             savedInstanceState.putDouble("currLocationLong", currLocation.getLongitude());
             savedInstanceState.putDouble("currLocationAlt", currLocation.getAltitude());
@@ -81,10 +100,9 @@ public class RoomActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -122,29 +140,23 @@ public class RoomActivity extends AppCompatActivity {
                 ContextCompat.checkSelfPermission(RoomActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(RoomActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
-            if (gpsStatus) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        TextView textViewGPS = findViewById(R.id.textViewCurrLoc);
-                        currLocation = location;
-                        textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.currPos), location.getLatitude(), location.getLongitude(), location.getAltitude()));
-                        Toast.makeText(RoomActivity.this, getString(R.string.locationLoaded), Toast.LENGTH_SHORT).show();
-                    }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    TextView textViewGPS = findViewById(R.id.textViewCurrLoc);
+                    currLocation = location;
+                    textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.currPos), location.getLatitude(), location.getLongitude(), location.getAltitude()));
+                    Toast.makeText(RoomActivity.this, getString(R.string.locationLoaded), Toast.LENGTH_SHORT).show();
+                }
 
-                    @Override
-                    public void onProviderEnabled(@NonNull String provider) {
-                        System.out.println("Provider Enabled");
-                    }
+                @Override
+                public void onProviderEnabled(@NonNull String provider) {
+                }
 
-                    @Override
-                    public void onProviderDisabled(@NonNull String provider) {
-                        System.out.println("Provider Disabled");
-                    }
-                });
-            } else {
-                Toast.makeText(RoomActivity.this, getString(R.string.enableLoc), Toast.LENGTH_LONG).show();
-            }
+                @Override
+                public void onProviderDisabled(@NonNull String provider) {
+                }
+            });
         }
     }
 
@@ -157,13 +169,13 @@ public class RoomActivity extends AppCompatActivity {
             textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.coordinates), currLocation.getLatitude(), currLocation.getLongitude(), currLocation.getAltitude()));
             webView.setVisibility(View.VISIBLE);
             webView.loadUrl("https://www.google.com/maps/search/?api=1&query=" + currLocation.getLatitude() + "," + currLocation.getLongitude());
-            if(location == null) location = new Location("");
+            if (location == null) location = new Location("");
             location.set(currLocation);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String per[], int[] resultPerm) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] per, @NonNull int[] resultPerm) {
         if (requestCode == 1) {
             if (resultPerm.length > 0 && resultPerm[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(RoomActivity.this, getString(R.string.permissionGranted), Toast.LENGTH_SHORT).show();

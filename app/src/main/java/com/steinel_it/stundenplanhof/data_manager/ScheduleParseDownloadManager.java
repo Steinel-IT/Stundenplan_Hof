@@ -37,8 +37,12 @@ public class ScheduleParseDownloadManager {
 
     boolean isAlreadyRunning = false;
 
-    public ScheduleParseDownloadManager(HandleArrayListScheduleTaskInterface context) {
+    private final String virtuelString, changesString;
+
+    public ScheduleParseDownloadManager(HandleArrayListScheduleTaskInterface context, String virtuelString, String changesString) {
         this.context = context;
+        this.virtuelString = virtuelString;
+        this.changesString = changesString;
     }
 
     private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
@@ -109,7 +113,7 @@ public class ScheduleParseDownloadManager {
                 ArrayList<LectureEntry> lectureArrayList = new ArrayList<>();
                 for (Element course : dayData.select("tr")) {
                     String room = course.select("td").get(6).text();
-                    String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
+                    String building = room.contains("F") ? room.substring(1, 2) : virtuelString;
                     String shortName = course.select("td").get(3).textNodes().get(0).text();
                     lectureArrayList.add(new LectureEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, building, false));
                 }
@@ -126,7 +130,7 @@ public class ScheduleParseDownloadManager {
             Document docCompelte = Jsoup.parse(lecturesExpr);
             Elements lectures = docCompelte.select("div[class=hide-for-small]").select("tr");
             if (!lectures.isEmpty()) {
-                titelList.add("Änderungen");
+                titelList.add(changesString);
                 ArrayList<LectureEntry> lectureEntries = new ArrayList<>();
                 for (int i = 1; i < lectures.size(); i++) {
                     Elements infos = lectures.get(i).select("td");
@@ -137,7 +141,7 @@ public class ScheduleParseDownloadManager {
                     LocalDateTime endDateTime = LocalDateTime.of(1970, 1, 1, Integer.parseInt(timeStart.substring(0, 2)), Integer.parseInt(timeStart.substring(3, 5))).plusMinutes(90);
                     String endDate = endDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
                     String room = infos.get(3).textNodes().get(2).text().substring(1);
-                    String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
+                    String building = room.contains("F") ? room.substring(1, 2) : virtuelString;
                     lectureEntries.add(new LectureEntry(day, timeStart, endDate, infos.get(1).text(), shortName, infos.get(2).text(), room, building, true));
                     if (!infos.get(4).textNodes().get(1).text().trim().isEmpty()) {
                         String newDay = infos.get(4).textNodes().get(0).text().substring(1);
@@ -146,7 +150,7 @@ public class ScheduleParseDownloadManager {
                         LocalDateTime newEndDateTime = LocalDateTime.of(1970, 1, 1, Integer.parseInt(newTimeStart.substring(0, 2)), Integer.parseInt(newTimeStart.substring(3, 5))).plusMinutes(90);
                         String newEndDate = newEndDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
                         String newRoom = infos.get(4).textNodes().get(2).text().substring(1);
-                        String newBuilding = newRoom.contains("F") ? newRoom.substring(1, 2) : "Virtuell";
+                        String newBuilding = newRoom.contains("F") ? newRoom.substring(1, 2) : virtuelString;
                         lectureEntries.add(new LectureEntry(newDay, newTimeStart, newEndDate, infos.get(1).text(), shortName, infos.get(2).text(), newRoom, newBuilding, false));
                     }
                 }

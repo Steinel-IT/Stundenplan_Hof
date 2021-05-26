@@ -22,6 +22,7 @@ import com.steinel_it.stundenplanhof.parts.SetupViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SetupActivity extends AppCompatActivity implements HandleArrayListStringTaskInterface, SetupValueInterface {
 
@@ -44,7 +45,7 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
         //TODO: Hier auch SaveInstance?
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setupPagerSlider();
         setupParseDownloadManager = new SetupParseDownloadManager(this);
         setupParseDownloadManager.getCourses();

@@ -6,31 +6,32 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.steinel_it.stundenplanhof.adapter.ModuleBookAdapter;
 import com.steinel_it.stundenplanhof.data_manager.ModuleParseDownloadManager;
 import com.steinel_it.stundenplanhof.interfaces.HandleTitleContentTaskInterface;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ModuleActivity extends AppCompatActivity implements HandleTitleContentTaskInterface {
 
-    ModuleParseDownloadManager moduleParseDownloadManager;
+    private ArrayList<String> titelList;
+    private ArrayList<String> contentList;
 
-    ArrayList<String> titelList;
-    ArrayList<String> contentList;
-
+    private RecyclerView recyclerViewModule;
     private String shortCourse, shortLecture, year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
             titelList = savedInstanceState.getStringArrayList("titelList");
@@ -43,7 +44,7 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
             year = extras.getString(MainActivity.EXTRA_MESSAGE_YEAR);
         }
 
-        getSupportActionBar().setTitle("Modulhandbuch: " + shortLecture);
+        getSupportActionBar().setTitle(getString(R.string.modulebook) + ": " + shortLecture);
         setupContent();
     }
 
@@ -66,7 +67,7 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
 
     private void setupContent() {
         if (titelList == null || contentList == null) {
-            moduleParseDownloadManager = new ModuleParseDownloadManager(this);
+            ModuleParseDownloadManager moduleParseDownloadManager = new ModuleParseDownloadManager(this);
             moduleParseDownloadManager.getModule(shortCourse, year, shortLecture);
         } else if (titelList.isEmpty() || contentList.isEmpty()) {
             Group groupLoadingScreen = findViewById(R.id.groupLoadingModuleMain);
@@ -78,7 +79,6 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
             Group groupModuleContent = findViewById(R.id.groupModuleContent);
 
             Spinner spinnerTitle = findViewById(R.id.spinnerModuleContentSelector);
-            TextView textViewContent = findViewById(R.id.textViewModuleContent);
 
             ArrayAdapter<String> spinnerModuleTitleAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, titelList);
             spinnerModuleTitleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -87,7 +87,7 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
             spinnerTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                    textViewContent.setText(contentList.get(pos));
+                    recyclerViewModule.scrollToPosition(pos);
                 }
 
                 @Override
@@ -95,7 +95,9 @@ public class ModuleActivity extends AppCompatActivity implements HandleTitleCont
                 }
             });
 
-            textViewContent.setText(contentList.get(0));
+            recyclerViewModule = findViewById(R.id.recyclerViewModule);
+            ModuleBookAdapter moduleBookAdapter = new ModuleBookAdapter(titelList, contentList);
+            recyclerViewModule.setAdapter(moduleBookAdapter);
 
             groupLoadingScreen.setVisibility(View.GONE);
             groupModuleContent.setVisibility(View.VISIBLE);

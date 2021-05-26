@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/gps_save"
+        android:text="@string/saveLocation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textViewRoomGPS"
         app:layout_constraintHorizontal_bias="1.0"
