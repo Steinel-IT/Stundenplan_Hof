@@ -38,5 +38,5 @@ public class SetupFragmentThree extends Fragment {
         return inflater.inflate(R.layout.fragment_setup_three, container, false);
     }
 
-    //TODO: Hier die Checkboxes hin machen
+    //TODO: Hier den Switch machen
 }

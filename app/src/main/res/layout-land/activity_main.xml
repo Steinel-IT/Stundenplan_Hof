@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:clipToPadding="false"
             android:paddingBottom="10dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/recycler_item_scheduler_day">
 
@@ -64,7 +64,6 @@
         android:id="@+id/groupLoadingScheduleMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="progressBarMain,textViewLoadingScheduleMain"
-        tools:visibility="gone" />
+        app:constraint_referenced_ids="progressBarMain,textViewLoadingScheduleMain" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

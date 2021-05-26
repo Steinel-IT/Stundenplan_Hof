@@ -35,6 +35,8 @@ public class ScheduleParseDownloadManager {
     ArrayList<SchedulerEntry> schedulerEntries;
     ArrayList<String> titelList;
 
+    boolean isAlreadyRunning = false;
+
     public ScheduleParseDownloadManager(HandleArrayListScheduleTaskInterface context) {
         this.context = context;
     }
@@ -47,44 +49,51 @@ public class ScheduleParseDownloadManager {
     }
 
     public void getSchedule(String shortCourse, String semester) {
-        if (titelList == null || schedulerEntries == null) {
-            titelList = new ArrayList<>();
-            schedulerEntries = new ArrayList<>();
+        if(!isAlreadyRunning) {
+            isAlreadyRunning = true;
+            if (titelList == null || schedulerEntries == null) {
+                titelList = new ArrayList<>();
+                schedulerEntries = new ArrayList<>();
 
-            //Load Schedule
-            String replacedSemester = semester.replace(" - ", "_").replace(" ", "_");
-            OkHttpClient okClient = new OkHttpClient();
-            String url = "https://www.hof-university.de/index.php?type=1421771406&id=79&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadVorlesungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + replacedSemester + "&tx_stundenplan_stundenplan[view]=alle";
-            Request request = new Request.Builder().url(url).build();
+                //Load Schedule
+                String replacedSemester = semester.replace(" - ", "_").replace(" ", "_");
+                OkHttpClient okClient = new OkHttpClient();
+                String url = "https://www.hof-university.de/index.php?type=1421771406&id=79&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadVorlesungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + replacedSemester + "&tx_stundenplan_stundenplan[view]=alle";
+                Request request = new Request.Builder().url(url).build();
 
-            okClient.newCall(request).enqueue(new Callback() {
+                okClient.newCall(request).enqueue(new Callback() {
 
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Log.e("Schedule Loading", "Failed by loading schedule");
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        //Parse Normal Schedule
-                        parseSchedule(response);
-
-                        //Load Cancelled Lecuteres
-                        String newReplacedSemester = replacedSemester.replace("_", "%23");
-                        String cancelledURL = "https://www.hof-university.de/index.php?type=1421771406&id=166&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadAenderungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + newReplacedSemester + "&tx_stundenplan_stundenplan[datum]=TT.MM.JJJJ";
-                        Request requestCancelledLecuteres = new Request.Builder().url(cancelledURL).build();
-                        Response responseCancelledLecuteres = okClient.newCall(requestCancelledLecuteres).execute();
-                        parseCancelledLectures(responseCancelledLecuteres);
-
-                        uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
-                    } else {
-                        throw new IOException("Download not successful");
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        isAlreadyRunning = false;
+                        uiThreadHandler.post(() -> context.onTaskFinished(null, null));
+                        Log.e("Schedule Loading", "Failed by loading schedule");
                     }
-                }
-            });
-        } else {
-            uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            //Parse Normal Schedule
+                            parseSchedule(response);
+
+                            //Load Cancelled Lecuteres
+                            String newReplacedSemester = replacedSemester.replace("_", "%23");
+                            String cancelledURL = "https://www.hof-university.de/index.php?type=1421771406&id=166&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadAenderungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + newReplacedSemester + "&tx_stundenplan_stundenplan[datum]=TT.MM.JJJJ";
+                            Request requestCancelledLecuteres = new Request.Builder().url(cancelledURL).build();
+                            Response responseCancelledLecuteres = okClient.newCall(requestCancelledLecuteres).execute();
+                            parseCancelledLectures(responseCancelledLecuteres);
+                            isAlreadyRunning = false;
+                            uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
+                        } else {
+                            isAlreadyRunning = false;
+                            uiThreadHandler.post(() -> context.onTaskFinished(null, null));
+                        }
+                    }
+                });
+            } else {
+                isAlreadyRunning = false;
+                uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
+            }
         }
     }
 

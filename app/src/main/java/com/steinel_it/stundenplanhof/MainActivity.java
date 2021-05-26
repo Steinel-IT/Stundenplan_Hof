@@ -30,6 +30,7 @@ import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements HandleArrayListScheduleTaskInterface {
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     public static final String EXTRA_MESSAGE_ROOM = "com.steinel_it.stundenplanhof.room";
     public static final String EXTRA_MESSAGE_BUILDING = "com.steinel_it.stundenplanhof.building";
 
-    private String course;
+    private String course; // Für den Chat
     private String shortCourse;
     private String semester;
     private String year;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     SingletonSchedule schedule;
 
     StorageManager storageManager;
+
+    BottomSheetDialog bottomSheetDialogLecture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +78,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+        if (bottomSheetDialogLecture != null)
+            bottomSheetDialogLecture.dismiss();
     }
 
     @Override
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 setupContent(true);
             }
         } else
-            Toast.makeText(this, "Fehler im Setup aufgetreten", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.errorInSetup), Toast.LENGTH_SHORT).show();
     }
 
     private void setupContent(boolean reload) {
@@ -131,10 +131,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_update) {
-            Group loadingGroup = findViewById(R.id.groupLoadingScheduleMain);
-            RecyclerView recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
-            recyclerViewScheduler.setVisibility(View.GONE);
-            loadingGroup.setVisibility(View.VISIBLE);
+            hideContent();
             setupParseDownloadManager.resetSchedule();
             setupParseDownloadManager.getSchedule(shortCourse, semester);
         } else if (itemId == R.id.action_reset) {
@@ -147,15 +144,34 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         return super.onOptionsItemSelected(item);
     }
 
+    private void hideContent() {
+        Group loadingGroup = findViewById(R.id.groupLoadingScheduleMain);
+        RecyclerView recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
+        recyclerViewScheduler.setVisibility(View.GONE);
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            LinearLayout linearLayoutLandscape = findViewById(R.id.linearLayoutMainLandscape);
+            if (linearLayoutLandscape.getChildCount() > 2) {
+                linearLayoutLandscape.removeViewAt(2);
+            }
+        }
+
+        loadingGroup.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onTaskFinished(ArrayList<SchedulerEntry> result, ArrayList<String> titel) {
-        schedule.setDayTitle(titel);
-        schedule.setDaySortedSchedule(result);
-        schedule.sortSchedule();
-        if (schedulerEntryListAdapter != null) {
-            schedulerEntryListAdapter.notifyDataSetChanged();
+        if (result == null && titel == null) {
+            Toast.makeText(MainActivity.this, getString(R.string.errorInDownloadParse), Toast.LENGTH_LONG).show();
+        } else {
+            schedule.setDayTitle(titel);
+            schedule.setDaySortedSchedule(result);
+            schedule.sortSchedule();
+            if (schedulerEntryListAdapter != null) {
+                schedulerEntryListAdapter.notifyDataSetChanged();
+            }
+            setupRecyclerViews();
         }
-        setupRecyclerViews();
     }
 
     private void setupFilterBar() {
@@ -195,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     private void createSideOptionSheet(LectureEntry lectureEntry) {
         LinearLayout linearLayoutMainLandscape = findViewById(R.id.linearLayoutMainLandscape);
-        if (linearLayoutMainLandscape.getChildCount() > 1)
+        if (linearLayoutMainLandscape.getChildCount() > 2)
             linearLayoutMainLandscape.removeViewAt(2);
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -222,9 +238,9 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     private void createBottomOptionSheet(LectureEntry lectureEntry) {
-        BottomSheetDialog bottomSheetDialogVorlesung = new BottomSheetDialog(MainActivity.this);
-        bottomSheetDialogVorlesung.getBehavior().setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels - 100);
-        View buttomSheet = getLayoutInflater().inflate(R.layout.modal_sheet_vorlesung, null);  //TODO: warum hier null?
+        bottomSheetDialogLecture = new BottomSheetDialog(MainActivity.this);
+        bottomSheetDialogLecture.getBehavior().setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels - 100);
+        View buttomSheet = getLayoutInflater().inflate(R.layout.modal_sheet_vorlesung, null);
 
         TextView textViewVorlesungName = buttomSheet.findViewById(R.id.textViewModalSheetVorlesungName);
         textViewVorlesungName.setText(lectureEntry.getShortName());
@@ -238,8 +254,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         TextView textViewRoomDetail = buttomSheet.findViewById(R.id.textViewModalSheetRoomDetail);
         textViewRoomDetail.setText(String.format("%s %s", getString(R.string.building), lectureEntry.getBuilding()));
 
-        bottomSheetDialogVorlesung.setContentView(buttomSheet);
-        bottomSheetDialogVorlesung.show();
+        bottomSheetDialogLecture.setContentView(buttomSheet);
+        bottomSheetDialogLecture.show();
     }
 
     public void onClickDozent(View view) {

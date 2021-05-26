@@ -42,7 +42,6 @@ public class RoomActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         storageManager = new StorageManager();
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        //TODO Fehler bei der Rotation Überprüfen. Werden Objecte gespeichert automatisch bei der Rotation?
         if (savedInstanceState != null) {
             room = savedInstanceState.getString("room");
             building = savedInstanceState.getString("building");
@@ -127,10 +126,9 @@ public class RoomActivity extends AppCompatActivity {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {
-                        //TODO: Wird nicht geladen auf Physical Device
                         TextView textViewGPS = findViewById(R.id.textViewCurrLoc);
                         currLocation = location;
-                        textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.isLoading), location.getLatitude(), location.getLongitude(), location.getAltitude()));
+                        textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.currPos), location.getLatitude(), location.getLongitude(), location.getAltitude()));
                         Toast.makeText(RoomActivity.this, getString(R.string.locationLoaded), Toast.LENGTH_SHORT).show();
                     }
 
