@@ -49,7 +49,7 @@ public class ScheduleParseDownloadManager {
     }
 
     public void getSchedule(String shortCourse, String semester) {
-        if(!isAlreadyRunning) {
+        if (!isAlreadyRunning) {
             isAlreadyRunning = true;
             if (titelList == null || schedulerEntries == null) {
                 titelList = new ArrayList<>();
@@ -77,8 +77,8 @@ public class ScheduleParseDownloadManager {
                             parseSchedule(response);
 
                             //Load Cancelled Lecuteres
-                            String newReplacedSemester = replacedSemester.replace("_", "%23");
-                            String cancelledURL = "https://www.hof-university.de/index.php?type=1421771406&id=166&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadAenderungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + newReplacedSemester + "&tx_stundenplan_stundenplan[datum]=TT.MM.JJJJ";
+                            String cancelledLectureReplacedSemester = replacedSemester.replace("_", "%23");
+                            String cancelledURL = "https://www.hof-university.de/index.php?type=1421771406&id=166&tx_stundenplan_stundenplan[controller]=Ajax&tx_stundenplan_stundenplan[action]=loadAenderungen&tx_stundenplan_stundenplan[studiengang]=" + shortCourse + "&tx_stundenplan_stundenplan[semester]=" + cancelledLectureReplacedSemester + "&tx_stundenplan_stundenplan[datum]=TT.MM.JJJJ";
                             Request requestCancelledLecuteres = new Request.Builder().url(cancelledURL).build();
                             Response responseCancelledLecuteres = okClient.newCall(requestCancelledLecuteres).execute();
                             parseCancelledLectures(responseCancelledLecuteres);
@@ -131,7 +131,7 @@ public class ScheduleParseDownloadManager {
                 for (int i = 1; i < lectures.size(); i++) {
                     Elements infos = lectures.get(i).select("td");
                     String shortName = infos.get(1).textNodes().get(0).text().substring(1).trim();
-                    String day = infos.get(3).textNodes().get(0).text();
+                    String day = infos.get(3).textNodes().get(0).text().substring(1);
                     String timeStart = infos.get(3).textNodes().get(1).text().substring(1, 6);
                     //Clac endDate
                     LocalDateTime endDateTime = LocalDateTime.of(1970, 1, 1, Integer.parseInt(timeStart.substring(0, 2)), Integer.parseInt(timeStart.substring(3, 5))).plusMinutes(90);
@@ -139,15 +139,16 @@ public class ScheduleParseDownloadManager {
                     String room = infos.get(3).textNodes().get(2).text().substring(1);
                     String building = room.contains("F") ? room.substring(1, 2) : "Virtuell";
                     lectureEntries.add(new LectureEntry(day, timeStart, endDate, infos.get(1).text(), shortName, infos.get(2).text(), room, building, true));
-
-                    String newDay = infos.get(4).textNodes().get(0).text();
-                    String newTimeStart = infos.get(4).textNodes().get(1).text().substring(1, 6);
-                    //Clac new endDate
-                    LocalDateTime newEndDateTime = LocalDateTime.of(1970, 1, 1, Integer.parseInt(newTimeStart.substring(0, 2)), Integer.parseInt(newTimeStart.substring(3, 5))).plusMinutes(90);
-                    String newEndDate = newEndDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-                    String newRoom = infos.get(4).textNodes().get(2).text().substring(1);
-                    String newBuilding = newRoom.contains("F") ? newRoom.substring(1, 2) : "Virtuell";
-                    lectureEntries.add(new LectureEntry(newDay, newTimeStart, newEndDate, infos.get(1).text(), shortName, infos.get(2).text(), newRoom, newBuilding, false));
+                    if (!infos.get(4).textNodes().get(1).text().trim().isEmpty()) {
+                        String newDay = infos.get(4).textNodes().get(0).text().substring(1);
+                        String newTimeStart = infos.get(4).textNodes().get(1).text().substring(1, 6);
+                        //Clac new endDate
+                        LocalDateTime newEndDateTime = LocalDateTime.of(1970, 1, 1, Integer.parseInt(newTimeStart.substring(0, 2)), Integer.parseInt(newTimeStart.substring(3, 5))).plusMinutes(90);
+                        String newEndDate = newEndDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+                        String newRoom = infos.get(4).textNodes().get(2).text().substring(1);
+                        String newBuilding = newRoom.contains("F") ? newRoom.substring(1, 2) : "Virtuell";
+                        lectureEntries.add(new LectureEntry(newDay, newTimeStart, newEndDate, infos.get(1).text(), shortName, infos.get(2).text(), newRoom, newBuilding, false));
+                    }
                 }
                 schedulerEntries.add(new SchedulerEntry(lectureEntries));
             }
