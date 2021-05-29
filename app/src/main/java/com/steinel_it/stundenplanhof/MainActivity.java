@@ -30,7 +30,12 @@ import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements HandleArrayListScheduleTaskInterface {
 
@@ -52,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private ScheduleParseDownloadManager setupParseDownloadManager;
 
     private LectureEntry selectedLectureEntry;
+
+    private RecyclerView recyclerViewScheduler;
 
     private SchedulerEntryListAdapter schedulerEntryListAdapter;
 
@@ -194,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     private void setupRecyclerViews() {
         Group loadingGroup = findViewById(R.id.groupLoadingScheduleMain);
-        RecyclerView recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
+        recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
         loadingGroup.setVisibility(View.GONE);
         recyclerViewScheduler.setVisibility(View.VISIBLE);
         schedulerEntryListAdapter = new SchedulerEntryListAdapter(schedule.getTitleList(), schedule.getScheduleList(), (courseEntry, schedulerPos, vorlesungPos, view) -> {
@@ -210,7 +217,11 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     private void scrollToToday() {
-        //TODO: Machen
+        LocalDate date = LocalDate.now();
+        String dayOfWeekGerm = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.GERMAN);
+        if(schedule.getTitleList().contains(dayOfWeekGerm)) {
+            recyclerViewScheduler.scrollToPosition(schedule.getTitleList().indexOf(dayOfWeekGerm));
+        }
     }
 
     private void createSideOptionSheet(LectureEntry lectureEntry) {

@@ -16,10 +16,13 @@ public class SingletonSchedule {
     private ArrayList<String> dayTitle;
 
     private static final SingletonSchedule instance = new SingletonSchedule();
+
     public static SingletonSchedule getInstance() {
         return instance;
     }
-    private SingletonSchedule() { }
+
+    private SingletonSchedule() {
+    }
 
     public ArrayList<SchedulerEntry> getScheduleList() {
         return scheduleList;
@@ -46,7 +49,8 @@ public class SingletonSchedule {
     }
 
     public void sortSchedule() {
-        if (daySortedSchedule != null) {
+        if (daySortedSchedule != null) { //Data available
+            //Setup Lists
             if (titleList == null) {
                 titleList = new ArrayList<>();
             } else {
@@ -57,57 +61,48 @@ public class SingletonSchedule {
             } else {
                 scheduleList.clear();
             }
+            //Map for sorting
             HashMap<String, ArrayList<LectureEntry>> sortedMap = new HashMap<>();
-            if (filterType == SchedulerFilter.LECTURE) {
-                ArrayList<LectureEntry> allCourses = new ArrayList<>();
-                getAllCourses(allCourses);
-                for (LectureEntry entry : allCourses) {
-                    if (!sortedMap.containsKey(entry.getShortName())) {
-                        sortedMap.put(entry.getShortName(), new ArrayList<>());
-                    }
-                    sortedMap.get(entry.getShortName()).add(entry);
-                }
-                titleList.addAll(sortedMap.keySet());
-                for (String key : sortedMap.keySet()) {
-                    scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
-                }
-            } else if (filterType == SchedulerFilter.ROOMS) {
-                ArrayList<LectureEntry> allCourses = new ArrayList<>();
-                getAllCourses(allCourses);
-                for (LectureEntry entry : allCourses) {
-                    if (!sortedMap.containsKey(entry.getRoom())) {
-                        sortedMap.put(entry.getRoom(), new ArrayList<>());
-                    }
-                    sortedMap.get(entry.getRoom()).add(entry);
-                }
-                titleList.addAll(sortedMap.keySet());
-                for (String key : sortedMap.keySet()) {
-                    scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
-                }
-            } else if (filterType == SchedulerFilter.LECTURER) {
-                ArrayList<LectureEntry> allCourses = new ArrayList<>();
-                getAllCourses(allCourses);
-                for (LectureEntry entry : allCourses) {
-                    if (!sortedMap.containsKey(entry.getLecturer())) {
-                        sortedMap.put(entry.getLecturer(), new ArrayList<>());
-                    }
-                    sortedMap.get(entry.getLecturer()).add(entry);
-                }
-                titleList.addAll(sortedMap.keySet());
-                for (String key : sortedMap.keySet()) {
-                    scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
-                }
-            } else {
+
+            //Default Sort: DAYS
+            if (filterType == SchedulerFilter.DAYS) {
                 titleList.addAll(dayTitle);
                 scheduleList.addAll(daySortedSchedule);
+                return;
+            }
+
+            //Explicit Sort: LECTURE, ROOMS, LECTURER
+            for (LectureEntry entry : getAllCourses()) {
+
+                String sortItem = "";
+
+                //Set sorting Type
+                if (filterType == SchedulerFilter.LECTURE)
+                    sortItem = entry.getShortName();
+                else if (filterType == SchedulerFilter.ROOMS)
+                    sortItem = entry.getRoom();
+                else if (filterType == SchedulerFilter.LECTURER)
+                    sortItem = entry.getLecturer();
+
+
+                if (!sortedMap.containsKey(sortItem)) {
+                    sortedMap.put(sortItem, new ArrayList<>());
+                }
+                sortedMap.get(sortItem).add(entry);
+            }
+            titleList.addAll(sortedMap.keySet());
+            for (String key : sortedMap.keySet()) {
+                scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
             }
         }
     }
 
-    private void getAllCourses(ArrayList<LectureEntry> allCourses) {
+    private ArrayList<LectureEntry> getAllCourses() {
+        ArrayList<LectureEntry> allCourses = new ArrayList<>();
         for (SchedulerEntry scheduleEntry : daySortedSchedule) {
             allCourses.addAll(scheduleEntry.getCourseEntryArrayList());
         }
+        return allCourses;
     }
 
 }

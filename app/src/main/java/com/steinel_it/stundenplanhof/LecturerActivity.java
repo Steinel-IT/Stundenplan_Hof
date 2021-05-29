@@ -132,29 +132,9 @@ public class LecturerActivity extends AppCompatActivity implements HandleLecture
     public void onClickFAB(View view) {
         int id = view.getId();
         if (id == R.id.floatingActionButtonLecturerMail) {
-            if (mail != null) {
-                Intent intentMail = new Intent(Intent.ACTION_SENDTO);
-                intentMail.setData(Uri.parse("mailto:"));
-                intentMail.putExtra(Intent.EXTRA_EMAIL, new String[]{mail});
-                try {
-                    startActivity(Intent.createChooser(intentMail, getString(R.string.chooseEMailService)));
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, getString(R.string.noEMailServiceFound), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.EMailNotFound), Toast.LENGTH_SHORT).show();
-            }
+            sendMail();
         } else if (id == R.id.floatingActionButtonLecturerCall) {
-            if (phone != null) {
-                Intent intentCall = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                try {
-                    startActivity(Intent.createChooser(intentCall, getString(R.string.choosePhoneService)));
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, getString(R.string.noPhoneServiceFound), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.PhoneNotFound), Toast.LENGTH_SHORT).show();
-            }
+            callPhone();
         }
     }
 
@@ -168,5 +148,33 @@ public class LecturerActivity extends AppCompatActivity implements HandleLecture
             this.image = image;
         }
         setupContent();
+    }
+
+    private void sendMail() {
+        if (mail != null) {
+            Intent intentMail = new Intent(Intent.ACTION_SENDTO);
+            intentMail.setData(Uri.parse("mailto:"));
+            intentMail.putExtra(Intent.EXTRA_EMAIL, new String[]{mail});
+            try {
+                startActivity(Intent.createChooser(intentMail, getString(R.string.chooseEMailService)));
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, getString(R.string.noEMailServiceFound), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.EMailNotFound), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void callPhone() {
+        if (phone != null) {
+            Intent intentCall = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+            try {
+                startActivity(Intent.createChooser(intentCall, getString(R.string.choosePhoneService)));
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, getString(R.string.noPhoneServiceFound), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.PhoneNotFound), Toast.LENGTH_SHORT).show();
+        }
     }
 }
