@@ -2,7 +2,6 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -16,11 +15,12 @@
             android:id="@+id/textViewModalSheetVorlesungHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:text="@string/lectureInfos"
             android:textColor="@color/primaryBlue"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,10 +29,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewModalSheetVorlesungHeader" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/alarmbutton"
+            android:onClick="onClickSetAlarm"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewModalSheetVorlesungName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewModalSheetVorlesungHeader"
+            app:srcCompat="@drawable/ic_alarm" />
 
         <View
             android:id="@+id/modalSheetDivider"
@@ -199,62 +214,62 @@
             android:id="@+id/groupModalSheetChat"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:onClick="onClickChat"
             app:constraint_referenced_ids="textViewModalSheetChatTitle,textViewModalSheeChatIcon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetModul"
-            android:onClick="onClickChat"/>
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetModul" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupModalSheetModul"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
+            android:onClick="onClickModul"
             app:constraint_referenced_ids="textViewModalSheetModulTitle,textViewModalSheetModulIcon"
             app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetChatTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetNote"
-            android:onClick="onClickModul"/>
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetNote" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupModalSheetNote"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
+            android:onClick="onClickNote"
             app:constraint_referenced_ids="textViewModalSheetNoteIcon,textViewModalSheetNoteTitle"
             app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetModulTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetRoom"
-            android:onClick="onClickNote"/>
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetRoom" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupModalSheetRoom"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
+            android:onClick="onClickRoom"
             app:constraint_referenced_ids="textViewModalSheetRoomTitle,textViewModalSheetRoomName,textViewModalSheetRoomIcon"
             app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetNoteTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetLecturer"
-            android:onClick="onClickRoom"/>
+            app:layout_constraintTop_toBottomOf="@+id/groupModalSheetLecturer" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupModalSheetLecturer"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
+            android:onClick="onClickLecturer"
             app:constraint_referenced_ids="textViewModalSheetLecturerIcon,textViewModalSheetLecturerName,textViewModalSheetLecturerTitle"
             app:layout_constraintBottom_toTopOf="@+id/textViewModalSheetRoomName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/modalSheetDivider"
-            app:layout_constraintVertical_bias="1.0"
-            android:onClick="onClickLecturer"/>
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

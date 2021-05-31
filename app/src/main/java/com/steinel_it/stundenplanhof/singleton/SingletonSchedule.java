@@ -10,10 +10,13 @@ import java.util.HashMap;
 public class SingletonSchedule {
 
     private SchedulerFilter filterType = SchedulerFilter.DAYS;
-    private ArrayList<SchedulerEntry> scheduleList;
-    private ArrayList<SchedulerEntry> daySortedSchedule; //Original Sorted Schedule
+
     private ArrayList<String> titleList;
+    private ArrayList<SchedulerEntry> scheduleList;
+
+    //Original Sorted Schedule
     private ArrayList<String> dayTitle;
+    private ArrayList<SchedulerEntry> daySortedSchedule;
 
     private static final SingletonSchedule instance = new SingletonSchedule();
 
@@ -44,6 +47,10 @@ public class SingletonSchedule {
         return dayTitle;
     }
 
+    public ArrayList<SchedulerEntry> getDaySortedSchedule() {
+        return daySortedSchedule;
+    }
+
     public void setDayTitle(ArrayList<String> dayTitle) {
         this.dayTitle = dayTitle;
     }
@@ -70,7 +77,7 @@ public class SingletonSchedule {
                 scheduleList.addAll(daySortedSchedule);
                 return;
             }
-
+            //TODO: In Methode extrahieren
             //Explicit Sort: LECTURE, ROOMS, LECTURER
             for (LectureEntry entry : getAllCourses()) {
 

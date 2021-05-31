@@ -1,5 +1,5 @@
 <resources>
-<!--    TODO: Übersetzung auf Englisch-->
+    <!--    TODO: Übersetzung auf Englisch-->
     <string name="app_name">Stundenplan Hof</string>
     <string name="lectureEntry">Vorlesung</string>
     <string name="rooms">Räume</string>
@@ -77,4 +77,7 @@
     <string name="choosePhoneService">Wähle einen Telefon Service:</string>
     <string name="noPhoneServiceFound">Kein Telefon Service gefunden</string>
     <string name="PhoneNotFound">Telefon Nummer nicht vorhanden</string>
+    <string name="alarmbutton">Alarmbutton</string>
+    <string name="message">Nachricht</string>
+    <string name="sendbutton">sendButton</string>
 </resources>

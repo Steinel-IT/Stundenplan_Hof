@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,11 +31,10 @@ import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements HandleArrayListScheduleTaskInterface {
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private void scrollToToday() {
         LocalDate date = LocalDate.now();
         String dayOfWeekGerm = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.GERMAN);
-        if(schedule.getTitleList().contains(dayOfWeekGerm)) {
+        if (schedule.getTitleList().contains(dayOfWeekGerm)) {
             recyclerViewScheduler.scrollToPosition(schedule.getTitleList().indexOf(dayOfWeekGerm));
         }
     }
@@ -273,6 +273,10 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         bottomSheetDialogLecture.show();
     }
 
+    public void onClickSetAlarm(View view) {
+        setAlarm();
+    }
+
     public void onClickLecturer(View view) {
         Intent intentLecturer = new Intent(this, LecturerActivity.class);
         intentLecturer.putExtra(EXTRA_MESSAGE_LECTURER, selectedLectureEntry.getLecturer());
@@ -302,7 +306,59 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     public void onClickChat(View view) {
-        //TODO: CHAT
+        Intent intentChat = new Intent(this, ChatActivity.class);
+        intentChat.putExtra(EXTRA_MESSAGE_NAME, selectedLectureEntry.getShortName());
+        startActivity(intentChat);
     }
 
+    private void setAlarm() {
+        Intent setAlarmIntent = new Intent(AlarmClock.ACTION_SET_ALARM);
+        setAlarmIntent.putExtra(AlarmClock.EXTRA_HOUR, Integer.parseInt(selectedLectureEntry.getTimeStart().substring(0, 2)));
+        setAlarmIntent.putExtra(AlarmClock.EXTRA_MINUTES, Integer.parseInt(selectedLectureEntry.getTimeStart().substring(3)));
+
+        ArrayList<Integer> alarmDays = new ArrayList<>();
+        //Get day
+        fillWeekdayOfClickedLecture(alarmDays);
+
+        setAlarmIntent.putExtra(AlarmClock.EXTRA_DAYS, alarmDays);
+        startActivity(setAlarmIntent);
+    }
+
+    private void fillWeekdayOfClickedLecture(ArrayList<Integer> alarmDays) {
+        schedule.getDaySortedSchedule().forEach(schedulerEntry -> {
+            if (schedulerEntry.getCourseEntryArrayList().contains(selectedLectureEntry)) {
+                switch (schedule.getDayTitle().get(schedule.getDaySortedSchedule().indexOf(schedulerEntry))) {
+                    case "Montag":
+                        alarmDays.add(Calendar.MONDAY);
+                        break;
+                    case "Dienstag":
+                        alarmDays.add(Calendar.TUESDAY);
+                        break;
+                    case "Mittwoch":
+                        alarmDays.add(Calendar.WEDNESDAY);
+                        break;
+                    case "Donnerstag":
+                        alarmDays.add(Calendar.THURSDAY);
+                        break;
+                    case "Freitag":
+                        alarmDays.add(Calendar.FRIDAY);
+                        break;
+                    case "Samstag":
+                        alarmDays.add(Calendar.SATURDAY);
+                        break;
+                    case "Sonntag":
+                        alarmDays.add(Calendar.SUNDAY);
+                        break;
+                    case "Änderungen":
+                        //Get the weekday of the date
+                        if (!selectedLectureEntry.getDay().equals("")) {
+                            String dayString = selectedLectureEntry.getDay();
+                            LocalDate date = LocalDate.of(Integer.parseInt(dayString.substring(6, 10)), Integer.parseInt(dayString.substring(3, 5)), Integer.parseInt(dayString.substring(0, 2)));
+                            alarmDays.add(date.getDayOfWeek().getValue() + 1);
+                        }
+                        break;
+                }
+            }
+        });
+    }
 }
