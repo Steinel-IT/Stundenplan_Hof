@@ -80,4 +80,7 @@
     <string name="alarmbutton">Alarmbutton</string>
     <string name="message">Nachricht</string>
     <string name="sendbutton">sendButton</string>
+    <string name="activateAlarm">Alarm aktivieren</string>
+    <string name="chooseAlarmTime">Uhrzeit wählen</string>
+    <string name="hoursBeforeLecture">Stunde/n vor der Vorlesung</string>
 </resources>

@@ -104,7 +104,7 @@ public class NoteActivity extends AppCompatActivity {
         Button buttonCancel = dialogView.findViewById(R.id.buttonDialogNoteCancel);
         Button buttonSave = dialogView.findViewById(R.id.buttonDialogNoteSave);
         buttonCancel.setOnClickListener(view1 -> alertDialog.cancel());
-        buttonSave.setOnClickListener(view12 -> {
+        buttonSave.setOnClickListener(clickView -> {
             if (!editTextNote.getText().toString().equals("")) {
                 if (presetNote == null) {
                     Note newNote = new Note(editTextNote.getText().toString());

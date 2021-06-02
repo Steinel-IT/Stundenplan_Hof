@@ -1,8 +1,10 @@
 package com.steinel_it.stundenplanhof;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.view.LayoutInflater;
@@ -10,7 +12,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +38,7 @@ import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -136,17 +143,21 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.action_update) {
-            hideContent();
-            setupParseDownloadManager.resetSchedule();
-            setupParseDownloadManager.getSchedule(shortCourse, semester);
-        } else if (itemId == R.id.action_reset) {
-            storageManager.deleteSetupData(this, KEY_APP_SETTINGS);
-            schedule.setFilterType(SchedulerFilter.DAYS);
-            Intent intentFirstTime = new Intent(this, SetupActivity.class);
-            startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
-        } else if (itemId == R.id.action_sync) {
-        }//TODO set Kalender Sync
+        switch (itemId) {
+            case R.id.action_update:
+                hideContent();
+                setupParseDownloadManager.resetSchedule();
+                setupParseDownloadManager.getSchedule(shortCourse, semester);
+                break;
+            case R.id.action_reset:
+                storageManager.deleteSetupData(this, KEY_APP_SETTINGS);
+                schedule.setFilterType(SchedulerFilter.DAYS);
+                Intent intentFirstTime = new Intent(this, SetupActivity.class);
+                startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
+                break;
+            case R.id.action_sync:
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -183,14 +194,19 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private void setupFilterBar() {
         ChipGroup filterChipGroup = findViewById(R.id.chipGroupFilter);
         filterChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.chipFilterDay) {
-                schedule.setFilterType(SchedulerFilter.DAYS);
-            } else if (checkedId == R.id.chipFilterLecture) {
-                schedule.setFilterType(SchedulerFilter.LECTURE);
-            } else if (checkedId == R.id.chipFilterRoom) {
-                schedule.setFilterType(SchedulerFilter.ROOMS);
-            } else if (checkedId == R.id.chipFilterLecturer) {
-                schedule.setFilterType(SchedulerFilter.LECTURER);
+            switch (checkedId) {
+                case R.id.chipFilterDay:
+                    schedule.setFilterType(SchedulerFilter.DAYS);
+                    break;
+                case R.id.chipFilterLecture:
+                    schedule.setFilterType(SchedulerFilter.LECTURE);
+                    break;
+                case R.id.chipFilterRoom:
+                    schedule.setFilterType(SchedulerFilter.ROOMS);
+                    break;
+                case R.id.chipFilterLecturer:
+                    schedule.setFilterType(SchedulerFilter.LECTURER);
+                    break;
             }
             schedule.sortSchedule();
             if (schedulerEntryListAdapter != null) {
@@ -274,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     public void onClickSetAlarm(View view) {
-        setAlarm();
+        showDialogGetAlarmTime();
     }
 
     public void onClickLecturer(View view) {
@@ -311,10 +327,13 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         startActivity(intentChat);
     }
 
-    private void setAlarm() {
+    private void setAlarm(double before) {
+        LocalTime localTime = LocalTime.of(Integer.parseInt(selectedLectureEntry.getTimeStart().substring(0, 2)), Integer.parseInt(selectedLectureEntry.getTimeStart().substring(3)));
+        localTime = localTime.minusMinutes((long) (60 * before));
+        System.out.println(localTime);
         Intent setAlarmIntent = new Intent(AlarmClock.ACTION_SET_ALARM);
-        setAlarmIntent.putExtra(AlarmClock.EXTRA_HOUR, Integer.parseInt(selectedLectureEntry.getTimeStart().substring(0, 2)));
-        setAlarmIntent.putExtra(AlarmClock.EXTRA_MINUTES, Integer.parseInt(selectedLectureEntry.getTimeStart().substring(3)));
+        setAlarmIntent.putExtra(AlarmClock.EXTRA_HOUR, localTime.getHour());
+        setAlarmIntent.putExtra(AlarmClock.EXTRA_MINUTES, localTime.getMinute());
 
         ArrayList<Integer> alarmDays = new ArrayList<>();
         //Get day
@@ -322,6 +341,39 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
         setAlarmIntent.putExtra(AlarmClock.EXTRA_DAYS, alarmDays);
         startActivity(setAlarmIntent);
+    }
+
+    private void showDialogGetAlarmTime() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_set_alarm, viewGroup, false);
+        builder.setView(dialogView);
+        //Build AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        //Spinner
+        Spinner spinnerAlarmTime = dialogView.findViewById(R.id.spinnerAlarmTime);
+        //Hours
+        ArrayList<Double> hours = new ArrayList<>();
+        hours.add(0.25);
+        hours.add(0.5);
+        hours.add(1.0);
+        hours.add(1.5);
+        //Set Adapter
+        ArrayAdapter<Double> arrayAdapterHours = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, hours);
+        spinnerAlarmTime.setAdapter(arrayAdapterHours);
+
+        Button buttonSet = dialogView.findViewById(R.id.buttonDialogAlertSet);
+        Button buttonCancel = dialogView.findViewById(R.id.buttonDialogAlertCancel);
+
+
+        buttonCancel.setOnClickListener(view1 -> alertDialog.cancel());
+
+        buttonSet.setOnClickListener(view -> {
+            setAlarm(hours.get(spinnerAlarmTime.getSelectedItemPosition()));
+            alertDialog.cancel();
+        });
+        alertDialog.show();
     }
 
     private void fillWeekdayOfClickedLecture(ArrayList<Integer> alarmDays) {
