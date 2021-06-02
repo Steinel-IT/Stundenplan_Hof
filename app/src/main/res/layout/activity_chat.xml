@@ -16,6 +16,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/cardViewChatField"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardViewChatField"
+        android:onClick="sendMessage"
         app:srcCompat="@drawable/ic_send" />
 
     <androidx.cardview.widget.CardView
@@ -44,6 +45,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="2dp"

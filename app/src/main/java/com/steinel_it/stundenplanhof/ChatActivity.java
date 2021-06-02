@@ -1,16 +1,49 @@
 package com.steinel_it.stundenplanhof;
 
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.view.MenuItem;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.steinel_it.stundenplanhof.adapter.MessageAdapter;
+import com.steinel_it.stundenplanhof.objects.Message;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
+    ArrayList<Message> messages = new ArrayList<>();
+
     String lectureShortName;
+    String chatName;
+
+    private FirebaseAuth mAuth;
+
+    private DatabaseReference currChatDB;
+
+    private FirebaseUser currentUser;
+
+    private EditText chatEditText;
+    private FloatingActionButton sendButton;
+
+    private MessageAdapter messageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,23 +51,70 @@ public class ChatActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
+            chatName = savedInstanceState.getString("chatName");
             lectureShortName = savedInstanceState.getString("lectureShortName");
         } else {
             Bundle extras = getIntent().getExtras();
             lectureShortName = extras.getString(MainActivity.EXTRA_MESSAGE_NAME);
+            chatName = lectureShortName.replace(" ", "_");
         }
 
-        getSupportActionBar().setTitle(getString(R.string.chat) +": "+ lectureShortName);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://stundenplan-hof-429d1-default-rtdb.europe-west1.firebasedatabase.app");
+        currChatDB = database.getReference().child("chat").child(chatName);
+
+        getSupportActionBar().setTitle(getString(R.string.chat) + ": " + lectureShortName);
+
         setContentView(R.layout.activity_chat);
 
-        setContent();
+        buildUI();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null)
+            anonymRegister();
+        else {
+            Toast.makeText(ChatActivity.this, getString(R.string.successfullLogin), Toast.LENGTH_SHORT).show();
+            disableWriting(false);
+        }
+        updateMessages();
+    }
+
+    private void buildUI() {
+        chatEditText = findViewById(R.id.editTextChatField);
+        sendButton = findViewById(R.id.floatingActionButtonChatSend);
+        RecyclerView recyclerViewMessages = findViewById(R.id.recyclerViewChat);
+
+        messages = new ArrayList<>();
+        messageAdapter = new MessageAdapter(messages);
+        recyclerViewMessages.setAdapter(messageAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            this.finish();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            case R.id.action_logout:
+                if (logout()) {
+                    Toast.makeText(ChatActivity.this, getString(R.string.successfullLogout), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ChatActivity.this, getString(R.string.errorLogout), Toast.LENGTH_LONG).show();
+                }
+                this.finish();
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -42,11 +122,72 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("chatName", chatName);
         savedInstanceState.putString("lectureShortName", lectureShortName);
     }
 
-    private void setContent() {
-
+    private boolean logout() { //TODO: Maybe Logout weg
+        mAuth.signOut();
+        return mAuth.getCurrentUser() == null;
     }
 
+    private void anonymRegister() {
+        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
+            if (task.getResult() == null) {
+                Toast.makeText(ChatActivity.this, getString(R.string.errorLogin), Toast.LENGTH_LONG).show();
+                disableWriting(true);
+            } else {
+                currentUser = task.getResult().getUser();
+                Toast.makeText(ChatActivity.this, getString(R.string.successfullLogin), Toast.LENGTH_SHORT).show();
+                disableWriting(false);
+            }
+        });
+    }
+
+    private void updateMessages() {
+        currChatDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //Reset Array List
+                messages.clear();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String message = dataSnapshot.child("text").getValue(String.class);
+                    String time = dataSnapshot.child("time").getValue(String.class);
+                    messages.add(new Message(message, time));
+                }
+
+                messageAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ChatActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void disableWriting(boolean disable) {
+        if (disable) {
+            chatEditText.setText(getString(R.string.noLogin));
+            chatEditText.setEnabled(false);
+            sendButton.setEnabled(false);
+        } else {
+            chatEditText.setHint(getString(R.string.message));
+            chatEditText.setEnabled(true);
+            sendButton.setEnabled(true);
+        }
+    }
+
+    public void sendMessage(View view) {
+        if (chatEditText.getText().length() == 0) return;
+        String sendText = chatEditText.getText().toString();
+        String key = currChatDB.push().getKey();
+
+        if (key != null) {
+            currChatDB.child(key).child("text").setValue(sendText);
+            currChatDB.child(key).child("time").setValue(Message.getTimeAsString(LocalDateTime.now()));
+        }
+        chatEditText.setText("");
+    }
 }
