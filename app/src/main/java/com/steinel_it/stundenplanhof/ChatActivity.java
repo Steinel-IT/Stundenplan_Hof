@@ -156,7 +156,6 @@ public class ChatActivity extends AppCompatActivity {
                     String time = dataSnapshot.child("time").getValue(String.class);
                     messages.add(new Message(message, time));
                 }
-
                 messageAdapter.notifyDataSetChanged();
             }
 
