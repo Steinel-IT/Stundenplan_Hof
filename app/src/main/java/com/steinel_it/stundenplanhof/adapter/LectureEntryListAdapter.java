@@ -1,7 +1,9 @@
 package com.steinel_it.stundenplanhof.adapter;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.steinel_it.stundenplanhof.R;
@@ -51,17 +54,20 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
     }
 
     public static class LectureHolder extends RecyclerView.ViewHolder {
-        private final TextView day, time, room, name, dozent;
+        private final TextView day, time, room, name, dozent, type;
         private final int schedulerPos;
+        private final View view;
 
         public LectureHolder(View view, int schedulerPos) {
             super(view);
+            this.view = view;
             this.schedulerPos = schedulerPos;
             day = view.findViewById(R.id.textViewLectureDay);
             name = view.findViewById(R.id.textViewLectureName);
             time = view.findViewById(R.id.textViewLectureTime);
             room = view.findViewById(R.id.textViewLectureRoom);
             dozent = view.findViewById(R.id.textViewLectureDozent);
+            type = view.findViewById(R.id.textViewLectureType);
         }
 
         public void bind(final LectureEntry lectureEntry, int pos, final OnItemClickListener clickListener) {
@@ -72,18 +78,38 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
                 day.setVisibility(View.VISIBLE);
             }
             name.setText(lectureEntry.getName());
-            if(lectureEntry.getCanceled()) {
+            if (lectureEntry.getCanceled()) {
                 name.setTextColor(Color.RED);
                 name.setPaintFlags(name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
             time.setText(String.format("%1$s - %2$s", lectureEntry.getTimeStart(), lectureEntry.getTimeEnd()));
             room.setText(lectureEntry.getRoom());
             dozent.setText(lectureEntry.getLecturer());
+            if (lectureEntry.getType().isEmpty()) {
+                type.setVisibility(View.GONE);
+
+                ConstraintLayout mConstraintLayout = view.findViewById(R.id.constraintLayoutLecture);
+                ConstraintSet set = new ConstraintSet();
+                set.clone(mConstraintLayout);
+                set.connect(room.getId(), ConstraintSet.BOTTOM, mConstraintLayout.getId(), ConstraintSet.BOTTOM, pixToDp(8));
+                set.applyTo(mConstraintLayout);
+            } else {
+                type.setText(lectureEntry.getType());
+            }
             itemView.setOnClickListener(view -> clickListener.onItemClick(lectureEntry, schedulerPos, pos, view));
         }
 
         public interface OnItemClickListener {
             void onItemClick(LectureEntry lectureEntry, int posScheduler, int posLecture, View view);
+        }
+
+        private int pixToDp(int dp) {
+            Resources r = view.getResources();
+            return (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    dp,
+                    r.getDisplayMetrics()
+            );
         }
     }
 }

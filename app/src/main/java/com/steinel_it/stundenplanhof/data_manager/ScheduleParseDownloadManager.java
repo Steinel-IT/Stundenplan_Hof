@@ -112,10 +112,11 @@ public class ScheduleParseDownloadManager {
                 Element dayData = dayContent.get(i).select("tbody").first();
                 ArrayList<LectureEntry> lectureArrayList = new ArrayList<>();
                 for (Element course : dayData.select("tr")) {
-                    String room = course.select("td").get(6).text();
+                    Elements data = course.select("td");
+                    String room = data.get(6).text();
                     String building = room.contains("F") ? room.substring(1, 2) : virtuelString;
-                    String shortName = course.select("td").get(3).textNodes().get(0).text();
-                    lectureArrayList.add(new LectureEntry(course.select("td").get(0).text(), course.select("td").get(1).text(), course.select("td").get(2).text(), course.select("td").get(3).text(), shortName, course.select("td").get(4).text(), room, building, false));
+                    String shortName = data.get(3).textNodes().get(0).text();
+                    lectureArrayList.add(new LectureEntry(data.get(0).text(), data.get(1).text(), data.get(2).text(), data.get(3).text(), shortName, data.get(4).text(), room, building, data.get(5).text(), false));
                 }
                 schedulerEntries.add(new SchedulerEntry(lectureArrayList));
             }
@@ -142,7 +143,7 @@ public class ScheduleParseDownloadManager {
                     String endDate = endDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
                     String room = infos.get(3).textNodes().get(2).text().substring(1);
                     String building = room.contains("F") ? room.substring(1, 2) : virtuelString;
-                    lectureEntries.add(new LectureEntry(day, timeStart, endDate, infos.get(1).text(), shortName, infos.get(2).text(), room, building, true));
+                    lectureEntries.add(new LectureEntry(day, timeStart, endDate, infos.get(1).text(), shortName, infos.get(2).text(), room, building, "", true));
                     if (!infos.get(4).textNodes().get(1).text().trim().isEmpty()) {
                         String newDay = infos.get(4).textNodes().get(0).text().substring(1);
                         String newTimeStart = infos.get(4).textNodes().get(1).text().substring(1, 6);
@@ -151,7 +152,7 @@ public class ScheduleParseDownloadManager {
                         String newEndDate = newEndDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
                         String newRoom = infos.get(4).textNodes().get(2).text().substring(1);
                         String newBuilding = newRoom.contains("F") ? newRoom.substring(1, 2) : virtuelString;
-                        lectureEntries.add(new LectureEntry(newDay, newTimeStart, newEndDate, infos.get(1).text(), shortName, infos.get(2).text(), newRoom, newBuilding, false));
+                        lectureEntries.add(new LectureEntry(newDay, newTimeStart, newEndDate, infos.get(1).text(), shortName, infos.get(2).text(), newRoom, newBuilding, "", false));
                     }
                 }
                 schedulerEntries.add(new SchedulerEntry(lectureEntries));

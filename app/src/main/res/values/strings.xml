@@ -89,4 +89,6 @@
     <string name="errorLogout">Fehler bei Logout</string>
     <string name="errorLogin">Fehler bei Login</string>
     <string name="noLogin">Nicht eingeloggt</string>
+    <string name="latLongAltFormat">%s: Lat:%s Long:%s Alt:%s</string>
+    <string name="showDetailLectureIcon">show Detail Lecture Icon</string>
 </resources>

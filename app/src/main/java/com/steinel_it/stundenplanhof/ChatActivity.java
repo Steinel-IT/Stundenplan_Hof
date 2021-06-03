@@ -29,10 +29,10 @@ import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
-    ArrayList<Message> messages = new ArrayList<>();
+    private ArrayList<Message> messages = new ArrayList<>();
 
-    String lectureShortName;
-    String chatName;
+    private String lectureShortName;
+    private String chatName;
 
     private FirebaseAuth mAuth;
 

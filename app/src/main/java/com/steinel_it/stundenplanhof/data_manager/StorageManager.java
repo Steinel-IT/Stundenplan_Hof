@@ -77,26 +77,22 @@ public class StorageManager {
     }
 
     public void saveRoomGPS(Context context, String fileName, String room, Location loc) {
-        Set<String> locList = new HashSet<>();
-        locList.add(String.valueOf(loc.getAltitude()));
-        locList.add(String.valueOf(loc.getLongitude()));
-        locList.add(String.valueOf(loc.getLatitude()));
+        String locString = loc.getLatitude() +":"+loc.getLongitude()+":"+loc.getAltitude();
         SharedPreferences sharedPreferencesNote = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPreferencesNoteEditor = sharedPreferencesNote.edit();
-        sharedPreferencesNoteEditor.putStringSet(room, locList);
+        sharedPreferencesNoteEditor.putString(room, locString);
         sharedPreferencesNoteEditor.apply();
     }
 
     public Location getRoomGPS(Context context, String fileName, String room) {
         SharedPreferences sharedPreferencesNote = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        Set<String> resultSet = sharedPreferencesNote.getStringSet(room, null);
-        if (resultSet == null) return null;
-        List<String> resultList = new ArrayList<>(resultSet);
-        System.out.println(resultList);
+        String resultLocString = sharedPreferencesNote.getString(room, null);
+        if (resultLocString == null) return null;
         Location resultLoc = new Location("");
-        resultLoc.setLatitude(Double.parseDouble(resultList.get(1)));
-        resultLoc.setLongitude(Double.parseDouble(resultList.get(2)));
-        resultLoc.setAltitude(Double.parseDouble(resultList.get(0)));
+        String[] resultLocParts = resultLocString.split(":");
+        resultLoc.setLatitude(Double.parseDouble(resultLocParts[0]));
+        resultLoc.setLongitude(Double.parseDouble(resultLocParts[1]));
+        resultLoc.setAltitude(Double.parseDouble(resultLocParts[2]));
         return resultLoc;
     }
 }

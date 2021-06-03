@@ -1,6 +1,7 @@
 package com.steinel_it.stundenplanhof;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -128,6 +130,7 @@ public class RoomActivity extends AppCompatActivity {
         if (location != null) {
             textViewGPS.setText(String.format("%s:\nLat:%s Long:%s Alt:%s", getString(R.string.coordinates), location.getLatitude(), location.getLongitude(), location.getAltitude()));
             webView.setVisibility(View.VISIBLE);
+            webView.getSettings().setJavaScriptEnabled(true);
             webView.loadUrl("https://www.google.com/maps/search/?api=1&query=" + location.getLatitude() + "," + location.getLongitude());
         } else {
             textViewGPS.setText(String.format("%s: %s", getString(R.string.coordinates), getString(R.string.unknown)));
@@ -140,25 +143,28 @@ public class RoomActivity extends AppCompatActivity {
                 ContextCompat.checkSelfPermission(RoomActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(RoomActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
-                @Override
-                public void onLocationChanged(@NonNull Location location) {
-                    TextView textViewGPS = findViewById(R.id.textViewCurrLoc);
-                    currLocation = location;
-                    textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.currPos), location.getLatitude(), location.getLongitude(), location.getAltitude()));
-                    Toast.makeText(RoomActivity.this, getString(R.string.locationLoaded), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onProviderEnabled(@NonNull String provider) {
-                }
-
-                @Override
-                public void onProviderDisabled(@NonNull String provider) {
-                }
-            });
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, locationListener);
         }
     }
+
+    LocationListener locationListener = new LocationListener() {
+        @SuppressLint("StringFormatMatches")//Ignore Error. Only IDE Problem
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            TextView textViewGPS = findViewById(R.id.textViewCurrLoc);
+            currLocation = location;
+            textViewGPS.setText(String.format(getString(R.string.latLongAltFormat), getString(R.string.currPos), location.getLatitude(), location.getLongitude(), location.getAltitude()));
+            Toast.makeText(RoomActivity.this, getString(R.string.locationLoaded), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onProviderEnabled(@NonNull String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(@NonNull String provider) {
+        }
+    };
 
     public void onClickGpsSave(View view) {
         if (currLocation == null) {
@@ -168,6 +174,7 @@ public class RoomActivity extends AppCompatActivity {
             storageManager.saveRoomGPS(RoomActivity.this, "roomCoord", room, currLocation);
             textViewGPS.setText(String.format("%s: Lat:%s Long:%s Alt:%s", getString(R.string.coordinates), currLocation.getLatitude(), currLocation.getLongitude(), currLocation.getAltitude()));
             webView.setVisibility(View.VISIBLE);
+            webView.getSettings().setJavaScriptEnabled(true);
             webView.loadUrl("https://www.google.com/maps/search/?api=1&query=" + currLocation.getLatitude() + "," + currLocation.getLongitude());
             if (location == null) location = new Location("");
             location.set(currLocation);
@@ -176,6 +183,7 @@ public class RoomActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] per, @NonNull int[] resultPerm) {
+        super.onRequestPermissionsResult(requestCode, per, resultPerm);
         if (requestCode == 1) {
             if (resultPerm.length > 0 && resultPerm[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(RoomActivity.this, getString(R.string.permissionGranted), Toast.LENGTH_SHORT).show();
@@ -184,5 +192,11 @@ public class RoomActivity extends AppCompatActivity {
                 Toast.makeText(RoomActivity.this, getString(R.string.permissionNotGranted), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationManager.removeUpdates(locationListener);
     }
 }
