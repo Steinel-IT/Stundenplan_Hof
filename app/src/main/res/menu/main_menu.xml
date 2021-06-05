@@ -14,16 +14,9 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/action_sync"
-                android:checkable="true"
-                android:icon="@drawable/ic_event"
-                android:title="@string/calendarSync"
-                app:showAsAction="never" />
-
-            <item
                 android:id="@+id/action_reset"
                 android:icon="@drawable/ic_cancel"
-                android:title="@string/app_zur_cksetzen"
+                android:title="@string/app_zuruecksetzen"
                 app:showAsAction="never" />
         </menu>
     </item>

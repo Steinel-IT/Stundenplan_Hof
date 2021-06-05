@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     public static final String EXTRA_MESSAGE_ROOM = "com.steinel_it.stundenplanhof.room";
     public static final String EXTRA_MESSAGE_BUILDING = "com.steinel_it.stundenplanhof.building";
 
-    private String course; // Für den Chat
     private String shortCourse;
     private String semester;
     private String year;
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         if (requestCode == RESULTCODE_SETUP && resultCode == RESULT_OK) {
             if (data != null) {
                 Bundle extras = data.getExtras();
-                course = extras.getString(SetupActivity.EXTRA_MESSAGE_COURSE);
                 shortCourse = extras.getString(SetupActivity.EXTRA_MESSAGE_SHORT_COURSE);
                 semester = extras.getString(SetupActivity.EXTRA_MESSAGE_SEMESTER);
                 year = extras.getString(SetupActivity.EXTRA_MESSAGE_YEAR);
@@ -126,10 +124,9 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     private boolean isFirstTime() {
         String[] setupData = storageManager.getSetupData(this, KEY_APP_SETTINGS);
-        course = setupData[0];
-        shortCourse = setupData[1];
-        semester = setupData[2];
-        year = setupData[3];
+        shortCourse = setupData[0];
+        semester = setupData[1];
+        year = setupData[2];
         return setupData[0] == null && setupData[1] == null && setupData[2] == null;
     }
 
@@ -154,8 +151,6 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 schedule.setFilterType(SchedulerFilter.DAYS);
                 Intent intentFirstTime = new Intent(this, SetupActivity.class);
                 startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
-                break;
-            case R.id.action_sync:
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -68,6 +68,7 @@ public class SingletonSchedule {
             } else {
                 scheduleList.clear();
             }
+
             //Map for sorting
             HashMap<String, ArrayList<LectureEntry>> sortedMap = new HashMap<>();
 
@@ -77,30 +78,32 @@ public class SingletonSchedule {
                 scheduleList.addAll(daySortedSchedule);
                 return;
             }
-            //TODO: In Methode extrahieren
-            //Explicit Sort: LECTURE, ROOMS, LECTURER
-            for (LectureEntry entry : getAllCourses()) {
-
-                String sortItem = "";
-
-                //Set sorting Type
-                if (filterType == SchedulerFilter.LECTURE)
-                    sortItem = entry.getShortName();
-                else if (filterType == SchedulerFilter.ROOMS)
-                    sortItem = entry.getRoom();
-                else if (filterType == SchedulerFilter.LECTURER)
-                    sortItem = entry.getLecturer();
-
-
-                if (!sortedMap.containsKey(sortItem)) {
-                    sortedMap.put(sortItem, new ArrayList<>());
-                }
-                sortedMap.get(sortItem).add(entry);
-            }
+            explicitSort(sortedMap);
             titleList.addAll(sortedMap.keySet());
             for (String key : sortedMap.keySet()) {
                 scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
             }
+        }
+    }
+
+    private void explicitSort(HashMap<String, ArrayList<LectureEntry>> sortedMap) {
+        for (LectureEntry entry : getAllCourses()) {
+
+            String sortItem = "";
+
+            //Set sorting Type
+            if (filterType == SchedulerFilter.LECTURE)
+                sortItem = entry.getShortName();
+            else if (filterType == SchedulerFilter.ROOMS)
+                sortItem = entry.getRoom();
+            else if (filterType == SchedulerFilter.LECTURER)
+                sortItem = entry.getLecturer();
+
+
+            if (!sortedMap.containsKey(sortItem)) {
+                sortedMap.put(sortItem, new ArrayList<>());
+            }
+            sortedMap.get(sortItem).add(entry);
         }
     }
 

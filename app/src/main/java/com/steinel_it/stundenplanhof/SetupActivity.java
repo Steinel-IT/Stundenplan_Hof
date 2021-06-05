@@ -11,12 +11,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.steinel_it.stundenplanhof.adapter.SlidePageAdapter;
-import com.steinel_it.stundenplanhof.data_manager.StorageManager;
-import com.steinel_it.stundenplanhof.interfaces.HandleArrayListStringTaskInterface;
 import com.steinel_it.stundenplanhof.data_manager.SetupParseDownloadManager;
+import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 import com.steinel_it.stundenplanhof.fragments.SetupFragmentOne;
-import com.steinel_it.stundenplanhof.fragments.SetupFragmentThree;
 import com.steinel_it.stundenplanhof.fragments.SetupFragmentTwo;
+import com.steinel_it.stundenplanhof.interfaces.HandleArrayListStringTaskInterface;
 import com.steinel_it.stundenplanhof.interfaces.SetupValueInterface;
 import com.steinel_it.stundenplanhof.parts.SetupViewPager;
 
@@ -26,7 +25,6 @@ import java.util.Objects;
 
 public class SetupActivity extends AppCompatActivity implements HandleArrayListStringTaskInterface, SetupValueInterface {
 
-    public static final String EXTRA_MESSAGE_COURSE = "com.steinel_it.stundenplanhof.course";
     public static final String EXTRA_MESSAGE_SHORT_COURSE = "com.steinel_it.stundenplanhof.name";
     public static final String EXTRA_MESSAGE_SEMESTER = "com.steinel_it.stundenplanhof.semester";
     public static final String EXTRA_MESSAGE_YEAR = "com.steinel_it.stundenplanhof.year";
@@ -42,7 +40,6 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO: Hier auch SaveInstance?
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -64,7 +61,6 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
         fragmentPageList = new ArrayList<>();
         fragmentPageList.add(SetupFragmentOne.newInstance());
         fragmentPageList.add(SetupFragmentTwo.newInstance());
-        fragmentPageList.add(SetupFragmentThree.newInstance());
         pager = findViewById(R.id.viewPagerSetup);
 
         setupPageListener();
@@ -76,10 +72,9 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
         if (pager.getCurrentItem() == 1 && (selectedCourse == null || selectedSemester == null || selectedYear == null)) {
             pager.setSwipeEnabled(false);
             Toast.makeText(this, R.string.selectAllInSetup, Toast.LENGTH_SHORT).show();
-        } else if (pager.getCurrentItem() == 2) {
+        } else if (pager.getCurrentItem() == 1) {
             new StorageManager().saveSetupData(getApplicationContext(), MainActivity.KEY_APP_SETTINGS, selectedCourse, selectedShortCourse, selectedSemester, selectedYear);
             Intent intentToMain = new Intent();
-            intentToMain.putExtra(EXTRA_MESSAGE_COURSE, selectedCourse);
             intentToMain.putExtra(EXTRA_MESSAGE_SHORT_COURSE, selectedShortCourse);
             intentToMain.putExtra(EXTRA_MESSAGE_SEMESTER, selectedSemester);
             intentToMain.putExtra(EXTRA_MESSAGE_YEAR, selectedYear);
@@ -102,9 +97,6 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
             public void onPageSelected(int position) {
                 if (position == 1 && selectedCourse == null && selectedSemester == null) {
                     pager.setSwipeEnabled(false);
-                    setupFab.shrink();
-                } else if (position == 2) {
-                    pager.setSwipeEnabled(true);
                     setupFab.extend();
                 } else {
                     pager.setSwipeEnabled(true);
