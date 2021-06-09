@@ -147,7 +147,7 @@ public class RoomActivity extends AppCompatActivity {
         }
     }
 
-    LocationListener locationListener = new LocationListener() {
+    private final LocationListener locationListener = new LocationListener() {
         @SuppressLint("StringFormatMatches")//Ignore Error. Only IDE Problem
         @Override
         public void onLocationChanged(@NonNull Location location) {

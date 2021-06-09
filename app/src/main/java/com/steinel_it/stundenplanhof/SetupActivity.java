@@ -43,7 +43,7 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        setupPagerSlider();
+        setupPageSlider();
         setupParseDownloadManager = new SetupParseDownloadManager(this);
         setupParseDownloadManager.getCourses();
     }
@@ -57,7 +57,7 @@ public class SetupActivity extends AppCompatActivity implements HandleArrayListS
         }
     }
 
-    private void setupPagerSlider() {
+    private void setupPageSlider() {
         fragmentPageList = new ArrayList<>();
         fragmentPageList.add(SetupFragmentOne.newInstance());
         fragmentPageList.add(SetupFragmentTwo.newInstance());

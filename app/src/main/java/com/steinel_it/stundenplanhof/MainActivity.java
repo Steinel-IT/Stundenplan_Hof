@@ -59,19 +59,13 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     private String shortCourse;
     private String semester;
     private String year;
-
-    private ScheduleParseDownloadManager setupParseDownloadManager;
-
     private LectureEntry selectedLectureEntry;
 
+    private ScheduleParseDownloadManager setupParseDownloadManager;
     private RecyclerView recyclerViewScheduler;
-
     private SchedulerEntryListAdapter schedulerEntryListAdapter;
-
     private SingletonSchedule schedule;
-
     private StorageManager storageManager;
-
     private BottomSheetDialog bottomSheetDialogLecture;
 
     @Override
@@ -308,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         startActivity(intentNote);
     }
 
-    public void onClickModul(View view) {
+    public void onClickModule(View view) {
         Intent intentModule = new Intent(this, ModuleActivity.class);
         intentModule.putExtra(EXTRA_MESSAGE_NAME, shortCourse);
         intentModule.putExtra(EXTRA_MESSAGE_LECTURE, selectedLectureEntry.getShortName());

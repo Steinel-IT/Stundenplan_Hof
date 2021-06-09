@@ -10,10 +10,6 @@ public class SetupViewPager extends ViewPager {
 
     private boolean isSwipingEnabled = true;
 
-    public SetupViewPager(Context context) {
-        super(context);
-    }
-
     public SetupViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
