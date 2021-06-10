@@ -125,7 +125,7 @@ public class ChatActivity extends AppCompatActivity {
         savedInstanceState.putString("lectureShortName", lectureShortName);
     }
 
-    private boolean logout() { //TODO: Maybe Logout weg
+    private boolean logout() {
         mAuth.signOut();
         return mAuth.getCurrentUser() == null;
     }
