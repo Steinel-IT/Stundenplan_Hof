@@ -98,7 +98,7 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
         }
 
         public interface OnItemClickListener {
-            void onItemClick(LectureEntry lectureEntry, int posScheduler, int posLecture, View view);
+            void onItemClick(LectureEntry lectureEntry, int posSchedule, int posLecture, View view);
         }
 
         private int pixToDp(int dp) {
