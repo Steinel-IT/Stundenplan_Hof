@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.steinel_it.stundenplanhof.interfaces.HandleArrayListScheduleTaskInterface;
 import com.steinel_it.stundenplanhof.objects.LectureEntry;
-import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
+import com.steinel_it.stundenplanhof.objects.ScheduleEntry;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,14 +30,16 @@ import okhttp3.Response;
 
 public class ScheduleParseDownloadManager {
 
-    HandleArrayListScheduleTaskInterface context;
+    private HandleArrayListScheduleTaskInterface context;
 
-    ArrayList<SchedulerEntry> schedulerEntries;
-    ArrayList<String> titelList;
+    private ArrayList<ScheduleEntry> scheduleEntries;
+    private ArrayList<String> titelList;
 
-    boolean isAlreadyRunning = false;
+    private boolean isAlreadyRunning = false;
 
     private final String virtuelString, changesString;
+
+    private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
 
     public ScheduleParseDownloadManager(HandleArrayListScheduleTaskInterface context, String virtuelString, String changesString) {
         this.context = context;
@@ -45,19 +47,17 @@ public class ScheduleParseDownloadManager {
         this.changesString = changesString;
     }
 
-    private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
-
     public void resetSchedule() {
-        schedulerEntries = null;
+        scheduleEntries = null;
         titelList = null;
     }
 
     public void getSchedule(String shortCourse, String semester) {
         if (!isAlreadyRunning) {
             isAlreadyRunning = true;
-            if (titelList == null || schedulerEntries == null) {
+            if (titelList == null || scheduleEntries == null) {
                 titelList = new ArrayList<>();
-                schedulerEntries = new ArrayList<>();
+                scheduleEntries = new ArrayList<>();
 
                 //Load Schedule
                 String replacedSemester = semester.replace(" - ", "_").replace(" ", "_");
@@ -87,7 +87,7 @@ public class ScheduleParseDownloadManager {
                             Response responseCancelledLecuteres = okClient.newCall(requestCancelledLecuteres).execute();
                             parseCancelledLectures(responseCancelledLecuteres);
                             isAlreadyRunning = false;
-                            uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
+                            uiThreadHandler.post(() -> context.onTaskFinished(scheduleEntries, titelList));
                         } else {
                             isAlreadyRunning = false;
                             uiThreadHandler.post(() -> context.onTaskFinished(null, null));
@@ -96,7 +96,7 @@ public class ScheduleParseDownloadManager {
                 });
             } else {
                 isAlreadyRunning = false;
-                uiThreadHandler.post(() -> context.onTaskFinished(schedulerEntries, titelList));
+                uiThreadHandler.post(() -> context.onTaskFinished(scheduleEntries, titelList));
             }
         }
     }
@@ -118,7 +118,7 @@ public class ScheduleParseDownloadManager {
                     String shortName = data.get(3).textNodes().get(0).text();
                     lectureArrayList.add(new LectureEntry(data.get(0).text(), data.get(1).text(), data.get(2).text(), data.get(3).text(), shortName, data.get(4).text(), room, building, data.get(5).text(), false));
                 }
-                schedulerEntries.add(new SchedulerEntry(lectureArrayList));
+                scheduleEntries.add(new ScheduleEntry(lectureArrayList));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -155,7 +155,7 @@ public class ScheduleParseDownloadManager {
                         lectureEntries.add(new LectureEntry(newDay, newTimeStart, newEndDate, infos.get(1).text(), shortName, infos.get(2).text(), newRoom, newBuilding, "", false));
                     }
                 }
-                schedulerEntries.add(new SchedulerEntry(lectureEntries));
+                scheduleEntries.add(new ScheduleEntry(lectureEntries));
             }
         } catch (JSONException e) {
             e.printStackTrace();

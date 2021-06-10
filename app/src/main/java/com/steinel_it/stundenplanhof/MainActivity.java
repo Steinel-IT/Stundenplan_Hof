@@ -33,7 +33,7 @@ import com.steinel_it.stundenplanhof.data_manager.ScheduleParseDownloadManager;
 import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 import com.steinel_it.stundenplanhof.interfaces.HandleArrayListScheduleTaskInterface;
 import com.steinel_it.stundenplanhof.objects.LectureEntry;
-import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
+import com.steinel_it.stundenplanhof.objects.ScheduleEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
     }
 
     @Override
-    public void onTaskFinished(ArrayList<SchedulerEntry> result, ArrayList<String> titel) {
+    public void onTaskFinished(ArrayList<ScheduleEntry> result, ArrayList<String> titel) {
         if (result == null && titel == null) {
             Toast.makeText(MainActivity.this, getString(R.string.errorInDownloadParse), Toast.LENGTH_LONG).show();
         } else {

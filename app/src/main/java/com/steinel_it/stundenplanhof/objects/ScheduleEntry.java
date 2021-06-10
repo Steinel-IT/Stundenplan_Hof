@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-public class SchedulerEntry {
-    ArrayList<LectureEntry> lectureEntryArrayList;
+public class ScheduleEntry {
+    private final ArrayList<LectureEntry> lectureEntryArrayList;
 
-    public SchedulerEntry(ArrayList<LectureEntry> lectureEntryArrayList) {
+    public ScheduleEntry(ArrayList<LectureEntry> lectureEntryArrayList) {
         this.lectureEntryArrayList = lectureEntryArrayList;
     }
 

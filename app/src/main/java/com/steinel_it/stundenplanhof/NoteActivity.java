@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.steinel_it.stundenplanhof.adapter.NoteListAdapter;
+import com.steinel_it.stundenplanhof.adapter.NoteAdapter;
 import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 import com.steinel_it.stundenplanhof.objects.Note;
 
@@ -29,7 +29,7 @@ public class NoteActivity extends AppCompatActivity {
     private StorageManager storageManager;
     private LinearLayout linearLayoutNothingToSee;
     private ArrayList<Note> noteArrayList = new ArrayList<>();
-    private NoteListAdapter noteListAdapter;
+    private NoteAdapter noteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,9 @@ public class NoteActivity extends AppCompatActivity {
 
     private void setupNotes() {
         RecyclerView recyclerViewNotes = findViewById(R.id.recyclerViewNotes);
-        noteListAdapter = new NoteListAdapter(noteArrayList, (Note note, int position, View view) ->
+        noteAdapter = new NoteAdapter(noteArrayList, (Note note, int position, View view) ->
                 showDialog(view, note), (Note note, int position, View view) -> deleteSavedNote(note));
-        recyclerViewNotes.setAdapter(noteListAdapter);
+        recyclerViewNotes.setAdapter(noteAdapter);
     }
 
     private void getAllNotes() {
@@ -70,7 +70,7 @@ public class NoteActivity extends AppCompatActivity {
 
     private void deleteSavedNote(Note note) {
         noteArrayList.remove(note);
-        noteListAdapter.notifyDataSetChanged();
+        noteAdapter.notifyDataSetChanged();
         storageManager.deleteNote(note, getApplicationContext(), fileName);
         checkNothingLabel();
     }
@@ -115,7 +115,7 @@ public class NoteActivity extends AppCompatActivity {
                     storageManager.editNote(editNote, getApplicationContext(), fileName);
                     noteArrayList.get(noteArrayList.indexOf(presetNote)).setText(editNote.getText());
                 }
-                noteListAdapter.notifyDataSetChanged();
+                noteAdapter.notifyDataSetChanged();
                 checkNothingLabel();
             }
             alertDialog.cancel();

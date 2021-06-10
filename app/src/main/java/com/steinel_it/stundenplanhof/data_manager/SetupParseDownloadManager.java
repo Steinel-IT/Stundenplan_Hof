@@ -30,14 +30,16 @@ public class SetupParseDownloadManager {
     public static final int REQUEST_CODE_SEMESTER = 1;
     public static final int REQUEST_CODE_YEARS = 2;
 
-    HandleArrayListStringTaskInterface context;
+    private HandleArrayListStringTaskInterface context;
 
-    ArrayList<String> shortCourses = new ArrayList<>();
-    String coursesResponse;
-    String semesterResponse;
+    private ArrayList<String> shortCourses;
+    private String coursesResponse;
+    private String semesterResponse;
+    private String yearResponse;
 
     public SetupParseDownloadManager(HandleArrayListStringTaskInterface context) {
         this.context = context;
+        shortCourses = new ArrayList<>();
     }
 
     public String getShortCourse(int index) {
@@ -93,7 +95,7 @@ public class SetupParseDownloadManager {
             return;
         }
         try {
-            String semesterExpr = new JSONObject(semesterResponse).getString("year");
+            String semesterExpr = new JSONObject(yearResponse).getString("year");
             Document doc = Jsoup.parse(semesterExpr);
             Element select = doc.select("select[name=tx_modulhandbuch_modulhandbuch[ye]]").first();
             for (Element element : select.children()) {
@@ -128,7 +130,7 @@ public class SetupParseDownloadManager {
                             getSemester();
                             break;
                         case REQUEST_CODE_YEARS:
-                            semesterResponse = response.body().string();
+                            yearResponse = response.body().string();
                             getYears();
                             break;
                     }

@@ -80,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
             Toast.makeText(ChatActivity.this, getString(R.string.successfullLogin), Toast.LENGTH_SHORT).show();
             disableWriting(false);
         }
-        updateMessages();
+        setMessageListener();
     }
 
     private void buildUI() {
@@ -143,7 +143,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void updateMessages() {
+    private void setMessageListener() {
         currChatDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

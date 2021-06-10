@@ -46,7 +46,7 @@ public class LecturerActivity extends AppCompatActivity implements HandleLecture
             contentList = savedInstanceState.getStringArrayList("contentList");
             phone = savedInstanceState.getString("phone");
             mail = savedInstanceState.getString("mail");
-            image = bitmapToByteArray(savedInstanceState.getByteArray("imageBytes"));
+            image = byteArrayToBitmap(savedInstanceState.getByteArray("imageBytes"));
         } else {
             Bundle extras = getIntent().getExtras();
             lecturer = extras.getString(MainActivity.EXTRA_MESSAGE_LECTURER);
@@ -79,7 +79,7 @@ public class LecturerActivity extends AppCompatActivity implements HandleLecture
         return outStream.toByteArray();
     }
 
-    private Bitmap bitmapToByteArray(byte[] imageBytes) {
+    private Bitmap byteArrayToBitmap(byte[] imageBytes) {
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
@@ -129,7 +129,7 @@ public class LecturerActivity extends AppCompatActivity implements HandleLecture
         }
     }
 
-    public void onClickFAB(View view) {
+    public void onClickFab(View view) {
         int id = view.getId();
         if (id == R.id.floatingActionButtonLecturerMail) {
             sendMail();

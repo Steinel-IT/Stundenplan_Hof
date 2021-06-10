@@ -28,17 +28,17 @@ import okhttp3.Response;
 
 public class LecturerParseDownloadManager {
 
-    HandleLecturerTaskInterface context;
+    private HandleLecturerTaskInterface context;
 
-    ArrayList<String> contentList = new ArrayList<>();
-    ArrayList<String> titelList = new ArrayList<>();
-    Bitmap image;
+    private ArrayList<String> titelList = new ArrayList<>();
+    private ArrayList<String> contentList = new ArrayList<>();
+    private Bitmap image;
+
+    private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
 
     public LecturerParseDownloadManager(HandleLecturerTaskInterface context) {
         this.context = context;
     }
-
-    private static final Handler uiThreadHandler = new Handler(Looper.getMainLooper());
 
     public void getLecturer(String lecturer) {
         if (contentList.isEmpty() || titelList.isEmpty() || image == null) {

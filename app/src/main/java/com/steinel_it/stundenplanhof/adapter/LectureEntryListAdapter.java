@@ -22,16 +22,13 @@ import java.util.ArrayList;
 public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryListAdapter.LectureHolder> {
 
     private final ArrayList<LectureEntry> lectureEntryArrayList;
-    private int schedulerPos;
+    private final int schedulerPos;
     private final LectureHolder.OnItemClickListener lectureOnItemClickListener;
 
 
-    public LectureEntryListAdapter(ArrayList<LectureEntry> lectureEntryArrayList, LectureHolder.OnItemClickListener lectureOnItemClickListener) {
+    public LectureEntryListAdapter(ArrayList<LectureEntry> lectureEntryArrayList, LectureHolder.OnItemClickListener lectureOnItemClickListener, int schedulerPos) {
         this.lectureEntryArrayList = lectureEntryArrayList;
         this.lectureOnItemClickListener = lectureOnItemClickListener;
-    }
-
-    public void setSchedulerPos(int schedulerPos) {
         this.schedulerPos = schedulerPos;
     }
 
@@ -54,6 +51,7 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
     }
 
     public static class LectureHolder extends RecyclerView.ViewHolder {
+        private final ConstraintLayout mConstraintLayout;
         private final TextView day, time, room, name, dozent, type;
         private final int schedulerPos;
         private final View view;
@@ -62,6 +60,7 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
             super(view);
             this.view = view;
             this.schedulerPos = schedulerPos;
+            mConstraintLayout = view.findViewById(R.id.constraintLayoutLecture);
             day = view.findViewById(R.id.textViewLectureDay);
             name = view.findViewById(R.id.textViewLectureName);
             time = view.findViewById(R.id.textViewLectureTime);
@@ -88,7 +87,6 @@ public class LectureEntryListAdapter extends RecyclerView.Adapter<LectureEntryLi
             if (lectureEntry.getType().isEmpty()) {
                 type.setVisibility(View.GONE);
 
-                ConstraintLayout mConstraintLayout = view.findViewById(R.id.constraintLayoutLecture);
                 ConstraintSet set = new ConstraintSet();
                 set.clone(mConstraintLayout);
                 set.connect(room.getId(), ConstraintSet.BOTTOM, mConstraintLayout.getId(), ConstraintSet.BOTTOM, pixToDp(8));

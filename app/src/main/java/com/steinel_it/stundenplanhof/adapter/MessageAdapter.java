@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageHolder> {
 
-    final ArrayList<Message> messages;
+    private final ArrayList<Message> messages;
 
     public MessageAdapter(ArrayList<Message> messages) {
         this.messages = messages;
@@ -43,8 +43,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
     public static class MessageHolder extends RecyclerView.ViewHolder {
         private final TextView textViewTime, textViewText;
 
-        public MessageHolder(@NonNull View itemView) {
-            super(itemView);
+        public MessageHolder(@NonNull View view) {
+            super(view);
 
             textViewTime = itemView.findViewById(R.id.textViewChatMessageTime);
             textViewText = itemView.findViewById(R.id.textViewChatMessageText);

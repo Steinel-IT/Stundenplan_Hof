@@ -12,17 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.steinel_it.stundenplanhof.R;
 import com.steinel_it.stundenplanhof.objects.Note;
 
-import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteHolder> {
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
 
-    ArrayList<Note> noteArrayList;
-    NoteHolder.OnItemClickListener onItemClickListenerEdit;
-    NoteHolder.OnItemClickListener onItemClickListenerDelete;
+    private final ArrayList<Note> noteArrayList;
+    private final NoteHolder.OnItemClickListener onItemClickListenerEdit;
+    private final NoteHolder.OnItemClickListener onItemClickListenerDelete;
 
-    public NoteListAdapter(ArrayList<Note> noteArrayList, NoteHolder.OnItemClickListener onItemClickListenerEdit, NoteHolder.OnItemClickListener onItemClickListenerDelete) {
+    public NoteAdapter(ArrayList<Note> noteArrayList, NoteHolder.OnItemClickListener onItemClickListenerEdit, NoteHolder.OnItemClickListener onItemClickListenerDelete) {
         this.noteArrayList = noteArrayList;
         this.onItemClickListenerEdit = onItemClickListenerEdit;
         this.onItemClickListenerDelete = onItemClickListenerDelete;
@@ -33,7 +32,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteHo
     public NoteHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_item_note, viewGroup, false);
-        return new NoteListAdapter.NoteHolder(view);
+        return new NoteAdapter.NoteHolder(view);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteHo
             imageButtonDelete = itemView.findViewById(R.id.imageButtonNoteDelete);
         }
 
-        public void bind(final Note note, int pos, final OnItemClickListener clickListenerEdit, final OnItemClickListener clickListenerDelete) {
+        public void bind(final Note note, final int pos, final OnItemClickListener clickListenerEdit, final OnItemClickListener clickListenerDelete) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             date.setText(note.getSaveDate().format(formatter));
             text.setText(note.getText());

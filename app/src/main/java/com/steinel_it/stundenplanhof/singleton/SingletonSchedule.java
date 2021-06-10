@@ -1,7 +1,7 @@
 package com.steinel_it.stundenplanhof.singleton;
 
 import com.steinel_it.stundenplanhof.objects.LectureEntry;
-import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
+import com.steinel_it.stundenplanhof.objects.ScheduleEntry;
 import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
 
 import java.util.ArrayList;
@@ -12,11 +12,11 @@ public class SingletonSchedule {
     private SchedulerFilter filterType = SchedulerFilter.DAYS;
 
     private ArrayList<String> titleList;
-    private ArrayList<SchedulerEntry> scheduleList;
+    private ArrayList<ScheduleEntry> scheduleList;
 
     //Original Sorted Schedule
     private ArrayList<String> dayTitle;
-    private ArrayList<SchedulerEntry> daySortedSchedule;
+    private ArrayList<ScheduleEntry> daySortedSchedule;
 
     private static final SingletonSchedule instance = new SingletonSchedule();
 
@@ -27,11 +27,11 @@ public class SingletonSchedule {
     private SingletonSchedule() {
     }
 
-    public ArrayList<SchedulerEntry> getScheduleList() {
+    public ArrayList<ScheduleEntry> getScheduleList() {
         return scheduleList;
     }
 
-    public void setDaySortedSchedule(ArrayList<SchedulerEntry> daySortedSchedule) {
+    public void setDaySortedSchedule(ArrayList<ScheduleEntry> daySortedSchedule) {
         this.daySortedSchedule = daySortedSchedule;
     }
 
@@ -47,7 +47,7 @@ public class SingletonSchedule {
         return dayTitle;
     }
 
-    public ArrayList<SchedulerEntry> getDaySortedSchedule() {
+    public ArrayList<ScheduleEntry> getDaySortedSchedule() {
         return daySortedSchedule;
     }
 
@@ -81,7 +81,7 @@ public class SingletonSchedule {
             explicitSort(sortedMap);
             titleList.addAll(sortedMap.keySet());
             for (String key : sortedMap.keySet()) {
-                scheduleList.add(new SchedulerEntry(sortedMap.get(key)));
+                scheduleList.add(new ScheduleEntry(sortedMap.get(key)));
             }
         }
     }
@@ -109,7 +109,7 @@ public class SingletonSchedule {
 
     private ArrayList<LectureEntry> getAllCourses() {
         ArrayList<LectureEntry> allCourses = new ArrayList<>();
-        for (SchedulerEntry scheduleEntry : daySortedSchedule) {
+        for (ScheduleEntry scheduleEntry : daySortedSchedule) {
             allCourses.addAll(scheduleEntry.getCourseEntryArrayList());
         }
         return allCourses;

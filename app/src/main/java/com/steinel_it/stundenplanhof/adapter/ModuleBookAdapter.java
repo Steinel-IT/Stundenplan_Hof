@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ModuleBookAdapter extends RecyclerView.Adapter<ModuleBookAdapter.ModuleBookEntryHolder> {
 
-    ArrayList<String> titelList, contentList;
+    private final ArrayList<String> titelList, contentList;
 
     public ModuleBookAdapter(ArrayList<String> titelList, ArrayList<String> contentList) {
         this.titelList = titelList;
@@ -43,13 +43,13 @@ public class ModuleBookAdapter extends RecyclerView.Adapter<ModuleBookAdapter.Mo
     public static class ModuleBookEntryHolder extends RecyclerView.ViewHolder {
         private final TextView titelView, contentView;
 
-        public ModuleBookEntryHolder(@NonNull View itemView) {
-            super(itemView);
+        public ModuleBookEntryHolder(@NonNull View view) {
+            super(view);
             titelView = itemView.findViewById(R.id.textViewModuleBookEntryTitel);
             contentView = itemView.findViewById(R.id.textViewModuleBookEntryContent);
         }
 
-        public void bind(final String titel, String content) {
+        public void bind(final String titel, final String content) {
             titelView.setText(titel);
             contentView.setText(content);
         }

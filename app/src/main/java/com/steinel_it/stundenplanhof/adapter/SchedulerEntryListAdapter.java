@@ -11,19 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.steinel_it.stundenplanhof.R;
 import com.steinel_it.stundenplanhof.objects.LectureEntry;
-import com.steinel_it.stundenplanhof.objects.SchedulerEntry;
+import com.steinel_it.stundenplanhof.objects.ScheduleEntry;
 
 import java.util.ArrayList;
 
 public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEntryListAdapter.SchedulerHolder> {
 
     private final ArrayList<String> titelList;
-    private final ArrayList<SchedulerEntry> schedulerEntryArrayList;
+    private final ArrayList<ScheduleEntry> scheduleEntryArrayList;
     private final LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener;
 
-    public SchedulerEntryListAdapter(ArrayList<String> titelList, ArrayList<SchedulerEntry> schedulerEntryArrayList, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
+    public SchedulerEntryListAdapter(ArrayList<String> titelList, ArrayList<ScheduleEntry> scheduleEntryArrayList, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
         this.titelList = titelList;
-        this.schedulerEntryArrayList = schedulerEntryArrayList;
+        this.scheduleEntryArrayList = scheduleEntryArrayList;
         this.lectureOnItemClickListener = lectureOnItemClickListener;
     }
 
@@ -37,19 +37,19 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
 
     @Override
     public void onBindViewHolder(@NonNull SchedulerHolder courseHolder, int position) {
-        courseHolder.bind(titelList.get(position), schedulerEntryArrayList.get(position).getCourseEntryArrayList(), position, lectureOnItemClickListener);
+        courseHolder.bind(titelList.get(position), scheduleEntryArrayList.get(position).getCourseEntryArrayList(), position, lectureOnItemClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return schedulerEntryArrayList.size();
+        return scheduleEntryArrayList.size();
     }
 
     public static class SchedulerHolder extends RecyclerView.ViewHolder {
         TextView name;
         RecyclerView lectureRecyclerView;
 
-        public SchedulerHolder(View view) {
+        public SchedulerHolder(@NonNull View view) {
             super(view);
 
             name = view.findViewById(R.id.textViewSchedulerName);
@@ -57,10 +57,9 @@ public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEnt
             lectureRecyclerView.addItemDecoration(new DividerItemDecoration(lectureRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         }
 
-        public void bind(final String entryName, final ArrayList<LectureEntry> lectureEntryArrayList, final int schedulerPos, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
+        public void bind(final String entryName, final ArrayList<LectureEntry> lectureEntries, final int schedulePos, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
             name.setText(entryName);
-            LectureEntryListAdapter lectureEntryListAdapter = new LectureEntryListAdapter(lectureEntryArrayList, lectureOnItemClickListener);
-            lectureEntryListAdapter.setSchedulerPos(schedulerPos);
+            LectureEntryListAdapter lectureEntryListAdapter = new LectureEntryListAdapter(lectureEntries, lectureOnItemClickListener, schedulePos);
             lectureRecyclerView.setAdapter(lectureEntryListAdapter);
         }
     }

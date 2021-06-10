@@ -152,7 +152,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:contentDescription="@string/mailButton"
-        android:onClick="onClickFAB"
+        android:onClick="onClickFab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_mail" />
@@ -165,7 +165,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:contentDescription="@string/phoneButton"
-        android:onClick="onClickFAB"
+        android:onClick="onClickFab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonLecturerMail"
         app:srcCompat="@drawable/ic_call" />
