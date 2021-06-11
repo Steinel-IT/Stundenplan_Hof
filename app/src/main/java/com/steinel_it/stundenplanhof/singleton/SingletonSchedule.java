@@ -2,14 +2,14 @@ package com.steinel_it.stundenplanhof.singleton;
 
 import com.steinel_it.stundenplanhof.objects.LectureEntry;
 import com.steinel_it.stundenplanhof.objects.ScheduleEntry;
-import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
+import com.steinel_it.stundenplanhof.objects.ScheduleFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SingletonSchedule {
 
-    private SchedulerFilter filterType = SchedulerFilter.DAYS;
+    private ScheduleFilter filterType = ScheduleFilter.DAYS;
 
     private ArrayList<String> titleList;
     private ArrayList<ScheduleEntry> scheduleList;
@@ -39,7 +39,7 @@ public class SingletonSchedule {
         return titleList;
     }
 
-    public void setFilterType(SchedulerFilter filterType) {
+    public void setFilterType(ScheduleFilter filterType) {
         this.filterType = filterType;
     }
 
@@ -73,7 +73,7 @@ public class SingletonSchedule {
             HashMap<String, ArrayList<LectureEntry>> sortedMap = new HashMap<>();
 
             //Default Sort: DAYS
-            if (filterType == SchedulerFilter.DAYS) {
+            if (filterType == ScheduleFilter.DAYS) {
                 titleList.addAll(dayTitle);
                 scheduleList.addAll(daySortedSchedule);
                 return;
@@ -92,11 +92,11 @@ public class SingletonSchedule {
             String sortItem = "";
 
             //Set sorting Type
-            if (filterType == SchedulerFilter.LECTURE)
+            if (filterType == ScheduleFilter.LECTURE)
                 sortItem = entry.getShortName();
-            else if (filterType == SchedulerFilter.ROOMS)
+            else if (filterType == ScheduleFilter.ROOMS)
                 sortItem = entry.getRoom();
-            else if (filterType == SchedulerFilter.LECTURER)
+            else if (filterType == ScheduleFilter.LECTURER)
                 sortItem = entry.getLecturer();
 
 

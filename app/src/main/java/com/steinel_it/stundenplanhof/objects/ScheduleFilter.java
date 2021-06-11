@@ -1,6 +1,6 @@
 package com.steinel_it.stundenplanhof.objects;
 
-public enum SchedulerFilter {
+public enum ScheduleFilter {
     DAYS,
     LECTURE,
     ROOMS,

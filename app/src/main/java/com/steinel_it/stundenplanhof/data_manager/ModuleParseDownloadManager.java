@@ -62,6 +62,7 @@ public class ModuleParseDownloadManager {
                             String AllLinksExpr = new JSONObject(response.body().string()).getString("content");
                             Document docCompelte = Jsoup.parse(AllLinksExpr);
                             Elements links = docCompelte.select("tr");
+                            System.out.println("Links: " + links);
                             for (Element linkElement : links) {
                                 if (linkElement.text().contains(shortLecture)) {
                                     //Build new URL
@@ -70,15 +71,7 @@ public class ModuleParseDownloadManager {
                                     //Download specific ModuleBook
                                     Response responseModuleBook = okClient.newCall(requestModuleBook).execute();
                                     assert responseModuleBook.body() != null;
-                                    Document moduleDoc = Jsoup.parse(responseModuleBook.body().string());
-                                    Elements rows = moduleDoc.select("tr");
-                                    titelList.clear();
-                                    contentList.clear();
-                                    for (Element row : rows) {
-                                        Elements rowData = row.select("td");
-                                        titelList.add(rowData.get(0).text());
-                                        contentList.add(rowData.get(1).text());
-                                    }
+                                    parseModuleManual(responseModuleBook);
                                     uiThreadHandler.post(() -> context.onTaskFinished(titelList, contentList));
                                     return;
                                 }
@@ -92,6 +85,18 @@ public class ModuleParseDownloadManager {
                     }
                 }
             });
+        }
+    }
+
+    private void parseModuleManual(Response response) throws IOException {
+        Document moduleDoc = Jsoup.parse(response.body().string());
+        Elements rows = moduleDoc.select("tr");
+        titelList.clear();
+        contentList.clear();
+        for (Element row : rows) {
+            Elements rowData = row.select("td");
+            titelList.add(rowData.get(0).text());
+            contentList.add(rowData.get(1).text());
         }
     }
 }

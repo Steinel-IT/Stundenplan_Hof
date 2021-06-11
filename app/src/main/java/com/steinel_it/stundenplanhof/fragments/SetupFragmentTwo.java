@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SetupFragmentOne#newInstance} factory method to
+ * Use the {@link SetupFragmentTwo#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SetupFragmentTwo extends Fragment {
@@ -29,13 +29,8 @@ public class SetupFragmentTwo extends Fragment {
     public static final int SELECT_CODE_SEMESTER = 1;
     public static final int SELECT_CODE_YEAR = 2;
 
-    SetupValueInterface setupValueInterface;
-    View view;
-
-
-
-    public SetupFragmentTwo() {
-    }
+    private SetupValueInterface setupValueInterface;
+    private View view;
 
     public static SetupFragmentTwo newInstance() {
         return new SetupFragmentTwo();
@@ -60,7 +55,7 @@ public class SetupFragmentTwo extends Fragment {
         }
     }
 
-    public void setSpinnerSelect() {
+    private void setSpinnerSelect() {
         Spinner spinnerCourse = view.findViewById(R.id.spinnerSetupCourse);
         Spinner spinnerSemester = view.findViewById(R.id.spinnerSetupSemester);
         Spinner spinnerYear = view.findViewById(R.id.spinnerSetupYear);

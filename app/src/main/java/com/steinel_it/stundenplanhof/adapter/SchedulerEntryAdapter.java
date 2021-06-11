@@ -15,13 +15,13 @@ import com.steinel_it.stundenplanhof.objects.ScheduleEntry;
 
 import java.util.ArrayList;
 
-public class SchedulerEntryListAdapter extends RecyclerView.Adapter<SchedulerEntryListAdapter.SchedulerHolder> {
+public class SchedulerEntryAdapter extends RecyclerView.Adapter<SchedulerEntryAdapter.SchedulerHolder> {
 
     private final ArrayList<String> titelList;
     private final ArrayList<ScheduleEntry> scheduleEntryArrayList;
     private final LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener;
 
-    public SchedulerEntryListAdapter(ArrayList<String> titelList, ArrayList<ScheduleEntry> scheduleEntryArrayList, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
+    public SchedulerEntryAdapter(ArrayList<String> titelList, ArrayList<ScheduleEntry> scheduleEntryArrayList, LectureEntryListAdapter.LectureHolder.OnItemClickListener lectureOnItemClickListener) {
         this.titelList = titelList;
         this.scheduleEntryArrayList = scheduleEntryArrayList;
         this.lectureOnItemClickListener = lectureOnItemClickListener;

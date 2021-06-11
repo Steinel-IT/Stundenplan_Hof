@@ -28,13 +28,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.ChipGroup;
-import com.steinel_it.stundenplanhof.adapter.SchedulerEntryListAdapter;
+import com.steinel_it.stundenplanhof.adapter.SchedulerEntryAdapter;
 import com.steinel_it.stundenplanhof.data_manager.ScheduleParseDownloadManager;
 import com.steinel_it.stundenplanhof.data_manager.StorageManager;
 import com.steinel_it.stundenplanhof.interfaces.HandleArrayListScheduleTaskInterface;
 import com.steinel_it.stundenplanhof.objects.LectureEntry;
 import com.steinel_it.stundenplanhof.objects.ScheduleEntry;
-import com.steinel_it.stundenplanhof.objects.SchedulerFilter;
+import com.steinel_it.stundenplanhof.objects.ScheduleFilter;
 import com.steinel_it.stundenplanhof.singleton.SingletonSchedule;
 
 import java.time.LocalDate;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
 
     private ScheduleParseDownloadManager setupParseDownloadManager;
     private RecyclerView recyclerViewScheduler;
-    private SchedulerEntryListAdapter schedulerEntryListAdapter;
+    private SchedulerEntryAdapter schedulerEntryAdapter;
     private SingletonSchedule schedule;
     private StorageManager storageManager;
     private BottomSheetDialog bottomSheetDialogLecture;
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 break;
             case R.id.action_reset:
                 storageManager.deleteSetupData(this, KEY_APP_SETTINGS);
-                schedule.setFilterType(SchedulerFilter.DAYS);
+                schedule.setFilterType(ScheduleFilter.DAYS);
                 Intent intentFirstTime = new Intent(this, SetupActivity.class);
                 startActivityForResult(intentFirstTime, RESULTCODE_SETUP);
                 break;
@@ -173,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
             schedule.setDayTitle(titel);
             schedule.setDaySortedSchedule(result);
             schedule.sortSchedule();
-            if (schedulerEntryListAdapter != null) {
-                schedulerEntryListAdapter.notifyDataSetChanged();
+            if (schedulerEntryAdapter != null) {
+                schedulerEntryAdapter.notifyDataSetChanged();
             }
             setupRecyclerViews();
         }
@@ -185,21 +185,21 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         filterChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.chipFilterDay:
-                    schedule.setFilterType(SchedulerFilter.DAYS);
+                    schedule.setFilterType(ScheduleFilter.DAYS);
                     break;
                 case R.id.chipFilterLecture:
-                    schedule.setFilterType(SchedulerFilter.LECTURE);
+                    schedule.setFilterType(ScheduleFilter.LECTURE);
                     break;
                 case R.id.chipFilterRoom:
-                    schedule.setFilterType(SchedulerFilter.ROOMS);
+                    schedule.setFilterType(ScheduleFilter.ROOMS);
                     break;
                 case R.id.chipFilterLecturer:
-                    schedule.setFilterType(SchedulerFilter.LECTURER);
+                    schedule.setFilterType(ScheduleFilter.LECTURER);
                     break;
             }
             schedule.sortSchedule();
-            if (schedulerEntryListAdapter != null) {
-                schedulerEntryListAdapter.notifyDataSetChanged();
+            if (schedulerEntryAdapter != null) {
+                schedulerEntryAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
         recyclerViewScheduler = findViewById(R.id.recyclerViewScheduler);
         loadingGroup.setVisibility(View.GONE);
         recyclerViewScheduler.setVisibility(View.VISIBLE);
-        schedulerEntryListAdapter = new SchedulerEntryListAdapter(schedule.getTitleList(), schedule.getScheduleList(), (courseEntry, schedulerPos, vorlesungPos, view) -> {
+        schedulerEntryAdapter = new SchedulerEntryAdapter(schedule.getTitleList(), schedule.getScheduleList(), (courseEntry, schedulerPos, vorlesungPos, view) -> {
             int orientation = this.getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_PORTRAIT)
                 createBottomOptionSheet(courseEntry);
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements HandleArrayListSc
                 createSideOptionSheet(courseEntry);
             selectedLectureEntry = courseEntry;
         });
-        recyclerViewScheduler.setAdapter(schedulerEntryListAdapter);
+        recyclerViewScheduler.setAdapter(schedulerEntryAdapter);
         scrollToToday();
     }
 

@@ -60,61 +60,8 @@ public class LecturerParseDownloadManager {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
 
-                        Document docCompelte = Jsoup.parse(response.body().string());
-
-                        Elements lecturerContentRaw = docCompelte.select("div[class=row contact_persons]").select("div[class=bg]");
-
-                        //Falls keine Dozenten vorhanden
-                        if (lecturerContentRaw.isEmpty()) {
-                            uiThreadHandler.post(() -> context.onTaskFinished(new ArrayList<>(), new ArrayList<>(), null));
-                            return;
-                        }
-                        //Parse Image src
-                        String imageURL = null;
-                        if (lecturerContentRaw.first().select("img").first() != null)
-                            imageURL = lecturerContentRaw.first().select("img").first().attr("src");
-
-                        for (int i = 0; i < lecturerContentRaw.size(); i++) {
-                            titelList.add(lecturerContentRaw.get(i).select("h4").text());
-                            lecturerContentRaw.get(i).select("h4").remove();
-                            if (i < 2) {
-                                StringBuilder stringBuilder = new StringBuilder();
-                                for (Element line : lecturerContentRaw.get(i).select("p")) {
-                                    for (Node currNode : line.childNodes()) {
-                                        if (currNode.toString().equals("<br>")) {
-                                            stringBuilder.append("\n");
-                                        } else {
-                                            if (currNode.toString().contains("<a href")) {
-                                                Document linkDoc = Jsoup.parse(currNode.toString());
-                                                stringBuilder.append(linkDoc.text().replace(" hof-university", "@hof-university").replace("LÖSCHEN.", ""));
-                                            } else {
-                                                stringBuilder.append(currNode.toString());
-                                            }
-                                        }
-                                    }
-                                    stringBuilder.append("\n");
-                                }
-                                contentList.add(stringBuilder.toString());
-                            } else {
-                                contentList.add(lecturerContentRaw.get(i).text());
-                            }
-                        }
-
-                        //Parse Description
-                        Element lecturerDescRaw = docCompelte.select("div[class=six mobile-one columns]").first();
-                        titelList.add(lecturerDescRaw.select("div[class=row sitesubtitle]").text());
-                        contentList.add(lecturerDescRaw.text());
-
-                        //Load Image
-                        if (imageURL != null) {
-                            try {
-                                InputStream in = new java.net.URL(imageURL).openStream();
-                                image = BitmapFactory.decodeStream(in);
-                            } catch (Exception e) {
-                                Log.e("Error message by loading lecturer image", e.getMessage());
-                                e.printStackTrace();
-                            }
-                        }
+                        //true if infos are available
+                        if (!parseLecturer(response)) return;
 
                         uiThreadHandler.post(() -> context.onTaskFinished(titelList, contentList, image));
                     } else {
@@ -127,4 +74,62 @@ public class LecturerParseDownloadManager {
         }
     }
 
+    private boolean parseLecturer(@NonNull Response response) throws IOException {
+        Document docCompelte = Jsoup.parse(response.body().string());
+
+        Elements lecturerContentRaw = docCompelte.select("div[class=row contact_persons]").select("div[class=bg]");
+
+        //Falls keine Dozenten vorhanden
+        if (lecturerContentRaw.isEmpty()) {
+            uiThreadHandler.post(() -> context.onTaskFinished(new ArrayList<>(), new ArrayList<>(), null));
+            return false;
+        }
+        //Parse Image src
+        String imageURL = null;
+        if (lecturerContentRaw.first().select("img").first() != null)
+            imageURL = lecturerContentRaw.first().select("img").first().attr("src");
+
+        for (int i = 0; i < lecturerContentRaw.size(); i++) {
+            titelList.add(lecturerContentRaw.get(i).select("h4").text());
+            lecturerContentRaw.get(i).select("h4").remove();
+            if (i < 2) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Element line : lecturerContentRaw.get(i).select("p")) {
+                    for (Node currNode : line.childNodes()) {
+                        if (currNode.toString().equals("<br>")) {
+                            stringBuilder.append("\n");
+                        } else {
+                            if (currNode.toString().contains("<a href")) {
+                                Document linkDoc = Jsoup.parse(currNode.toString());
+                                stringBuilder.append(linkDoc.text().replace(" hof-university", "@hof-university").replace("LÖSCHEN.", ""));
+                            } else {
+                                stringBuilder.append(currNode.toString());
+                            }
+                        }
+                    }
+                    stringBuilder.append("\n");
+                }
+                contentList.add(stringBuilder.toString());
+            } else {
+                contentList.add(lecturerContentRaw.get(i).text());
+            }
+        }
+
+        //Parse Description
+        Element lecturerDescRaw = docCompelte.select("div[class=six mobile-one columns]").first();
+        titelList.add(lecturerDescRaw.select("div[class=row sitesubtitle]").text());
+        contentList.add(lecturerDescRaw.text());
+
+        //Load Image
+        if (imageURL != null) {
+            try {
+                InputStream in = new java.net.URL(imageURL).openStream();
+                image = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error message by loading lecturer image", e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
 }

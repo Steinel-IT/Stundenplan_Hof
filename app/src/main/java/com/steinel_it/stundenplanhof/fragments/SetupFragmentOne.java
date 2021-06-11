@@ -20,10 +20,6 @@ import java.util.ArrayList;
  */
 public class SetupFragmentOne extends Fragment {
 
-
-    public SetupFragmentOne() {
-    }
-
     public static SetupFragmentOne newInstance() {
         SetupFragmentOne fragment = new SetupFragmentOne();
         return fragment;
