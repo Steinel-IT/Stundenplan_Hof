@@ -94,24 +94,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.chat_menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
-                return true;
-            case R.id.action_logout:
-                if (logout()) {
-                    Toast.makeText(ChatActivity.this, getString(R.string.successfullLogout), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(ChatActivity.this, getString(R.string.errorLogout), Toast.LENGTH_LONG).show();
-                }
                 this.finish();
                 return true;
         }
@@ -123,11 +108,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("chatName", chatName);
         savedInstanceState.putString("lectureShortName", lectureShortName);
-    }
-
-    private boolean logout() {
-        mAuth.signOut();
-        return mAuth.getCurrentUser() == null;
     }
 
     private void anonymRegister() {
