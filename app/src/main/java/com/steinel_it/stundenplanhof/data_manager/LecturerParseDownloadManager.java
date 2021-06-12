@@ -28,7 +28,7 @@ import okhttp3.Response;
 
 public class LecturerParseDownloadManager {
 
-    private HandleLecturerTaskInterface context;
+    private final HandleLecturerTaskInterface context;
 
     private ArrayList<String> titelList = new ArrayList<>();
     private ArrayList<String> contentList = new ArrayList<>();

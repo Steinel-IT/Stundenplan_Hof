@@ -30,7 +30,7 @@ public class SetupParseDownloadManager {
     public static final int REQUEST_CODE_SEMESTER = 1;
     public static final int REQUEST_CODE_YEARS = 2;
 
-    private HandleArrayListStringTaskInterface context;
+    private final HandleArrayListStringTaskInterface context;
 
     private ArrayList<String> shortCourses;
     private String coursesResponse;

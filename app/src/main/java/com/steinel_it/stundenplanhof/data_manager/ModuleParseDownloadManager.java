@@ -26,7 +26,7 @@ import okhttp3.Response;
 
 public class ModuleParseDownloadManager {
 
-    private HandleTitleContentTaskInterface context;
+    private final HandleTitleContentTaskInterface context;
 
     private ArrayList<String> titelList;
     private ArrayList<String> contentList;

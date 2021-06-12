@@ -30,7 +30,7 @@ import okhttp3.Response;
 
 public class ScheduleParseDownloadManager {
 
-    private HandleArrayListScheduleTaskInterface context;
+    private final HandleArrayListScheduleTaskInterface context;
 
     private ArrayList<ScheduleEntry> scheduleEntries;
     private ArrayList<String> titelList;

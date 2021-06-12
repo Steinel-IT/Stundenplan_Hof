@@ -24,8 +24,7 @@ public class SingletonSchedule {
         return instance;
     }
 
-    private SingletonSchedule() {
-    }
+    private SingletonSchedule() {}
 
     public ArrayList<ScheduleEntry> getScheduleList() {
         return scheduleList;
