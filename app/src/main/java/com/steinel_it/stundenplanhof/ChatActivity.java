@@ -63,10 +63,6 @@ public class ChatActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://stundenplan-hof-429d1-default-rtdb.europe-west1.firebasedatabase.app");
 
-        //enables the offline function of Firebase
-        //It caches all downloaded data up to 10MB
-        database.setPersistenceEnabled(true);
-
         currChatDB = database.getReference().child("chat").child(chatName);
 
         getSupportActionBar().setTitle(getString(R.string.chat) + ": " + lectureShortName);
