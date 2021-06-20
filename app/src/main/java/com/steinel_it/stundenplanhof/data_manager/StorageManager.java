@@ -6,13 +6,9 @@ import android.location.Location;
 
 import com.steinel_it.stundenplanhof.objects.Note;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class StorageManager {
 

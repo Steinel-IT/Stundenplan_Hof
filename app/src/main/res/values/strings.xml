@@ -80,10 +80,7 @@
     <string name="activateAlarm">Set alarm</string>
     <string name="chooseAlarmTime">Choose time</string>
     <string name="hoursBeforeLecture">Hours before lecture</string>
-    <string name="logout">Logout</string>
-    <string name="successfullLogout">Successfull logout</string>
     <string name="successfullLogin">Successfull login</string>
-    <string name="errorLogout">Error in logout</string>
     <string name="errorLogin">Error in login</string>
     <string name="noLogin">Not logged in</string>
     <string name="latLongAltFormat" translatable="false">%s: Lat:%s Long:%s Alt:%s</string>

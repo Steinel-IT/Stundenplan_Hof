@@ -74,10 +74,7 @@
     <string name="chooseAlarmTime">Uhrzeit wählen</string>
     <string name="activateAlarm">Alarm aktivieren</string>
     <string name="hoursBeforeLecture">Stunde/n vor der Vorlesung</string>
-    <string name="logout">Logout</string>
-    <string name="successfullLogout">Logout erfolgreich</string>
     <string name="successfullLogin">Login erfolgreich</string>
-    <string name="errorLogout">Fehler bei Logout</string>
     <string name="errorLogin">Fehler bei Login</string>
     <string name="noLogin">Nicht eingeloggt</string>
     <string name="changeName">Name ändern</string>
